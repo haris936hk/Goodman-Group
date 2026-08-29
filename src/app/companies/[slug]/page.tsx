@@ -110,11 +110,11 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
         <section className="company-record section-shell">
           <header>
             <p className="chapter-index">Company record</p>
-            <h2>Precise facts will live here.</h2>
+            <h2>Information found in the current source.</h2>
             <p>
-              This profile framework is ready for approved company information.
-              It deliberately does not infer legal, operational, or leadership
-              claims from legacy material.
+              This profile reflects the company and leadership information
+              currently published or represented in Goodman Group source
+              material. Formal legal and operational approval is still required.
             </p>
           </header>
 
@@ -123,13 +123,20 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
               <Network aria-hidden="true" />
               <span>Group relationship</span>
               <strong>Pending verification</strong>
-              <p>Subsidiary, associate, joint venture, brand, or partner.</p>
+              <p>{company.relationshipLabel}. Formal relationship classification has not been published.</p>
             </article>
             <article className="record-panel glass-panel">
               <MapPin aria-hidden="true" />
               <span>Locations and markets</span>
-              <strong>Pending verification</strong>
-              <p>Registered office, operations, and status-labelled markets.</p>
+              <strong>
+                {company.locations.length > 0
+                  ? company.locations.join(" · ")
+                  : "Not stated on the current site"}
+              </strong>
+              <p>
+                Locations and markets are shown only where the current source
+                provides them.
+              </p>
             </article>
             <article className="record-panel glass-panel">
               <Clock3 aria-hidden="true" />
@@ -144,26 +151,40 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
           {[
             [
               "Capabilities",
-              "Products, services, facilities, and areas of operation.",
+              company.capabilities.length > 0
+                ? company.capabilities.join(", ")
+                : "Products, services, facilities, and areas of operation.",
+              company.capabilities.length > 0
+                ? "Listed in current source material"
+                : "Content awaiting approval",
             ],
             [
               "Leadership",
-              "Approved leaders, current roles, and professional biographies.",
+              company.leadership.length > 0
+                ? company.leadership
+                    .map((leader) => `${leader.name} — ${leader.role}`)
+                    .join("; ")
+                : "Current leaders and professional biographies.",
+              company.leadership.length > 0
+                ? "Listed on the current Goodman Group site"
+                : "Content awaiting approval",
             ],
             [
               "Evidence",
               "Licences, certifications, documents, and quality systems.",
+              "Content awaiting approval",
             ],
             [
               "Contact route",
-              "Publication awaits a confirmed owner and functional destination.",
+              "No company-specific contact route is published on the current Goodman Group site.",
+              "Content awaiting approval",
             ],
-          ].map(([title, copy], index) => (
+          ].map(([title, copy, status], index) => (
             <article key={title}>
               <span>0{index + 1}</span>
               <h2>{title}</h2>
               <p>{copy}</p>
-              <small>Content awaiting approval</small>
+              <small>{status}</small>
             </article>
           ))}
         </section>

@@ -26,7 +26,7 @@ describe('CompanyPage', () => {
       screen.getByText('Preview record — not publication-ready'),
     ).toBeInTheDocument();
     expect(screen.getAllByText('Pending verification').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Content awaiting approval')).toHaveLength(4);
+    expect(screen.getAllByText('Content awaiting approval')).toHaveLength(2);
   });
 
   it('marks provisional profiles noindex and handles unknown records', async () => {

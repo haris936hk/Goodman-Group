@@ -43,10 +43,13 @@ const presenceStates = [
 ] as const;
 
 const audienceRoutes = [
-  ["Procurement", "Company capabilities and approved evidence"],
-  ["Partnerships", "Commercial and international opportunities"],
-  ["Careers", "Roles across distinct operating companies"],
-  ["Press", "Group facts, leadership, and current activity"],
+  [
+    "Procurement",
+    "Government hospitals, private hospitals, retailers and national distributors",
+  ],
+  ["Partnerships", "Inquiries and partnership opportunities"],
+  ["Careers", "Career opportunities across the Group"],
+  ["Press", "Group profile, leadership and business areas"],
 ] as const;
 
 export default function Home() {
@@ -67,7 +70,7 @@ export default function Home() {
               <p className="eyebrow" data-hero-kicker>
                 <span>Goodman Group</span>
                 <span className="eyebrow-rule" aria-hidden="true" />
-                <span>Connected enterprise</span>
+                <span>Health · Wellness · Progress</span>
               </p>
               <h1>
                 <span className="hero-line-mask">
@@ -78,9 +81,9 @@ export default function Home() {
                 </span>
               </h1>
               <p className="hero-intro" data-hero-support>
-                One Group experience that makes each approved company easier to
-                understand, explore, and reach—without erasing what makes it
-                distinct.
+                Goodman Group is a diversified conglomerate driving innovation
+                and excellence across healthcare, medical equipment, chemicals,
+                laboratory services, real estate, restaurants, and automobiles.
               </p>
               <div className="hero-actions" data-hero-support>
                 <Link className="button button-primary" href="#portfolio">
@@ -202,8 +205,10 @@ export default function Home() {
                     <div className="image-wash" aria-hidden="true" />
                   </div>
                   <div className="sector-visual-label glass-panel">
-                    <span>Approved operational media required</span>
-                    <strong>Concept illustration only</strong>
+                    <span>Goodman Group areas of activity</span>
+                    <strong>
+                      Healthcare, equipment, chemicals and laboratory services
+                    </strong>
                   </div>
                 </div>
 
@@ -344,9 +349,9 @@ export default function Home() {
                 <p className="chapter-index">05 / Remember</p>
                 <h2>Heritage, told with the precision it deserves.</h2>
                 <p>
-                  The final history will connect the family-business origin,
-                  company milestones, and current leadership only after dates,
-                  roles, and biographies are approved.
+                  The current site describes a family-business origin and a
+                  leadership journey spanning more than three decades in
+                  pharmaceutical manufacturing.
                 </p>
                 <span className="verification-label">
                   <ShieldCheck aria-hidden="true" /> Content verification in progress
@@ -357,22 +362,31 @@ export default function Home() {
                 <li data-reveal>
                   <span>Origin</span>
                   <div>
-                    <h3>The founding chapter</h3>
-                    <p>Approved origin, founder context, and primary-source date.</p>
+                    <h3>A family-business beginning</h3>
+                    <p>
+                      Syed Talib Hussain Hashmi says he took over the family
+                      business at age 16.
+                    </p>
                   </div>
                 </li>
                 <li data-reveal>
                   <span>Growth</span>
                   <div>
-                    <h3>Companies and milestones</h3>
-                    <p>Verified formations, acquisitions, facilities, and markets.</p>
+                    <h3>Healthcare and beyond</h3>
+                    <p>
+                      The current site names Goodman Laboratories, Geron Pharma,
+                      Wal Green Chemical, and medical equipment operations.
+                    </p>
                   </div>
                 </li>
                 <li data-reveal>
                   <span>Now</span>
                   <div>
-                    <h3>Leadership in motion</h3>
-                    <p>Current roles and biographies with a last-reviewed date.</p>
+                    <h3>Leadership across the Group</h3>
+                    <p>
+                      Hashmi is listed as CEO or director across the named
+                      operations from 2012 through July 2024.
+                    </p>
                   </div>
                 </li>
               </ol>
@@ -429,10 +443,10 @@ export default function Home() {
             <div className="section-shell">
               <div className="connect-intro" data-reveal>
                 <p className="chapter-index">07 / Connect</p>
-                <h2>Clear routes, once ownership is approved.</h2>
+                <h2>Inquiries, partnerships and career opportunities.</h2>
                 <p>
-                  These audience pathways are informational until responsible
-                  teams and functional destinations are confirmed.
+                  Contact Goodman Group for inquiries, partnerships, or career
+                  opportunities.
                 </p>
               </div>
 

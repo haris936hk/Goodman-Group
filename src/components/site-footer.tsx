@@ -23,8 +23,8 @@ export function SiteFooter() {
             sizes="(max-width: 640px) 170px, 200px"
           />
           <p>
-            A clearer way to understand the Group, its companies, and the
-            evidence behind each operation.
+            A diversified conglomerate driving innovation and excellence across
+            healthcare and multiple business areas.
           </p>
         </div>
         <nav className="footer-nav" aria-label="Footer navigation">
@@ -35,7 +35,7 @@ export function SiteFooter() {
           ))}
         </nav>
         <div className="footer-action footer-action-status">
-          Contact routes pending approval
+          Contact us for inquiries, partnerships, or career opportunities.
         </div>
       </div>
       <div className="footer-meta">

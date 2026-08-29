@@ -142,7 +142,7 @@ export function SiteHeader() {
         ))}
       </nav>
 
-      <span className="header-status">Contact routes pending</span>
+      <span className="header-status">Health · Wellness · Progress</span>
 
       <button
         ref={menuButtonRef}
@@ -235,7 +235,7 @@ export function SiteHeader() {
                       ))}
                     </div>
                     <p className="mobile-contact-status">
-                      Contact routes pending approval
+                      Inquiries, partnerships and careers
                     </p>
                   </nav>
                 </motion.div>

@@ -20,9 +20,6 @@ export const metadata: Metadata = {
   },
   description:
     "A Goodman Group information and company-record preview. Corporate relationships and company details remain subject to business and legal approval.",
-  icons: {
-    icon: "/favicon.png",
-  },
 };
 
 export const viewport: Viewport = {

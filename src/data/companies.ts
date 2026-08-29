@@ -8,20 +8,24 @@ export type CompanyProfile = {
   publicationStatus: "provisional" | "published";
   displayName: string;
   legalName: string | null;
-  relationship: null;
-  relationshipLabel: "Relationship under verification";
+  relationship: string | null;
+  relationshipLabel: string;
   sector: Sector;
   summary: string;
   logo: string;
   logoWidth: number;
   logoHeight: number;
   accent: string;
-  founded: null;
-  locations: readonly [];
-  leadership: readonly [];
-  capabilities: readonly [];
-  contacts: readonly [];
-  lastReviewed: "Pending business approval";
+  founded: string | null;
+  locations: readonly string[];
+  leadership: readonly {
+    name: string;
+    role: string;
+    detail: string;
+  }[];
+  capabilities: readonly string[];
+  contacts: readonly string[];
+  lastReviewed: string;
 };
 
 export const companies = [
@@ -29,22 +33,28 @@ export const companies = [
     slug: "goodman-laboratories",
     publicationStatus: "provisional",
     displayName: "Goodman Laboratories",
-    legalName: null,
+    legalName: "Goodman Laboratories (Pvt.) Ltd.",
     relationship: null,
-    relationshipLabel: "Relationship under verification",
+    relationshipLabel: "Named on the current Goodman Group site",
     sector: "Healthcare & Pharmaceuticals",
     summary:
-      "A provisional discovery record associated with healthcare and pharmaceuticals source material. Its Group relationship and operating details await business and legal approval.",
+      "A pharmaceutical manufacturing company named on the current Goodman Group site. Syed Talib Hussain Hashmi is listed as its CEO since 2012.",
     logo: "/assets/logos/GoodmanLabLogo.png",
     logoWidth: 575,
     logoHeight: 279,
     accent: "#46b7e8",
     founded: null,
     locations: [],
-    leadership: [],
-    capabilities: [],
+    leadership: [
+      {
+        name: "Syed Talib Hussain Hashmi",
+        role: "CEO since 2012",
+        detail: "Listed on the current Goodman Group site.",
+      },
+    ],
+    capabilities: ["Pharmaceutical manufacturing"],
     contacts: [],
-    lastReviewed: "Pending business approval",
+    lastReviewed: "Current Goodman Group site",
   },
   {
     slug: "hygeia-pharmaceuticals",
@@ -52,10 +62,10 @@ export const companies = [
     displayName: "Hygeia Pharmaceuticals",
     legalName: null,
     relationship: null,
-    relationshipLabel: "Relationship under verification",
+    relationshipLabel: "Included in migration source material",
     sector: "Healthcare & Pharmaceuticals",
     summary:
-      "A provisional discovery record associated with healthcare and pharmaceuticals source material. Its Group relationship and operating details await business and legal approval.",
+      "A pharmaceutical company represented in the migration source material. Its relationship to Goodman Group is not stated on the current Goodman Group homepage.",
     logo: "/assets/logos/HygeiaLogo.png",
     logoWidth: 585,
     logoHeight: 254,
@@ -63,30 +73,36 @@ export const companies = [
     founded: null,
     locations: [],
     leadership: [],
-    capabilities: [],
+    capabilities: ["Pharmaceuticals"],
     contacts: [],
-    lastReviewed: "Pending business approval",
+    lastReviewed: "Current Goodman Group source review",
   },
   {
     slug: "geron-pharma",
     publicationStatus: "provisional",
     displayName: "Geron Pharma",
-    legalName: null,
+    legalName: "Geron Pharma Pvt. Ltd.",
     relationship: null,
-    relationshipLabel: "Relationship under verification",
+    relationshipLabel: "Named on the current Goodman Group site",
     sector: "Healthcare & Pharmaceuticals",
     summary:
-      "A provisional discovery record associated with healthcare and pharmaceuticals source material. Its Group relationship and operating details await business and legal approval.",
+      "A pharmaceutical company named on the current Goodman Group site. Syed Talib Hussain Hashmi is listed as its CEO since 2019.",
     logo: "/assets/logos/geronlogo.png",
     logoWidth: 684,
     logoHeight: 357,
     accent: "#58c6f0",
     founded: null,
     locations: [],
-    leadership: [],
-    capabilities: [],
+    leadership: [
+      {
+        name: "Syed Talib Hussain Hashmi",
+        role: "CEO since 2019",
+        detail: "Listed on the current Goodman Group site.",
+      },
+    ],
+    capabilities: ["Pharmaceuticals"],
     contacts: [],
-    lastReviewed: "Pending business approval",
+    lastReviewed: "Current Goodman Group site",
   },
   {
     slug: "medwell-pharmaceuticals",
@@ -94,10 +110,10 @@ export const companies = [
     displayName: "Medwell Pharmaceuticals",
     legalName: null,
     relationship: null,
-    relationshipLabel: "Relationship under verification",
+    relationshipLabel: "Included in migration source material",
     sector: "Healthcare & Pharmaceuticals",
     summary:
-      "A provisional discovery record associated with healthcare and pharmaceuticals source material. Its Group relationship and operating details await business and legal approval.",
+      "A pharmaceutical company represented in the migration source material. Its relationship to Goodman Group is not stated on the current Goodman Group homepage.",
     logo: "/assets/logos/medwellLogo.png",
     logoWidth: 516,
     logoHeight: 261,
@@ -105,9 +121,9 @@ export const companies = [
     founded: null,
     locations: [],
     leadership: [],
-    capabilities: [],
+    capabilities: ["Pharmaceuticals"],
     contacts: [],
-    lastReviewed: "Pending business approval",
+    lastReviewed: "Current Goodman Group source review",
   },
   {
     slug: "goodman-medical-equipment",
@@ -115,41 +131,53 @@ export const companies = [
     displayName: "Goodman Medical Equipment Trading",
     legalName: null,
     relationship: null,
-    relationshipLabel: "Relationship under verification",
+    relationshipLabel: "Named on the current Goodman Group site",
     sector: "Medical Equipment",
     summary:
-      "A provisional discovery record associated with medical equipment source material. Its Group relationship and operating details await business and legal approval.",
+      "A medical equipment trading operation named on the current Goodman Group site in both UAE and Pakistan. Syed Talib Hussain Hashmi is listed as director from July 2024.",
     logo: "/assets/logos/GG3.png",
     logoWidth: 2450,
     logoHeight: 1961,
     accent: "#4dc0e8",
     founded: null,
-    locations: [],
-    leadership: [],
-    capabilities: [],
+    locations: ["United Arab Emirates", "Pakistan"],
+    leadership: [
+      {
+        name: "Syed Talib Hussain Hashmi",
+        role: "Director since July 2024",
+        detail: "Listed for the UAE and Pakistan operations.",
+      },
+    ],
+    capabilities: ["Medical equipment trading"],
     contacts: [],
-    lastReviewed: "Pending business approval",
+    lastReviewed: "Current Goodman Group site",
   },
   {
     slug: "wal-green-chemicals",
     publicationStatus: "provisional",
     displayName: "Wal Green Chemicals",
-    legalName: null,
+    legalName: "Wal Green Chemical Pvt. Ltd.",
     relationship: null,
-    relationshipLabel: "Relationship under verification",
+    relationshipLabel: "Named on the current Goodman Group site",
     sector: "Chemicals",
     summary:
-      "A provisional discovery record associated with chemicals source material. Its Group relationship and operating details await business and legal approval.",
+      "A chemicals business named on the current Goodman Group site. Syed Talib Hussain Hashmi is listed as its CEO since 2021.",
     logo: "/assets/logos/walgreenLogo.png",
     logoWidth: 528,
     logoHeight: 259,
     accent: "#5fbf92",
     founded: null,
     locations: [],
-    leadership: [],
-    capabilities: [],
+    leadership: [
+      {
+        name: "Syed Talib Hussain Hashmi",
+        role: "CEO since 2021",
+        detail: "Listed on the current Goodman Group site.",
+      },
+    ],
+    capabilities: ["Chemicals"],
     contacts: [],
-    lastReviewed: "Pending business approval",
+    lastReviewed: "Current Goodman Group site",
   },
 ] as const satisfies readonly CompanyProfile[];
 
@@ -158,31 +186,31 @@ export const sectors = [
     name: "Healthcare & Pharmaceuticals",
     index: "01",
     description:
-      "Distinct company identities presented with room for manufacturing, quality, product, and compliance evidence once approved.",
+      "The Group's healthcare areas include medical billing, pharmaceuticals, and laboratory services.",
   },
   {
     name: "Medical Equipment",
     index: "02",
     description:
-      "A dedicated operating-company pathway for equipment capabilities, service information, and direct inquiry routing.",
+      "The Group deals in medical equipment, medical devices, and surgical equipment.",
   },
   {
     name: "Chemicals",
     index: "03",
     description:
-      "A separate sector context that prevents chemical operations from being misrepresented as pharmaceutical activity.",
+      "Chemicals are listed among Goodman Group's areas of activity.",
   },
   {
     name: "Automotive",
     index: "04",
     description:
-      "Entity register under review. No operating company is presented until the relationship is confirmed.",
+      "Automobiles are listed among Goodman Group's areas of activity; no entity details are published on the current site.",
   },
   {
     name: "Real Estate",
     index: "05",
     description:
-      "Entity register under review. Future profiles will use property-relevant modules rather than a generic template.",
+      "Real estate is listed among Goodman Group's areas of activity; no entity details are published on the current site.",
   },
 ] as const;
 
