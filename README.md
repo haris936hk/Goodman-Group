@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Goodman Group Website
+
+Next.js App Router application for the Goodman Group website redesign.
+
+## Requirements
+
+- Node.js 24 (see `.nvmrc`)
+- npm 11
 
 ## Getting Started
 
-First, run the development server:
+Install the locked dependencies and start the development server:
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quality Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint           # ESLint and Next.js Core Web Vitals rules
+npm run typecheck      # Strict TypeScript validation
+npm run test:run       # Unit and component tests once
+npm run test:coverage  # Unit tests with enforced coverage thresholds
+npm run build          # Optimized production build
+npm run check          # All non-browser checks above
+```
 
-## Learn More
+`npm test` runs Vitest in watch mode during development.
 
-To learn more about Next.js, take a look at the following resources:
+## End-to-End Tests
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Install the managed Chromium, Firefox, and WebKit binaries once:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx playwright install
+```
 
-## Deploy on Vercel
+Then run the browser suite:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run test:e2e
+npm run test:e2e:all
+npm run test:e2e:headed
+npm run test:e2e:ui
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The default end-to-end command runs Chromium and Firefox for fast local feedback. `npm run test:e2e:all` adds WebKit and is enforced in CI, where Playwright installs the required browser system dependencies.
+
+Playwright starts the development server locally. In CI it runs against the previously built production server. The suite covers Chromium, Firefox, WebKit, reduced-motion behavior, and automated accessibility checks.
+
+## Testing Conventions
+
+- Colocate unit and component tests as `*.test.ts` or `*.test.tsx` under `src/`.
+- Put browser journeys in `tests/e2e/`.
+- Prefer role- and label-based queries over implementation selectors.
+- Test observable behavior, not animation frames or component internals.
+- Use Playwright for async Server Components and full App Router behavior.
