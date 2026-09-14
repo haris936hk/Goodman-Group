@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { companies, isCompanyPublished } from '@/data/companies';
+import { companies } from '@/data/companies';
 
 import { GET } from './route';
 
 describe('sitemap.xml', () => {
-  it('lists only indexable routes and preserves XML escaping', async () => {
+  it('lists all company routes and preserves XML escaping', async () => {
     const response = GET(new Request('https://example.test/sitemap.xml'));
     const xml = await response.text();
 
@@ -14,7 +14,7 @@ describe('sitemap.xml', () => {
     expect(xml).toContain('<loc>https://example.test/companies</loc>');
     for (const company of companies) {
       const route = `<loc>https://example.test/companies/${company.slug}</loc>`;
-      expect(xml.includes(route)).toBe(isCompanyPublished(company));
+      expect(xml).toContain(route);
     }
     expect(xml).not.toContain('&quot;');
   });

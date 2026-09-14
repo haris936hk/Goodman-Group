@@ -218,7 +218,9 @@ test.describe('home page on mobile', () => {
     await expect(heading).toBeVisible();
     await expect(page.locator('[data-presence-map] > svg[role="img"]')).toBeVisible();
     await expect(
-      page.getByText('Conceptual preview—not market data'),
+      page.getByText('Active, partner, agreement-stage, and planned markets', {
+        exact: true,
+      }),
     ).toBeVisible();
 
     for (const label of [
@@ -312,5 +314,5 @@ test('publishes crawl and sitemap endpoints', async ({ request }) => {
   const origin = new URL(sitemap.url()).origin;
   expect(sitemapText).toContain(`<loc>${origin}/</loc>`);
   expect(sitemapText).toContain(`<loc>${origin}/companies</loc>`);
-  expect(sitemapText).not.toContain('/companies/goodman-laboratories');
+  expect(sitemapText).toContain('/companies/goodman-laboratories');
 });

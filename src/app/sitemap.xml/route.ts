@@ -1,4 +1,4 @@
-import { companies, isCompanyPublished } from "@/data/companies";
+import { companies } from "@/data/companies";
 
 function escapeXml(value: string) {
   return value.replace(
@@ -19,9 +19,7 @@ export function GET(request: Request) {
   const routes = [
     "/",
     "/companies",
-    ...companies
-      .filter(isCompanyPublished)
-      .map((company) => `/companies/${company.slug}`),
+    ...companies.map((company) => `/companies/${company.slug}`),
   ];
   const entries = routes
     .map((route) => `<url><loc>${escapeXml(`${origin}${route}`)}</loc></url>`)

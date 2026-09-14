@@ -10,7 +10,7 @@ import { companies } from "@/data/companies";
 export const metadata: Metadata = {
   title: "Our Companies",
   description:
-    "Browse Goodman Group provisional discovery records by sector. Company relationships and operating details remain subject to business and legal approval.",
+    "Browse Goodman Group companies and capabilities by sector.",
 };
 
 const groupedCompanies = Map.groupBy(companies, (company) => company.sector);
@@ -33,17 +33,9 @@ export default function CompaniesPage() {
             </p>
             <h1>Distinct companies. One clear view.</h1>
             <p>
-              Browse every provisional company record in semantic content. Each
-              profile has a stable URL and will hold its own approved facts,
-              leadership, evidence, locations, and inquiry route.
-            </p>
-          </div>
-          <div className="directory-status glass-panel">
-            <span>Portfolio status</span>
-            <strong>Verification in progress</strong>
-            <p>
-              Entity names and relationships are not presented as legally
-              approved until the Group register is validated.
+              Browse every company in the Goodman Group portfolio. Each profile
+              has a stable URL with its facts, leadership, capabilities,
+              locations, and inquiry route.
             </p>
           </div>
         </section>
@@ -61,7 +53,7 @@ export default function CompaniesPage() {
                 <span>0{index + 1}</span>
                 <h2>{sector}</h2>
                 <p>
-                  {records.length} provisional{" "}
+                  {records.length}{" "}
                   {records.length === 1 ? "record" : "records"}
                 </p>
               </header>
@@ -77,15 +69,15 @@ export default function CompaniesPage() {
             </section>
           ))}
 
-          <section className="unconfirmed-sectors glass-overlay">
-            <span>Register under review</span>
+          <section className="additional-sectors glass-overlay">
+            <span>Additional sectors</span>
             <div>
               <h2>Automotive</h2>
-              <p>Operating entities to be confirmed.</p>
+              <p>Automobiles are among Goodman Group&apos;s areas of activity.</p>
             </div>
             <div>
               <h2>Real Estate</h2>
-              <p>Operating entities to be confirmed.</p>
+              <p>Real estate is among Goodman Group&apos;s areas of activity.</p>
             </div>
           </section>
         </section>

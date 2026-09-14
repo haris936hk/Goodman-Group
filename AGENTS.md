@@ -11,33 +11,32 @@ This repository is a Next.js 16 App Router site written in TypeScript. Applicati
 - Parent/child hierarchy communicates Group relationships and provides stable company URLs.
 - Sector grouping supports portfolio discovery but must not replace or obscure individual companies.
 
-“Our Companies” is a primary navigation destination. Every approved entity must appear exactly once in canonical structured portfolio data, remain present in semantic page content, and be reachable by a normal link at a permanent `/companies/[slug]` route. Filters, spatial panels, and animated exploration are progressive enhancements, never the only discovery mechanism. Clearly separate operating companies from partners, associates, joint ventures, and brands.
+“Our Companies” is a primary navigation destination. Every entity must appear exactly once in canonical structured portfolio data, remain present in semantic page content, and be reachable by a normal link at a permanent `/companies/[slug]` route. Filters, spatial panels, and animated exploration are progressive enhancements, never the only discovery mechanism. Clearly separate operating companies from partners, associates, joint ventures, and brands.
 
-The homepage must explain the Group before promoting a subsidiary. Its intended narrative order is Group proposition, company constellation, sector exploration, verified scale, geographic presence, heritage and leadership, current activity, and audience-specific contact routing. Healthcare may be the strongest heritage story but must not be used to characterize the entire Group as a pharmaceutical manufacturer.
+The homepage must explain the Group before promoting a subsidiary. Its intended narrative order is Group proposition, company constellation, sector exploration, scale, geographic presence, heritage and leadership, current activity, and audience-specific contact routing. Healthcare may be the strongest heritage story but must not be used to characterize the entire Group as a pharmaceutical manufacturer.
 
-Company profiles share a parent shell while preserving each entity's approved logo, legal identity, content, leadership, evidence, contact route, and restrained identity accent. Required profile information includes identity and Group relationship, overview, facts, capabilities, leadership, presence, contact, and a last-reviewed date. Add sector-specific modules only when supported by content; do not render empty pharmaceutical-oriented sections for unlike businesses.
+Company profiles share a parent shell while preserving each entity's logo, legal identity, content, leadership, evidence, contact route, and restrained identity accent. Required profile information includes identity and Group relationship, overview, facts, capabilities, leadership, presence, and contact. Add sector-specific modules only when supported by content; do not render empty pharmaceutical-oriented sections for unlike businesses.
 
 ## Content Accuracy and Data Modeling
 
-Treat the existing site, filenames, logos, and asset folders as discovery inputs, not authoritative corporate records. Do not infer ownership from a logo or publish provisional relationships as facts. Legal names, relationship types, leadership, dates, locations, statistics, certifications, products, market presence, and endorsement wording require approved source data.
+Treat company records, filenames, logos, and asset folders as source material for the site. Legal names, relationship types, leadership, dates, locations, statistics, certifications, products, market presence, and endorsement wording belong in the structured company data.
 
 - Scope and date every statistic, for example employee count as of a named month and year.
 - Distinguish active operations, distribution or partner markets, signed agreements, and planned markets in both text and visuals.
-- Do not publish claims such as “nationwide,” “global presence,” “affordable access,” or “life-saving” without approval and evidence.
-- Give each record a content owner or review path and a `lastReviewed` value.
-- Do not create decorative forms. A form needs confirmed fields, submission handling, validation and error states, spam protection, privacy requirements, and an owner.
-- Use an approved geographic or industry qualifier in SEO metadata only after leadership and legal approval.
+- Keep claims such as “nationwide,” “global presence,” “affordable access,” or “life-saving” specific to the company information they describe.
+- Do not create decorative forms. A form needs defined fields, submission handling, validation and error states, spam protection, privacy requirements, and an owner.
+- Use a clear geographic or industry qualifier in SEO metadata where it helps distinguish the Group.
 
-Represent companies as typed structured records rather than embedding facts in one-off JSX. The content source must support unique slugs, legal and display names, relationship type, sector, summary, logo, locations, leadership, capabilities, contacts, optional evidence and markets, and record freshness. Prefer reusable required modules plus optional sector-specific modules. Keep metadata, canonical URLs, structured data, sitemap entries, and internal links aligned with the same source of truth.
+Represent companies as typed structured records rather than embedding facts in one-off JSX. The content source must support unique slugs, legal and display names, relationship type, sector, summary, logo, locations, leadership, capabilities, contacts, optional evidence and markets. Prefer reusable required modules plus optional sector-specific modules. Keep metadata, canonical URLs, structured data, sitemap entries, and internal links aligned with the same source of truth.
 
 ## Luminous Momentum Design Direction
 
-The approved direction is **Luminous Momentum**: an immersive, cinematic, digitally native Group experience balanced with institutional clarity and human warmth. Aim for dark atmospheric canvases, Goodman blue (`#174a87`) as the brand source, focused cyan and green (`#5fbf92`) illumination, modern oversized sans typography, layered real-world media, depth, and controlled motion.
+The design direction is **Luminous Momentum**: an immersive, cinematic, digitally native Group experience balanced with institutional clarity and human warmth. Aim for dark atmospheric canvases, Goodman blue (`#174a87`) as the brand source, focused cyan and green (`#5fbf92`) illumination, modern oversized sans typography, layered real-world media, depth, and controlled motion.
 
 - Treat gradients as environmental light, not indiscriminate rainbow text fills.
 - Use glow to communicate focus, energy, or relationships; do not apply it to everything.
 - Implement glass as named, tokenized materials with reliable contrast, limited foreground use, and opaque fallbacks. Avoid repetitive frosted-card grids.
-- Prefer real facilities, manufacturing, equipment, employees, leadership, offices, and verified activity over generic medical stock or synthetic technology imagery.
+- Prefer real facilities, manufacturing, equipment, employees, leadership, offices, and real activity over generic medical stock or synthetic technology imagery.
 - Preserve logo clarity. Obtain vector masters where possible and do not invent arbitrary company icons.
 - Use full-viewport chapters, asymmetric composition, deliberate overlap, and meaningful changes of scale. Dense facts, documents, certifications, and filters may use calmer high-contrast panels.
 - Borrow the production quality of contemporary technology marketing, not its product vocabulary. Avoid dashboards, meaningless gradient blobs, invented software metaphors, and generic SaaS feature cards.
@@ -63,7 +62,7 @@ WCAG 2.2 AA is the minimum target. Maintain semantic headings and landmarks, key
 
 Use `next/image` for suitable responsive raster media, `next/font` for controlled font delivery, crisp SVG for logos and animated diagrams, and optimized WebM or MP4 instead of large GIFs. Ambient video must be muted, non-essential, compressed, responsive where practical to reduced-motion and data-saving preferences, and backed by an effective poster.
 
-Treat performance as part of the visual quality. Reserve media dimensions, route-load expensive code, and explicitly test blur radius, layer count, pinned duration, and simultaneous animation on mid-range mobile hardware and constrained networks. Prefer HTML, CSS, SVG, and GSAP for the initial visual system; add WebGL or custom 3D only when a specific approved visualization genuinely requires it.
+Treat performance as part of the visual quality. Reserve media dimensions, route-load expensive code, and explicitly test blur radius, layer count, pinned duration, and simultaneous animation on mid-range mobile hardware and constrained networks. Prefer HTML, CSS, SVG, and GSAP for the initial visual system; add WebGL or custom 3D only when a specific visualization genuinely requires it.
 
 ## Build, Test, and Development Commands
 

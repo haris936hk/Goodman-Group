@@ -40,7 +40,6 @@ export function SiteFooter() {
       </div>
       <div className="footer-meta">
         <p>Goodman Group</p>
-        <p>Portfolio information is subject to business and legal validation.</p>
         <Link href="#top">Back to top ↑</Link>
       </div>
     </footer>

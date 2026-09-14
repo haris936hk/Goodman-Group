@@ -12,7 +12,7 @@ describe('CompanyPage', () => {
     );
   });
 
-  it('renders a truthful provisional profile', async () => {
+  it('renders a company profile', async () => {
     const page = await CompanyPage({
       params: Promise.resolve({ slug: 'goodman-laboratories' }),
     });
@@ -22,22 +22,18 @@ describe('CompanyPage', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: 'Goodman Laboratories' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText('Preview record — not publication-ready'),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText('Pending verification').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Content awaiting approval')).toHaveLength(2);
+    expect(screen.getByText('Legal identity')).toBeInTheDocument();
+    expect(screen.getByText('Goodman Laboratories (Pvt.) Ltd.')).toBeInTheDocument();
   });
 
-  it('marks provisional profiles noindex and handles unknown records', async () => {
-    const provisionalMetadata = await generateMetadata({
+  it('generates public metadata and handles unknown records', async () => {
+    const companyMetadata = await generateMetadata({
       params: Promise.resolve({ slug: 'wal-green-chemicals' }),
     });
-    expect(provisionalMetadata).toMatchObject({
+    expect(companyMetadata).toMatchObject({
       title: 'Wal Green Chemicals',
-      robots: { index: false, follow: true },
+      description: 'A chemicals business. Syed Talib Hussain Hashmi is its CEO since 2021.',
     });
-    expect(provisionalMetadata.alternates).toBeUndefined();
 
     await expect(
       generateMetadata({ params: Promise.resolve({ slug: 'unknown' }) }),

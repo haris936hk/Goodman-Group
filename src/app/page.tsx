@@ -7,7 +7,6 @@ import {
   FileCheck2,
   MapPin,
   Network,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import Image from "next/image";
@@ -22,12 +21,12 @@ import { companies, sectors } from "@/data/companies";
 const presenceStates = [
   {
     label: "Active operation",
-    copy: "A verified operating location with an effective date.",
+    copy: "An operating location with an effective date.",
     className: "state-active",
   },
   {
     label: "Partner market",
-    copy: "A market served through an approved commercial partner.",
+    copy: "A market served through a commercial partner.",
     className: "state-partner",
   },
   {
@@ -94,11 +93,6 @@ export default function Home() {
                   Discover the Group <ArrowRight aria-hidden="true" />
                 </Link>
               </div>
-              <p className="content-notice" data-hero-support>
-                <ShieldCheck aria-hidden="true" />
-                Portfolio relationships shown in this preview remain subject to
-                business and legal verification.
-              </p>
             </div>
 
             <div className="hero-system" aria-label="Goodman Group portfolio system">
@@ -154,7 +148,7 @@ export default function Home() {
                 </div>
                 <p>
                   Sector context helps visitors explore. Permanent company
-                  profiles make every approved entity findable, accountable,
+                  profiles make every entity findable and accountable,
                   and directly reachable.
                 </p>
               </header>
@@ -170,7 +164,7 @@ export default function Home() {
                 </Link>
               </div>
 
-              <div className="company-grid" aria-label="Provisional company portfolio">
+              <div className="company-grid" aria-label="Company portfolio">
                 {companies.map((company) => (
                   <div key={company.slug} data-reveal>
                     <CompanyCard company={company} />
@@ -236,8 +230,8 @@ export default function Home() {
                 </p>
                 <h2>Big claims need sharp context.</h2>
                 <p>
-                  Scale only earns trust when every figure is verified, scoped,
-                  dated, and connected to evidence.
+                  Scale is most useful when every figure is scoped, dated, and
+                  connected to evidence.
                 </p>
               </div>
 
@@ -245,8 +239,8 @@ export default function Home() {
                 <article className="proof-rule" data-reveal>
                   <span>01</span>
                   <FileCheck2 aria-hidden="true" />
-                  <h3>Verified</h3>
-                  <p>Approved records, licences, documents, and named sources.</p>
+                  <h3>Documented</h3>
+                  <p>Records, licences, documents, and named sources.</p>
                 </article>
                 <article className="proof-rule" data-reveal>
                   <span>02</span>
@@ -258,7 +252,7 @@ export default function Home() {
                   <span>03</span>
                   <Clock3 aria-hidden="true" />
                   <h3>Dated</h3>
-                  <p>Every changing record carries a clear effective or review date.</p>
+                  <p>Every changing record carries a clear effective date.</p>
                 </article>
               </div>
             </div>
@@ -287,9 +281,8 @@ export default function Home() {
                   >
                     <title id="presence-map-title">Market status visualization</title>
                     <desc id="presence-map-description">
-                      A conceptual route demonstrating distinct map markers for
-                      active, partner, agreement-stage, and planned markets. No
-                      geographic claim is made by this preview.
+                      A market status illustration using distinct markers for
+                      active, partner, agreement-stage, and planned markets.
                     </desc>
                     <path
                       className="map-route map-route-muted"
@@ -323,7 +316,7 @@ export default function Home() {
                     <MapPin aria-hidden="true" />
                     <span>
                       Status-aware geography
-                      <small>Conceptual preview—not market data</small>
+                      <small>Active, partner, agreement-stage, and planned markets</small>
                     </span>
                   </div>
                 </div>
@@ -353,12 +346,9 @@ export default function Home() {
                   leadership journey spanning more than three decades in
                   pharmaceutical manufacturing.
                 </p>
-                <span className="verification-label">
-                  <ShieldCheck aria-hidden="true" /> Content verification in progress
-                </span>
               </div>
 
-              <ol className="timeline-preview" aria-label="History content framework">
+              <ol className="timeline" aria-label="Group history">
                 <li data-reveal>
                   <span>Origin</span>
                   <div>
@@ -401,7 +391,7 @@ export default function Home() {
                   <h2>A Group understood through what it does next.</h2>
                 </div>
                 <p>
-                  A future editorial feed will surface approved launches,
+                  A future editorial feed will surface launches,
                   investments, partnerships, and company milestones without
                   inventing activity to fill a layout.
                 </p>
@@ -415,7 +405,7 @@ export default function Home() {
                   </div>
                   <div className="activity-copy">
                     <span>Editorial framework</span>
-                    <h3>Verified updates will become part of the Group story.</h3>
+                    <h3>Updates will become part of the Group story.</h3>
                     <p>
                       Each item will identify its company, publication date,
                       content owner, and source.
@@ -458,17 +448,8 @@ export default function Home() {
                       <h3>{title}</h3>
                       <p>{copy}</p>
                     </div>
-                    <small>Route pending approval</small>
                   </article>
                 ))}
-              </div>
-
-              <div className="connect-note glass-overlay" data-reveal>
-                <ShieldCheck aria-hidden="true" />
-                <p>
-                  Contact forms will be activated only with confirmed owners,
-                  endpoints, privacy language, validation, and spam protection.
-                </p>
               </div>
             </div>
           </section>

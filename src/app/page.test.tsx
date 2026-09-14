@@ -17,7 +17,7 @@ describe('Home', () => {
     expect(container.querySelector('main')).toBeInTheDocument();
   });
 
-  it('exposes every provisional company through a normal profile link', () => {
+  it('exposes every company through a normal profile link', () => {
     render(<Home />);
 
     expect(

@@ -23,14 +23,16 @@ describe('CompaniesPage', () => {
     }
   });
 
-  it('does not invent companies for unconfirmed sectors', () => {
+  it('includes the additional portfolio sectors', () => {
     render(<CompaniesPage />);
 
     expect(screen.getByRole('heading', { name: 'Automotive' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Real Estate' })).toBeInTheDocument();
     expect(
-      screen.getAllByText('Operating entities to be confirmed.'),
-    ).toHaveLength(2);
+      screen.getByText("Automobiles are among Goodman Group's areas of activity."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Real estate is among Goodman Group's areas of activity."),
+    ).toBeInTheDocument();
   });
 });
-

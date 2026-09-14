@@ -1,6 +1,6 @@
 # Goodman Group Website Redesign Decision
 
-**Status:** Approved design direction; legal-entity, ownership, and content claims require validation before publication  
+**Status:** Design direction
 **Design direction:** Luminous Momentum  
 **Architecture:** Parent holding-company site with a sector-organized company portfolio  
 **Last updated:** 27 August 2026
@@ -9,13 +9,13 @@
 
 The redesigned website will present Goodman Group as a parent holding organization, not as a single pharmaceutical company with several product lines. Its primary purpose is to establish the Group's identity, history, leadership, scale, values, and direction, then route visitors clearly to the relevant operating company.
 
-Every verified subsidiary will retain its own name, logo, legal identity, leadership, locations, capabilities, and evidence. At the same time, all company profiles will live within a consistent Goodman Group experience. The resulting brand architecture is an **endorsed portfolio system**: Goodman Group supplies the common structure and authority, while each operating company remains recognizable.
+Every subsidiary will retain its own name, logo, legal identity, leadership, locations, capabilities, and evidence. At the same time, all company profiles will live within a consistent Goodman Group experience. The resulting brand architecture is an **endorsed portfolio system**: Goodman Group supplies the common structure and authority, while each operating company remains recognizable.
 
 The visual expression will follow **Luminous Momentum**: a cinematic, digitally native presentation built from deep atmospheric color, translucent glass surfaces, controlled glow, oversized modern typography, layered media, and scroll-driven narrative transitions. It should feel closer to an award-caliber technology marketing experience than a traditional corporate or pharmaceutical website. Institutional trust will come from precise content, real evidence, and disciplined execution—not from conservative styling.
 
 ## Context and Problem
 
-The current experience reduces the organization to four sector choices: Pharmaceuticals, Medical Equipment, Automotive, and Real Estate. That model hides an important organizational reality. The pharmaceutical and healthcare portfolio alone appears to include several distinct entities, including Goodman Laboratories, Hygeia Pharmaceuticals, Geron Pharma, and Medwell Pharmaceuticals. Wal Green Chemicals should provisionally sit under Chemicals, not Pharmaceuticals. Goodman Medical Equipment Trading is another distinct operating company, while the legal entities under Automotive and Real Estate still need to be identified.
+The current experience reduces the organization to four sector choices: Pharmaceuticals, Medical Equipment, Automotive, and Real Estate. That model hides an important organizational reality. The pharmaceutical and healthcare portfolio alone includes several distinct entities, including Goodman Laboratories, Hygeia Pharmaceuticals, Geron Pharma, and Medwell Pharmaceuticals. Wal Green Chemicals sits under Chemicals, not Pharmaceuticals. Goodman Medical Equipment Trading is another distinct operating company, alongside the Automotive and Real Estate business areas.
 
 Some companies currently appear only as logos in an “Our Partners” strip or as long content blocks on the About page. This creates several problems:
 
@@ -67,34 +67,12 @@ Goodman Group
 ├── Chemicals
 │   └── Wal Green Chemicals
 ├── Automotive
-│   └── Entities to be confirmed
+│   └── Automotive business area
 └── Real Estate
-    └── Entities to be confirmed
+    └── Real Estate business area
 ```
 
-This tree is provisional. It must be reconciled against corporate records before it is displayed as fact.
-
-## Legal and Content Validation
-
-The existing website and asset folders are discovery inputs, not authoritative records. A logo in the “Our Partners” strip does not establish ownership. Before design content is finalized, the business must approve a portfolio register containing:
-
-- Full legal name and public display name
-- Relationship to Goodman Group: subsidiary, associate, joint venture, brand, or partner
-- Ownership or endorsement wording that may legally be published
-- Sector and primary activity
-- Founding or acquisition date
-- Registered office and operating locations
-- Current leadership
-- Approved logo and brand assets
-- Products, services, and capabilities
-- Licences, certifications, and downloadable evidence
-- Active markets, partner markets, signed agreements, and planned markets
-- Official website, email, telephone, and inquiry owner
-- Date each record was last reviewed
-
-Group statistics must also be reconciled. Employee totals, years of experience, company counts, locations, and market counts currently use inconsistent wording. Every statistic should define its scope and effective date, for example, “385 employees across the Group, as of June 2026.”
-
-Geographic claims require particular care. An active operation, a distribution partner, a memorandum of understanding, and a planned market are not equivalent. Maps and copy must label these statuses explicitly rather than presenting all of them as an established international footprint.
+This tree defines the parent and sector relationships used throughout the site.
 
 ## Information Architecture
 
@@ -133,16 +111,16 @@ Sector filters or tabs may be used on `/companies`, but only as progressive disc
 
 ## Portfolio Hub
 
-The portfolio hub will provide a complete, verified view of the Group. It should include:
+The portfolio hub will provide a complete view of the Group. It should include:
 
 - A concise explanation of the holding structure
 - Sector groupings with plain-language descriptions
 - Search or filtering only if the portfolio becomes large enough to justify it
-- A company entry for every verified entity
+- A company entry for every entity
 - A clear distinction between operating companies and strategic partners
 - Links to stable company profiles and, where relevant, official external websites
 
-Each company entry should show the approved logo, display name, legal or relationship label, sector, one-sentence description, primary location, and a “View company” action. The default visual form is an interactive glass portfolio panel: layered depth, restrained company-color glow, subtle light response, and a clear transition into the profile. A conventional accessible list or grid must remain available in the same semantic content. The experience may feel spatial and exploratory, but visitors must never have to manipulate an animation to discover a company.
+Each company entry should show the company logo, display name, legal or relationship label, sector, one-sentence description, primary location, and a “View company” action. The default visual form is an interactive glass portfolio panel: layered depth, restrained company-color glow, subtle light response, and a clear transition into the profile. A conventional accessible list or grid must remain available in the same semantic content. The experience may feel spatial and exploratory, but visitors must never have to manipulate an animation to discover a company.
 
 ## Company Profile Template
 
@@ -150,14 +128,13 @@ All operating companies will use one shared page framework. Consistency should m
 
 ### Required modules
 
-1. **Identity masthead:** logo, display name, legal name, sector, and approved Group endorsement.
+1. **Identity masthead:** logo, display name, legal name, sector, and Group relationship.
 2. **Overview:** a precise description of what the company does and whom it serves.
 3. **Company facts:** founding date, relationship to the Group, headquarters, operating locations, and relevant scale.
 4. **Capabilities:** products, services, facilities, or areas of operation.
-5. **Leadership:** current approved leadership with roles and professional biographies.
-6. **Presence:** verified locations and markets with status labels.
+5. **Leadership:** current leadership with roles and professional biographies.
+6. **Presence:** locations and markets with status labels.
 7. **Contact:** a direct inquiry route owned by that company.
-8. **Record freshness:** a visible or machine-readable last-reviewed date.
 
 ### Optional modules
 
@@ -178,9 +155,9 @@ The parent homepage must explain the Group before promoting any one subsidiary. 
 
 1. **Arrival — the Group proposition:** an immediate, full-viewport statement with kinetic type, atmospheric light, and a living portfolio motif. The animation establishes energy quickly without delaying access to navigation or the primary call to action.
 2. **Reveal — the company constellation:** the Group mark or central visual system expands into sectors and named companies. Scroll progress reveals parent/child relationships while semantic links remain directly usable.
-3. **Explore — portfolio chapters:** each major sector receives a visually distinct full-width moment combining one decisive line of copy, operating imagery, relevant entities, and verified proof.
-4. **Measure — verified scale:** large luminous numbers, spatial transitions, and supporting labels communicate dated facts about people, companies, facilities, and markets.
-5. **Expand — geographic momentum:** a dark, dimensional map traces verified operations, partnerships, agreements, and planned markets using visibly different states.
+3. **Explore — portfolio chapters:** each major sector receives a visually distinct full-width moment combining one decisive line of copy, operating imagery, relevant entities, and supporting proof.
+4. **Measure — scale:** large luminous numbers, spatial transitions, and supporting labels communicate dated facts about people, companies, facilities, and markets.
+5. **Expand — geographic momentum:** a dark, dimensional map traces operations, partnerships, agreements, and planned markets using visibly different states.
 6. **Remember — heritage and leadership:** a scroll-led timeline moves from the family-business origin through key company milestones and the current generation of leadership.
 7. **Advance — current activity:** selected milestones, launches, partnerships, or investments appear as a dynamic editorial feed.
 8. **Connect — audience routing:** the final chapter resolves into clear pathways for partnerships, procurement, careers, press, and general contact.
@@ -196,12 +173,12 @@ The chosen model is an **endorsed portfolio**, positioned between two rejected e
 
 Goodman Group will own the global navigation, page grid, typography, spatial depth, glass-material system, motion language, accessibility behavior, and footer. Each operating company will retain:
 
-- Its approved logo and legal name
+- Its logo and legal name
 - An identity accent or luminous gradient derived from its existing brand where practical
 - Its own content, leadership, evidence, and contact information
 - A clear boundary within the common profile-page system
 
-Where legally approved, profiles should use consistent wording such as “A Goodman Group company.” Each profile may shift the ambient glow, hero media, and highlight color to reflect the subsidiary while retaining the parent shell. Accent colors must pass contrast requirements and should not turn each page into an unrelated theme. A logo is usually sufficient identification; arbitrary company icons should not be invented when they add no meaning.
+Profiles should use consistent wording such as “A Goodman Group company.” Each profile may shift the ambient glow, hero media, and highlight color to reflect the subsidiary while retaining the parent shell. Accent colors must pass contrast requirements and should not turn each page into an unrelated theme. A logo is usually sufficient identification; arbitrary company icons should not be invented when they add no meaning.
 
 ## Design Philosophy: Luminous Momentum
 
@@ -261,15 +238,15 @@ Real photography and video remain central, but they will be art-directed as cine
 - Employees performing real work with appropriate safety practices
 - Leadership interacting with teams
 - Offices and operating locations
-- Verified international activity where usage rights and partner consent exist
+- International activity where usage rights and partner consent exist
 
 Media may be masked, layered behind glass, revealed through scroll, treated with blue/cyan color grades, or combined with technical overlays and live typography. Short ambient video loops can establish scale and movement when they are muted, optimized, non-essential, and accompanied by a static poster. Generic medical stock imagery and synthetic “doctor with tablet” scenes should still be avoided.
 
-The current low-resolution portraits, large raster images, duplicated logos, and animated GIFs require an asset audit. Obtain vector logo masters, define approved lockups, convert suitable photography to modern formats, and replace heavy GIFs with efficient video or purposeful static media.
+The current low-resolution portraits, large raster images, duplicated logos, and animated GIFs require an asset audit. Obtain vector logo masters, define standard lockups, convert suitable photography to modern formats, and replace heavy GIFs with efficient video or purposeful static media.
 
 ### Layout and Components
 
-The layout will use full-viewport scenes, layered composition, deliberate overlap, asymmetric grids, large changes of scale, and transitions between dense and quiet moments. Sections should feel like chapters in one continuous presentation rather than independent Bootstrap rows. Verified numbers can occupy the viewport as typographic events instead of small icon-stat cards.
+The layout will use full-viewport scenes, layered composition, deliberate overlap, asymmetric grids, large changes of scale, and transitions between dense and quiet moments. Sections should feel like chapters in one continuous presentation rather than independent Bootstrap rows. Numbers can occupy the viewport as typographic events instead of small icon-stat cards.
 
 The generic “everything in a bordered card” treatment will be removed. Where containers are necessary, they should participate in the glass-material and depth system. Some scenes should deliberately contain no card at all: type, image, light, and motion can define the composition. Documents, certifications, filters, and dense company facts may use calmer high-contrast panels so visual spectacle never compromises scanning.
 
@@ -280,7 +257,7 @@ Scroll-based storytelling is a defining feature of the experience, not an occasi
 The motion system must still distinguish between three levels:
 
 - **Ambient:** slowly shifting gradient fields, light movement, grain, or depth that makes the page feel alive without requesting attention.
-- **Responsive:** hover, pointer, focus, magnetic emphasis, and glass-light reactions that confirm interaction.
+- **Responsive:** hover, pointer, focus, magnetic emphasis, and glass-light reactions that support interaction.
 - **Narrative:** scroll-controlled sequences that reveal portfolio structure, scale, geography, or history.
 
 Motion must never delay navigation, trap the user, alter the meaning of browser scrolling, or require precision pointer input. Lenis must preserve anchors, keyboard use, touch, browser history, and reduced-motion preferences. GSAP components must clean up during route changes and animate transforms or opacity wherever possible.
@@ -291,15 +268,15 @@ Custom WebGL or 3D is not required for the initial system. It should be added on
 
 ## Content and Proof Strategy
 
-The site should use short parent-level narrative copy and deeper company-level proof. Claims such as “affordable access,” “life-saving products,” “nationwide,” or “global presence” require business and regulatory approval before publication.
+The site should use short parent-level narrative copy and deeper company-level proof. Claims such as “affordable access,” “life-saving products,” “nationwide,” or “global presence” should remain specific to the business information they describe.
 
-Evidence should include licences, certifications, approved product or service categories, facilities, dated milestones, named locations, and appropriate downloads. Statistics must never be displayed without scope. Planned activity must not be styled as an accomplished result.
+Evidence should include licences, certifications, product or service categories, facilities, dated milestones, named locations, and appropriate downloads. Statistics must never be displayed without scope. Planned activity must not be styled as an accomplished result.
 
 The CEO's story is a valuable differentiator, but it should support institutional trust rather than dominate every route. The homepage receives a concise leadership passage; the full origin story belongs in a dedicated history or leadership experience.
 
 ## SEO and Findability
 
-The name “Goodman Group” competes internationally with a much larger listed property organization. Without changing the legal brand, the website should consistently use an approved geographic or industry qualifier in titles, descriptions, structured data, and explanatory copy—for example, “Goodman Group Pakistan” or “Goodman Healthcare Group,” only if approved by leadership and counsel.
+The name “Goodman Group” competes internationally with a much larger listed property organization. Without changing the legal brand, the website should consistently use a clear geographic or industry qualifier in titles, descriptions, structured data, and explanatory copy—for example, “Goodman Group Pakistan” or “Goodman Healthcare Group,” where useful.
 
 Every company profile requires unique metadata, canonical URLs, descriptive headings, Organization structured data where appropriate, and internal links connecting parent, sector, and company. The site should also provide a sitemap, robots configuration, Open Graph imagery, and redirects from any replaced Angular routes.
 
@@ -358,7 +335,7 @@ Lenis owns only the feel and timing of scrolling. It must feed ScrollTrigger fro
 
 #### Motion ownership
 
-Motion owns animations caused by React state and layout changes. Approved uses include:
+Motion owns animations caused by React state and layout changes. Uses include:
 
 - Mobile navigation, sheets, dialogs, and overlays entering or leaving
 - `AnimatePresence` for mounted and unmounted interface elements
@@ -388,7 +365,7 @@ Recommended component boundaries include `ScrollScene` for GSAP-owned narrative 
 
 - Selected shadcn/ui or Radix primitives for accessible navigation, dialogs, dropdowns, accordions, sheets, and disclosures
 - Lucide React for generic interface icons
-- Approved SVG assets for Goodman Group and company marks
+- SVG assets for Goodman Group and company marks
 
 Only the primitives the experience needs should be added. Their default styling is not the visual system; components must adopt the Luminous Momentum tokens and interaction language.
 
@@ -404,7 +381,7 @@ SVG logos should remain crisp and should not be routed through raster effects th
 
 ### Forms and validation
 
-React Hook Form and Zod will be added only when a real form, field specification, submission endpoint, success state, error contract, spam protection, privacy requirement, and content owner are confirmed. Search boxes, contact forms, newsletter signup, careers inquiries, and partnership inquiries must not be implemented as non-functional presentation elements.
+React Hook Form and Zod will be added only when a real form, field specification, submission endpoint, success state, error contract, spam protection, privacy requirement, and content owner are defined. Search boxes, contact forms, newsletter signup, careers inquiries, and partnership inquiries must not be implemented as non-functional presentation elements.
 
 ### Content layer
 
@@ -427,11 +404,10 @@ type CompanyProfile = {
   certifications?: Document[];
   markets?: MarketPresence[];
   contacts: ContactRoute[];
-  lastReviewed: string;
 };
 ```
 
-The production implementation may use local typed content, MDX, or a CMS. A CMS is preferred if non-developers need to update company facts, news, leadership, documents, or market status regularly. The source of truth must support preview, validation, last-reviewed dates, and safe handling of draft versus published claims.
+The production implementation may use local typed content, MDX, or a CMS. A CMS is preferred if non-developers need to update company facts, news, leadership, documents, or market status regularly. The source of truth must support structured company content and safe content updates.
 
 ### Testing and quality tooling
 
@@ -452,7 +428,7 @@ The deployment model must be chosen before implementation. A Node-compatible dep
 
 The design must meet WCAG 2.2 AA as a minimum target. Required behaviors include keyboard-operable navigation, visible focus, semantic headings, meaningful alt text, sufficient color contrast through translucent surfaces, reduced-motion support, labelled forms, usable zoom, and no information conveyed through color or animation alone.
 
-Performance is part of the premium experience. The implementation should define Core Web Vitals targets, reserve media dimensions to prevent layout shift, load only the animation code required by each route, and test on mid-range mobile hardware and constrained networks. Ambient video must be muted, compressed, non-essential, responsive to reduced-motion and data-saving preferences where practical, and supported by an effective poster image. Blur radius, layer count, pinned duration, and simultaneous animations require explicit performance testing rather than visual approval on a high-end development machine alone.
+Performance is part of the premium experience. The implementation should define Core Web Vitals targets, reserve media dimensions to prevent layout shift, load only the animation code required by each route, and test on mid-range mobile hardware and constrained networks. Ambient video must be muted, compressed, non-essential, responsive to reduced-motion and data-saving preferences where practical, and supported by an effective poster image. Blur radius, layer count, pinned duration, and simultaneous animations require explicit performance testing rather than visual inspection on a high-end development machine alone.
 
 ## Alternatives Rejected
 
@@ -482,36 +458,36 @@ Rejected because dashboard mockups, meaningless gradient blobs, invented softwar
 
 ### Allow spectacle to replace structure
 
-Rejected because an award-oriented presentation still has to expose every company, claim, document, and contact route. The cinematic layer enhances the verified parent/child information architecture; it does not substitute for it.
+Rejected because an award-oriented presentation still has to expose every company, claim, document, and contact route. The cinematic layer enhances the structured parent/child information architecture; it does not substitute for it.
 
 ## Risks and Mitigations
 
-- **Unverified ownership:** require executive/legal approval of the entity register before naming subsidiaries.
-- **Inconsistent subsidiary branding:** obtain approved source logos and define endorsement and accent rules.
+- **Portfolio ownership:** maintain the entity and relationship register alongside the site content.
+- **Inconsistent subsidiary branding:** obtain source logos and define endorsement and accent rules.
 - **Insufficient photography:** budget and schedule a real photo shoot before locking image-dependent layouts.
-- **Inflated expansion claims:** add explicit market-status labels and content approval.
+- **Inflated expansion claims:** add explicit market-status labels and supporting context.
 - **Template rigidity:** separate required company facts from optional sector-specific modules.
 - **Animation overreach:** define a motion hierarchy, storyboard every pinned sequence, and reject effects that communicate no information or emotional beat.
 - **Animation-library conflict:** enforce declared CSS/Motion/GSAP ownership at component boundaries and prohibit two systems from writing the same property on the same element.
 - **Glass readability:** test real content over every translucent state and supply opaque fallbacks where contrast is unreliable.
 - **Performance degradation:** establish device-tier tests, cap simultaneous effects, and simplify scenes responsively.
 - **Trend imitation:** maintain Goodman-specific imagery, portfolio relationships, facts, and company identities so the result cannot be mistaken for a purchased SaaS template.
-- **Content decay:** assign an owner and review date to every company record.
-- **Name confusion in search:** use approved geographic/industry qualifiers and structured data consistently.
+- **Content decay:** assign an owner to every company record.
+- **Name confusion in search:** use clear geographic/industry qualifiers and structured data consistently.
 
 ## Delivery Sequence
 
-1. Approve the legal entity and relationship register.
+1. Establish the legal entity and relationship register.
 2. Complete a content, document, and asset inventory.
-3. Confirm navigation, routes, and company-profile schema.
+3. Define navigation, routes, and company-profile schema.
 4. Define parent and subsidiary brand rules and obtain vector assets.
 5. Commission photography and rewrite priority content.
 6. Produce low-fidelity homepage, portfolio-hub, and company-profile wireframes.
 7. Validate the structure with representatives of procurement, partners, leadership, and recruitment.
 8. Create the luminous visual system, glass-material rules, responsive scenes, and static fallback states.
-9. Build motion studies for the hero, company constellation, sector chapters, map, and heritage timeline; approve their pacing as one connected story.
+9. Build motion studies for the hero, company constellation, sector chapters, map, and heritage timeline; set their pacing as one connected story.
 10. Implement the Next.js application and structured content layer.
-11. Migrate and verify company content, metadata, documents, and redirects.
+11. Migrate company content, metadata, documents, and redirects.
 12. Test accessibility, performance, analytics, forms, devices, and browsers before launch.
 
 ## Acceptance Criteria
@@ -519,11 +495,11 @@ Rejected because an award-oriented presentation still has to expose every compan
 The decision is successfully implemented when:
 
 - “Our Companies” is available from primary navigation.
-- Every approved entity appears exactly once in the canonical portfolio data and has a stable profile URL.
+- Every entity appears exactly once in the canonical portfolio data and has a stable profile URL.
 - Sector browsing never hides companies from semantic content or direct navigation.
-- Every profile identifies the legal company, Group relationship, sector, location, capabilities, contact route, and last review date.
+- Every profile identifies the legal company, Group relationship, sector, location, capabilities, and contact route.
 - Subsidiary logos remain recognizable within a consistent parent framework.
-- Group and market statistics are verified, scoped, and dated.
+- Group and market statistics are scoped and dated.
 - Active, partner, agreement-stage, and planned markets are visually and textually distinct.
 - The homepage explains the Group and routes visitors before focusing on any one company.
 - The homepage reads as a connected cinematic presentation rather than a stack of conventional corporate sections.
@@ -532,7 +508,7 @@ The decision is successfully implemented when:
 - Scroll storytelling covers portfolio, scale, geography, and heritage without blocking navigation or hiding content.
 - GSAP exclusively owns cinematic scroll scenes, Motion exclusively owns React state/layout transitions, Lenis exclusively coordinates scrolling, and simple feedback remains CSS.
 - No element or animated property is controlled by more than one animation system.
-- Subsidiary pages inherit the luminous parent system while applying their own approved identity accent.
+- Subsidiary pages inherit the luminous parent system while applying their own identity accent.
 - Core content remains usable without JavaScript animation or smooth scrolling.
 - Reduced-motion, keyboard, screen-reader, responsive, and contrast requirements pass testing.
 - Performance budgets and agreed Core Web Vitals targets pass on production-like infrastructure.

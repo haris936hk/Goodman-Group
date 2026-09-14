@@ -23,7 +23,6 @@ export function CompanyCard({ company, compact = false }: CompanyCardProps) {
       >
         <div className="company-card-topline">
           <span>{company.sector}</span>
-          <span className="verification-dot">Verification pending</span>
         </div>
         <div className="company-logo-frame glass-opaque">
           <Image

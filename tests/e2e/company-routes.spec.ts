@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 import { companies } from '../../src/data/companies';
 
 test.describe('company directory', () => {
-  test('exposes every provisional record as one normal link', async ({ page }) => {
+  test('exposes every company record as one normal link', async ({ page }) => {
     await page.goto('/companies');
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
@@ -57,7 +57,7 @@ test.describe('company directory', () => {
 });
 
 for (const company of companies) {
-  test(`renders the ${company.displayName} preview record`, async ({ page }) => {
+  test(`renders the ${company.displayName} company profile`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const response = await page.goto(`/companies/${company.slug}`);
 
@@ -68,11 +68,6 @@ for (const company of companies) {
     await expect(
       page.getByRole('img', { name: `${company.displayName} logo` }),
     ).toBeVisible();
-    await expect(page.getByText(company.relationshipLabel)).toBeVisible();
-    await expect(page.getByText(company.lastReviewed)).toBeVisible();
-    await expect(
-      page.getByText('Preview record — not publication-ready'),
-    ).toBeVisible();
     for (const heading of [
       'Capabilities',
       'Leadership',
@@ -81,11 +76,6 @@ for (const company of companies) {
     ]) {
       await expect(page.getByRole('heading', { name: heading })).toBeVisible();
     }
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-      'content',
-      'noindex, follow',
-    );
-
     const widths = await page.evaluate(() => ({
       viewport: window.innerWidth,
       content: document.documentElement.scrollWidth,
@@ -117,7 +107,6 @@ test('keeps a profile usable across the required viewport sizes', async ({
       const selectors = [
         '.company-profile-logo',
         '.company-masthead h1',
-        '.company-publication-status',
         '.company-summary',
         '.record-panel',
         '.profile-modules',
@@ -167,11 +156,11 @@ test('returns the branded 404 for an unknown company slug', async ({ page }) => 
   await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
 });
 
-test('keeps provisional profiles out of the sitemap', async ({ request }) => {
+test('includes every company profile in the sitemap', async ({ request }) => {
   const response = await request.get('/sitemap.xml');
   const xml = await response.text();
 
   for (const company of companies) {
-    expect(xml).not.toContain(`/companies/${company.slug}`);
+    expect(xml).toContain(`/companies/${company.slug}`);
   }
 });

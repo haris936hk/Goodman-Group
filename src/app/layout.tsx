@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Goodman Group | Information and company-record preview",
+    default: "Goodman Group | Companies and capabilities",
     template: "%s | Goodman Group",
   },
   description:
-    "A Goodman Group information and company-record preview. Corporate relationships and company details remain subject to business and legal approval.",
+    "Goodman Group brings together companies and capabilities across healthcare, medical equipment, chemicals, and other business areas.",
 };
 
 export const viewport: Viewport = {
