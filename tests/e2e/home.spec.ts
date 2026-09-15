@@ -67,6 +67,55 @@ test.describe('home page', () => {
     await expect(hero.locator('.system-caption')).toBeVisible();
   });
 
+  test('keeps the Goodman core concentric with both orbit rings', async ({
+    page,
+  }) => {
+    for (const viewport of [
+      { width: 1280, height: 720 },
+      { width: 390, height: 844 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto('/');
+
+      await expect
+        .poll(
+          () =>
+            page.locator('.group-core').evaluate((element) =>
+              getComputedStyle(element).opacity,
+            ),
+          { timeout: 5000 },
+        )
+        .toBe('1');
+
+      const centers = await page.evaluate(() => {
+        const centerOf = (selector: string) => {
+          const rect = document
+            .querySelector(selector)
+            ?.getBoundingClientRect();
+
+          return rect
+            ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+            : null;
+        };
+
+        return {
+          outer: centerOf('.orbit-outer'),
+          inner: centerOf('.orbit-inner'),
+          core: centerOf('.group-core'),
+        };
+      });
+
+      expect(centers.outer).not.toBeNull();
+      expect(centers.inner).not.toBeNull();
+      expect(centers.core).not.toBeNull();
+
+      for (const center of [centers.inner, centers.core]) {
+        expect(Math.abs(center!.x - centers.outer!.x)).toBeLessThanOrEqual(1);
+        expect(Math.abs(center!.y - centers.outer!.y)).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
   test('has no automatically detectable accessibility violations', async ({
     page,
   }) => {
