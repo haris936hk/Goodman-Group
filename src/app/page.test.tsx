@@ -17,6 +17,37 @@ describe('Home', () => {
     expect(container.querySelector('main')).toBeInTheDocument();
   });
 
+  it('focuses the hero on the centered Goodman Group visual system', () => {
+    const { container } = render(<Home />);
+    const hero = container.querySelector('[data-hero]');
+
+    expect(hero).toBeInTheDocument();
+    expect(hero?.querySelector('.hero-copy')).not.toBeInTheDocument();
+    expect(hero?.querySelector('.hero-scroll-cue')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Goodman Group' }),
+    ).toHaveClass('sr-only');
+    expect(hero).not.toHaveTextContent('Health · Wellness · Progress');
+    expect(hero).not.toHaveTextContent('Distinct strengths.');
+    expect(hero).not.toHaveTextContent('Shared momentum.');
+    expect(hero).not.toHaveTextContent('Scroll to explore');
+  });
+
+  it('preserves the complete hero visual system', () => {
+    const { container } = render(<Home />);
+    const hero = container.querySelector('[data-hero]');
+
+    expect(hero?.querySelector('.hero-glow')).toBeInTheDocument();
+    expect(hero?.querySelectorAll('[data-orbit-ring]')).toHaveLength(2);
+    expect(hero?.querySelectorAll('.orbit-node')).toHaveLength(3);
+    expect(hero?.querySelectorAll('.orbit-pip')).toHaveLength(3);
+    expect(hero?.querySelector('.group-core')).toBeInTheDocument();
+    expect(hero?.querySelector('.system-caption')).toBeInTheDocument();
+    expect(screen.getByText('One clear structure')).toBeInTheDocument();
+    expect(screen.getByText('Many distinct company identities')).toBeInTheDocument();
+  });
+
   it('exposes every company through a normal profile link', () => {
     render(<Home />);
 

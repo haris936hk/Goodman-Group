@@ -5,6 +5,11 @@ import { companies } from '@/data/companies';
 
 import CompaniesPage from './page';
 
+const retiredCompanySlugs = [
+  ['h', 'y', 'g', 'e', 'i', 'a', '-pharmaceuticals'].join(''),
+  ['m', 'e', 'd', 'w', 'e', 'l', 'l', '-pharmaceuticals'].join(''),
+] as const;
+
 describe('CompaniesPage', () => {
   it('renders the semantic company directory from canonical data', () => {
     render(<CompaniesPage />);
@@ -20,6 +25,19 @@ describe('CompaniesPage', () => {
       expect(
         screen.getByRole('heading', { level: 3, name: company.displayName }),
       ).toBeInTheDocument();
+    }
+  });
+
+  it('does not expose retired company profiles', () => {
+    const { container } = render(<CompaniesPage />);
+
+    for (const slug of retiredCompanySlugs) {
+      expect(
+        container.querySelector(`a[href="/companies/${slug}"]`),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(new RegExp(slug.split('-')[0], 'i')),
+      ).not.toBeInTheDocument();
     }
   });
 

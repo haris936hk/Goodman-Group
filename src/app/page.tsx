@@ -1,6 +1,4 @@
 import {
-  ArrowDown,
-  ArrowRight,
   ArrowUpRight,
   Check,
   Clock3,
@@ -65,35 +63,7 @@ export default function Home() {
 
         <main id="main-content" tabIndex={-1}>
           <section className="hero section-shell" id="about" data-hero>
-            <div className="hero-copy">
-              <p className="eyebrow" data-hero-kicker>
-                <span>Goodman Group</span>
-                <span className="eyebrow-rule" aria-hidden="true" />
-                <span>Health · Wellness · Progress</span>
-              </p>
-              <h1>
-                <span className="hero-line-mask">
-                  <span data-hero-line>Distinct strengths.</span>
-                </span>
-                <span className="hero-line-mask hero-line-accent">
-                  <span data-hero-line>Shared momentum.</span>
-                </span>
-              </h1>
-              <p className="hero-intro" data-hero-support>
-                Goodman Group is a diversified conglomerate driving innovation
-                and excellence across healthcare, medical equipment, chemicals,
-                laboratory services, real estate, restaurants, and automobiles.
-              </p>
-              <div className="hero-actions" data-hero-support>
-                <Link className="button button-primary" href="#portfolio">
-                  Explore the portfolio
-                  <ArrowDown aria-hidden="true" />
-                </Link>
-                <Link className="text-link" href="#group-story">
-                  Discover the Group <ArrowRight aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
+            <h1 className="sr-only">Goodman Group</h1>
 
             <div className="hero-system" aria-label="Goodman Group portfolio system">
               <div className="hero-glow" aria-hidden="true" />
@@ -131,11 +101,6 @@ export default function Home() {
                   <small>Many distinct company identities</small>
                 </span>
               </div>
-            </div>
-
-            <div className="hero-scroll-cue" aria-hidden="true">
-              <span>Scroll to explore</span>
-              <i />
             </div>
           </section>
 

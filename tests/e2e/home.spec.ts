@@ -42,7 +42,29 @@ test.describe('home page', () => {
   test('renders its primary content', async ({ page }) => {
     await expect(page.locator('main')).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Goodman Group' }),
+    ).toHaveCount(1);
     await expect(page).toHaveTitle(/.+/);
+  });
+
+  test('centers the group visual and removes only the left-side hero content', async ({
+    page,
+  }) => {
+    const hero = page.locator('[data-hero]');
+
+    await expect(hero.locator('.hero-copy')).toHaveCount(0);
+    await expect(hero.locator('.hero-scroll-cue')).toHaveCount(0);
+    await expect(hero.getByText('Health · Wellness · Progress')).toHaveCount(0);
+    await expect(hero.getByText('Distinct strengths.')).toHaveCount(0);
+    await expect(hero.getByText('Shared momentum.')).toHaveCount(0);
+    await expect(hero.getByText('Scroll to explore')).toHaveCount(0);
+    await expect(hero.locator('.hero-system')).toBeVisible();
+    await expect(hero.locator('[data-orbit-ring]')).toHaveCount(2);
+    await expect(hero.locator('.orbit-node')).toHaveCount(3);
+    await expect(hero.locator('.orbit-pip')).toHaveCount(3);
+    await expect(hero.locator('.group-core')).toBeVisible();
+    await expect(hero.locator('.system-caption')).toBeVisible();
   });
 
   test('has no automatically detectable accessibility violations', async ({
@@ -89,18 +111,22 @@ test.describe('home page', () => {
             .gridTemplateColumns.split(' ').length;
         const bounds = Array.from(
           document.querySelectorAll(
-            '.site-header, .hero-copy, .hero-system, .company-grid, .proof-layout, .presence-layout, .audience-grid',
+            '.site-header, .hero-system, .company-grid, .proof-layout, .presence-layout, .audience-grid',
           ),
         ).map((element) => {
           const rect = element.getBoundingClientRect();
           return { left: rect.left, right: rect.right };
         });
+        const hero = document.querySelector('.hero')?.getBoundingClientRect();
+        const system = document.querySelector('.hero-system')?.getBoundingClientRect();
 
         return {
           companyColumns: gridColumns('.company-grid'),
           proofColumns: gridColumns('.proof-rules'),
           proofLayoutColumns: gridColumns('.proof-layout'),
           bounds,
+          heroCenter: hero ? hero.left + hero.width / 2 : null,
+          systemCenter: system ? system.left + system.width / 2 : null,
           viewport: window.innerWidth,
         };
       });
@@ -113,6 +139,9 @@ test.describe('home page', () => {
           (bound) => bound.left >= -1 && bound.right <= layout.viewport + 1,
         ),
       ).toBe(true);
+      expect(layout.heroCenter).not.toBeNull();
+      expect(layout.systemCenter).not.toBeNull();
+      expect(Math.abs(layout.heroCenter! - layout.systemCenter!)).toBeLessThanOrEqual(1);
     }
   });
 });
@@ -123,7 +152,10 @@ test.describe('home page with reduced motion', () => {
     await page.goto('/');
 
     await expect(page.locator('main')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Goodman Group' })).toHaveCount(1);
+    await expect(page.locator('[data-hero] .hero-system')).toBeVisible();
+    await expect(page.locator('[data-hero] [data-orbit-ring]')).toHaveCount(2);
+    await expect(page.locator('[data-hero] .system-caption')).toBeVisible();
   });
 
   test('stops smooth scrolling when the preference changes at runtime', async ({

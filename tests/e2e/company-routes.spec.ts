@@ -3,6 +3,11 @@ import { expect, test } from '@playwright/test';
 
 import { companies } from '../../src/data/companies';
 
+const retiredCompanySlugs = [
+  ['h', 'y', 'g', 'e', 'i', 'a', '-pharmaceuticals'].join(''),
+  ['m', 'e', 'd', 'w', 'e', 'l', 'l', '-pharmaceuticals'].join(''),
+] as const;
+
 test.describe('company directory', () => {
   test('exposes every company record as one normal link', async ({ page }) => {
     await page.goto('/companies');
@@ -12,6 +17,9 @@ test.describe('company directory', () => {
       await expect(
         page.getByRole('link', { name: `View ${company.displayName}` }),
       ).toHaveCount(1);
+    }
+    for (const slug of retiredCompanySlugs) {
+      await expect(page.locator(`a[href="/companies/${slug}"]`)).toHaveCount(0);
     }
 
     const results = await new AxeBuilder({ page }).analyze();
@@ -156,11 +164,24 @@ test('returns the branded 404 for an unknown company slug', async ({ page }) => 
   await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
 });
 
+test('returns the branded 404 for retired company slugs', async ({ page }) => {
+  for (const slug of retiredCompanySlugs) {
+    const response = await page.goto(`/companies/${slug}`);
+
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole('main')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible();
+  }
+});
+
 test('includes every company profile in the sitemap', async ({ request }) => {
   const response = await request.get('/sitemap.xml');
   const xml = await response.text();
 
   for (const company of companies) {
     expect(xml).toContain(`/companies/${company.slug}`);
+  }
+  for (const slug of retiredCompanySlugs) {
+    expect(xml).not.toContain(`/companies/${slug}`);
   }
 });

@@ -15,7 +15,7 @@ The visual expression will follow **Luminous Momentum**: a cinematic, digitally 
 
 ## Context and Problem
 
-The current experience reduces the organization to four sector choices: Pharmaceuticals, Medical Equipment, Automotive, and Real Estate. That model hides an important organizational reality. The pharmaceutical and healthcare portfolio alone includes several distinct entities, including Goodman Laboratories, Hygeia Pharmaceuticals, Geron Pharma, and Medwell Pharmaceuticals. Wal Green Chemicals sits under Chemicals, not Pharmaceuticals. Goodman Medical Equipment Trading is another distinct operating company, alongside the Automotive and Real Estate business areas.
+The current experience reduces the organization to four sector choices: Pharmaceuticals, Medical Equipment, Automotive, and Real Estate. That model hides an important organizational reality. The pharmaceutical and healthcare portfolio alone includes several distinct entities, including Goodman Laboratories and Geron Pharma. Wal Green Chemicals sits under Chemicals, not Pharmaceuticals. Goodman Medical Equipment Trading is another distinct operating company, alongside the Automotive and Real Estate business areas.
 
 Some companies currently appear only as logos in an “Our Partners” strip or as long content blocks on the About page. This creates several problems:
 
@@ -59,9 +59,7 @@ The proposed structure is:
 Goodman Group
 ├── Healthcare & Pharmaceuticals
 │   ├── Goodman Laboratories
-│   ├── Hygeia Pharmaceuticals
-│   ├── Geron Pharma
-│   └── Medwell Pharmaceuticals
+│   └── Geron Pharma
 ├── Medical Equipment
 │   └── Goodman Medical Equipment Trading
 ├── Chemicals
@@ -94,9 +92,7 @@ Contact
 ```text
 /companies
 /companies/goodman-laboratories
-/companies/hygeia-pharmaceuticals
 /companies/geron-pharma
-/companies/medwell-pharmaceuticals
 /companies/goodman-medical-equipment
 /companies/wal-green-chemicals
 

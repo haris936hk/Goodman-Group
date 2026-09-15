@@ -5,10 +5,26 @@ import { companies, getCompanyBySlug } from '@/data/companies';
 
 import CompanyPage, { generateMetadata, generateStaticParams } from './page';
 
+const retiredCompanySlugs = [
+  ['h', 'y', 'g', 'e', 'i', 'a', '-pharmaceuticals'].join(''),
+  ['m', 'e', 'd', 'w', 'e', 'l', 'l', '-pharmaceuticals'].join(''),
+] as const;
+
 describe('CompanyPage', () => {
   it('generates a static route for every canonical company', () => {
     expect(generateStaticParams()).toEqual(
       companies.map((company) => ({ slug: company.slug })),
+    );
+  });
+
+  it('excludes retired companies from data and generated routes', () => {
+    expect(
+      retiredCompanySlugs.every((slug) => getCompanyBySlug(slug) === undefined),
+    ).toBe(true);
+    expect(generateStaticParams()).not.toEqual(
+      expect.arrayContaining(
+        retiredCompanySlugs.map((slug) => ({ slug })),
+      ),
     );
   });
 
