@@ -1,0 +1,325 @@
+/* Geron Pharma: Deep violet, circular healthcare-network composition */
+.geron-page {
+  --geron-bg: #0c0817;
+  --geron-surface: #17102b;
+  --geron-surface-card: #20153d;
+  --geron-purple: #8b5cf6;
+  --geron-purple-light: #c4b5fd;
+  --geron-glow: rgba(139, 92, 246, 0.25);
+  --geron-heading: #f5f3ff;
+  --geron-body: #ddd6fe;
+  --geron-muted: #a78bfa;
+  --geron-rule: rgba(139, 92, 246, 0.2);
+
+  /* Frame token overrides */
+  --frame-fg: #f5f3ff;
+  --frame-bg: #0c0817;
+  --frame-border: rgba(139, 92, 246, 0.25);
+  --frame-badge-bg: rgba(139, 92, 246, 0.2);
+  --frame-badge-fg: #c4b5fd;
+
+  background-color: var(--geron-bg);
+  color: var(--geron-body);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: clip;
+}
+
+/* Ambient radial glow background */
+.geron-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 45rem;
+  background: radial-gradient(
+    circle at 50% 20%,
+    rgba(139, 92, 246, 0.18) 0%,
+    rgba(91, 33, 182, 0.08) 45%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.geron-hero {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 1.5rem 4.5rem;
+  border-bottom: 1px solid var(--geron-rule);
+}
+
+.geron-hero-inner {
+  max-width: 78rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.geron-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.geron-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  background: var(--geron-surface);
+  border: 1px solid var(--geron-rule);
+  color: var(--geron-purple-light);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.geron-pill-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--geron-purple);
+  box-shadow: 0 0 8px var(--geron-purple);
+}
+
+.geron-hero-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.95fr);
+  gap: 4rem;
+  align-items: center;
+}
+
+.geron-headings-area h1 {
+  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: var(--geron-heading);
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.geron-business-category {
+  display: inline-block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--geron-purple-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.geron-summary-lead {
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--geron-body);
+  max-width: 38rem;
+  margin: 0;
+}
+
+/* Circular stage and decorative orbits */
+.geron-circular-stage {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.geron-orbit-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(139, 92, 246, 0.4);
+  animation: geronOrbit 40s linear infinite;
+  pointer-events: none;
+}
+
+.geron-orbit-node {
+  position: absolute;
+  top: -0.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--geron-purple);
+  box-shadow: 0 0 12px var(--geron-purple);
+}
+
+.geron-circle-center {
+  position: relative;
+  width: 78%;
+  height: 78%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--geron-surface-card), var(--geron-surface));
+  border: 2px solid var(--geron-purple);
+  box-shadow: 0 0 35px var(--geron-glow), inset 0 0 20px rgba(139, 92, 246, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.geron-circle-center img {
+  max-width: 90%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Radial network content layout */
+.geron-network-section {
+  position: relative;
+  z-index: 1;
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 6rem;
+}
+
+.geron-section-intro {
+  text-align: center;
+  max-width: 36rem;
+  margin: 0 auto 3.5rem;
+}
+
+.geron-section-intro h2 {
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  font-weight: 700;
+  color: var(--geron-heading);
+  letter-spacing: -0.03em;
+  margin: 0 0 0.75rem;
+}
+
+.geron-section-intro p {
+  color: var(--geron-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.geron-circular-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 2rem;
+}
+
+.geron-node-card {
+  background: var(--geron-surface);
+  border: 1px solid var(--geron-rule);
+  border-radius: 1.5rem;
+  padding: 2.25rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.geron-node-card:hover {
+  border-color: var(--geron-purple);
+  transform: translateY(-2px);
+}
+
+.geron-node-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--geron-purple-light);
+  margin-bottom: 0.75rem;
+}
+
+.geron-node-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--geron-heading);
+  margin: 0 0 0.5rem;
+}
+
+.geron-node-role {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--geron-purple-light);
+  margin-bottom: 0.85rem;
+}
+
+.geron-node-card p {
+  color: var(--geron-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Accessible focus & reduced motion */
+.geron-page a:focus-visible,
+.geron-page button:focus-visible {
+  outline: 2px solid var(--geron-purple);
+  outline-offset: 3px;
+}
+
+@keyframes geronOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 960px) {
+  .geron-hero-main {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .geron-circular-stage {
+    max-width: 18rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .geron-hero {
+    padding: 2.5rem 1rem 3rem;
+  }
+  .geron-network-section {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+
+  .geron-circular-nodes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .geron-node-card {
+    padding: 1.75rem 1rem;
+  }
+  .geron-badge-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geron-orbit-ring {
+    animation: none !important;
+  }
+
+  .geron-node-card:hover {
+    transform: none !important;
+  }
+}

@@ -2,7 +2,7 @@
 
 **Status:** Design direction
 **Design direction:** Luminous Momentum  
-**Architecture:** Parent holding-company site with a sector-organized company portfolio  
+**Architecture:** Parent holding-company site with an ungrouped, bespoke company portfolio  
 **Last updated:** 27 August 2026
 
 ## Executive Summary
@@ -48,30 +48,23 @@ These users need a combination of group-level confidence and company-level speci
 
 ## Core Architecture Decision
 
-The site will use both **parent/child hierarchy** and **sector-based discovery**. These concepts solve different problems and must not be treated as alternatives:
+The site will use a **parent holding-company architecture with an ungrouped company portfolio** and a **bespoke page per company** rule.
 
-- Parent/child hierarchy communicates ownership and supplies stable URLs.
-- Sector grouping helps visitors browse and understand the portfolio.
+- The parent site communicates holding identity, governance, scale, geographic reach, and global stewardship.
+- The company portfolio is presented directly as an ungrouped index of distinct operating entities, without sector grouping or category archetypes.
+- Every company owns its information hierarchy, composition, typography, palette, media, interactions, and motion. Business category is descriptive content only and MUST NOT select a component, layout, theme, or module set.
 
-The proposed structure is:
+The portfolio structure is:
 
 ```text
 Goodman Group
-├── Healthcare & Pharmaceuticals
-│   ├── Goodman Laboratories
-│   └── Geron Pharma
-├── Medical Equipment
-│   └── Goodman Medical Equipment Trading
-├── Chemicals
-│   └── Wal Green Chemicals
-├── Automotive
-│   └── Automotive business area
-└── Real Estate
-    └── Real Estate business area
+├── Goodman Laboratories (/companies/goodman-laboratories)
+├── Geron Pharma (/companies/geron-pharma)
+├── Goodman Medical Equipment Trading (/companies/goodman-medical-equipment)
+└── Wal Green Chemicals (/companies/wal-green-chemicals)
 ```
 
-This tree defines the parent and sector relationships used throughout the site.
-
+This flat canonical company structure defines portfolio relationships throughout the site.
 ## Information Architecture
 
 The recommended primary navigation is:
@@ -87,7 +80,7 @@ Careers
 Contact
 ```
 
-“Our Companies” is a top-level destination, not a subsection of About. If the final content inventory justifies sector narrative pages, the company area can contain both views:
+“Our Companies” is a top-level destination, not a subsection of About. The company area contains the direct portfolio index and canonical company routes:
 
 ```text
 /companies
@@ -95,63 +88,50 @@ Contact
 /companies/geron-pharma
 /companies/goodman-medical-equipment
 /companies/wal-green-chemicals
-
-/businesses/healthcare-pharmaceuticals   # optional
-/businesses/medical-equipment            # optional
-/businesses/chemicals                    # optional
-/businesses/automotive                   # optional
-/businesses/real-estate                  # optional
 ```
 
-Sector filters or tabs may be used on `/companies`, but only as progressive discovery controls. Every company must remain visible in semantic page content, reachable through a normal link, and addressable through a permanent URL.
-
+Every company remains visible in semantic page content, reachable through a normal link, and addressable through a permanent URL. No sector tabs, sector pages, or archetype-based grouping are used.
 ## Portfolio Hub
 
-The portfolio hub will provide a complete view of the Group. It should include:
+The portfolio hub will provide a direct, complete view of the Group's companies. It should include:
 
 - A concise explanation of the holding structure
-- Sector groupings with plain-language descriptions
-- Search or filtering only if the portfolio becomes large enough to justify it
-- A company entry for every entity
+- An ungrouped, direct presentation of every canonical operating company
+- A company entry for every entity with normal, direct links
 - A clear distinction between operating companies and strategic partners
-- Links to stable company profiles and, where relevant, official external websites
+- Links to stable company pages and, where relevant, official external websites
 
-Each company entry should show the company logo, display name, legal or relationship label, sector, one-sentence description, primary location, and a “View company” action. The default visual form is an interactive glass portfolio panel: layered depth, restrained company-color glow, subtle light response, and a clear transition into the profile. A conventional accessible list or grid must remain available in the same semantic content. The experience may feel spatial and exploratory, but visitors must never have to manipulate an animation to discover a company.
+Each company entry presents the company logo, display name, legal or relationship label, descriptive business summary, primary locations, and a direct link. Rather than forcing entities into a uniform card grid, directory entries are individually composed rows or panels reflecting each entity's brand identity while remaining equally discoverable, semantic, and keyboard accessible. Visitors must never have to manipulate an animation to discover a company.
+## Bespoke Company Pages
 
-## Company Profile Template
+Rather than using a shared profile template or generic shell, each operating company has a dedicated, bespoke page. Every company owns its information hierarchy, composition, typography, palette, media, interactions, and motion. Business category is descriptive content only and MUST NOT select a component, layout, theme, or module set.
 
-All operating companies will use one shared page framework. Consistency should make the portfolio easier to navigate without forcing unlike businesses into identical content.
+Operating companies retain only a minimal shared Goodman Group frame (`CompanyGroupFrame`): an accessible skip link, compact Group return/navigation treatment, relationship disclosure (`A Goodman Group company`), `<main id="main-content" tabIndex={-1}>`, and a compact Group footer/return path. The frame must not supply content sections, grids, colors, typography, motion, or company-page layout.
 
-### Required modules
+### Company-Owned Direction
 
-1. **Identity masthead:** logo, display name, legal name, sector, and Group relationship.
-2. **Overview:** a precise description of what the company does and whom it serves.
-3. **Company facts:** founding date, relationship to the Group, headquarters, operating locations, and relevant scale.
-4. **Capabilities:** products, services, facilities, or areas of operation.
-5. **Leadership:** current leadership with roles and professional biographies.
-6. **Presence:** locations and markets with status labels.
-7. **Contact:** a direct inquiry route owned by that company.
+Each page is designed around verified source records and authentic brand identity:
 
-### Optional modules
+1. **Goodman Laboratories:** A light editorial laboratory composition derived from `GoodmanLabLogo.png`—white and charcoal field, focused red accents, high-contrast editorial headings, strict horizontal rules, and an upward trajectory motif. Leads with legal identity and current pharmaceutical-manufacturing capability.
+2. **Geron Pharma:** A purple, circular healthcare-network composition derived from `geronlogo.png`—deep violet field, round stages, bold condensed display treatment, and decorative orbit/radial geometry that simplifies under reduced motion.
+3. **Goodman Medical Equipment Trading:** A bright blue-and-white technical/engineering composition derived from `GG3.png`—precision grid, circular/gear geometry, strong geometric sans typography, blueprint rules, and a split UAE/Pakistan presence section.
+4. **Wal Green Chemicals:** An ivory, charcoal, and restrained green composition derived from `walgreenLogo.png`—generous whitespace, soft outlined regions, flowing line work echoing the logo swoosh, and a clean sans system centered on the script wordmark. Green is brand visual identity, not a sustainability claim.
 
-- Founding story and timeline
-- Manufacturing facilities and dosage forms
-- Licences, GMP status, certifications, and quality systems
-- Product catalogues and company-profile downloads
-- Partner network or distribution information
-- Case studies, projects, or facilities
-- Related news and career openings
-- Link to a separately maintained company website
+### Common Standards Across Bespoke Pages
 
-Pharmaceutical pages may require detailed compliance and manufacturing modules. Automotive and Real Estate pages should not display empty pharmaceutical-shaped sections merely to preserve template symmetry.
-
+While visually and structurally bespoke, every company page adheres to common standards:
+- Derives all factual assertions strictly from verified canonical company data; no invented certifications, facilities, or claims.
+- Retains permanent `/companies/[slug]` route and unique SEO metadata.
+- Complies with WCAG 2.2 AA accessibility, skip navigation, and keyboard operability.
+- Strictly respects `prefers-reduced-motion` by disabling decorative transforms and ambient motion while preserving document order and readability.
+- Follows single motion ownership rules (GSAP, Motion, CSS) with zero horizontal overflow at 320px.
 ## Parent Homepage Narrative
 
 The parent homepage must explain the Group before promoting any one subsidiary. It will behave as a sequence of connected visual chapters rather than a stack of ordinary corporate sections:
 
 1. **Arrival — the Group proposition:** an immediate, full-viewport statement with kinetic type, atmospheric light, and a living portfolio motif. The animation establishes energy quickly without delaying access to navigation or the primary call to action.
-2. **Reveal — the company constellation:** the Group mark or central visual system expands into sectors and named companies. Scroll progress reveals parent/child relationships while semantic links remain directly usable.
-3. **Explore — portfolio chapters:** each major sector receives a visually distinct full-width moment combining one decisive line of copy, operating imagery, relevant entities, and supporting proof.
+2. **Reveal — the company constellation:** the Group mark or central visual system expands into named companies. Scroll progress reveals parent/child relationships while semantic links remain directly usable.
+3. **Explore — direct company discovery:** introduces the four canonical companies directly from canonical data without category headings or sector-based grouping, providing direct routes to each bespoke company page.
 4. **Measure — scale:** large luminous numbers, spatial transitions, and supporting labels communicate dated facts about people, companies, facilities, and markets.
 5. **Expand — geographic momentum:** a dark, dimensional map traces operations, partnerships, agreements, and planned markets using visibly different states.
 6. **Remember — heritage and leadership:** a scroll-led timeline moves from the family-business origin through key company milestones and the current generation of leadership.
@@ -163,18 +143,15 @@ The homepage must not describe the entire holding company as a pharmaceutical ma
 ## Brand Architecture
 
 The chosen model is an **endorsed portfolio**, positioned between two rejected extremes:
-
-- A fully monolithic identity would erase valuable company names and sector credibility.
+- A fully monolithic identity would erase valuable company names and operating credibility.
 - Completely independent microsites would fragment the Group story, duplicate maintenance, and obscure ownership.
 
-Goodman Group will own the global navigation, page grid, typography, spatial depth, glass-material system, motion language, accessibility behavior, and footer. Each operating company will retain:
+Goodman Group owns the global navigation, parent site design system, accessibility behavior, and the minimal Group frame (`CompanyGroupFrame`) enclosing bespoke company pages. Each operating company retains:
 
-- Its logo and legal name
-- An identity accent or luminous gradient derived from its existing brand where practical
-- Its own content, leadership, evidence, and contact information
-- A clear boundary within the common profile-page system
-
-Profiles should use consistent wording such as “A Goodman Group company.” Each profile may shift the ambient glow, hero media, and highlight color to reflect the subsidiary while retaining the parent shell. Accent colors must pass contrast requirements and should not turn each page into an unrelated theme. A logo is usually sufficient identification; arbitrary company icons should not be invented when they add no meaning.
+- Complete ownership of its page structure, palette, typography, visual rhythm, and media
+- Its logo, legal name, and authentic brand identity
+- An explicit Group relationship disclosure (`A Goodman Group company`)
+- Its verified leadership, capabilities, locations, and direct contact route
 
 ## Design Philosophy: Luminous Momentum
 
@@ -191,7 +168,7 @@ Six principles govern the design:
 
 1. **Presentation is part of credibility.** Goodman should look as ambitious and contemporary as it claims to be. High production value is a strategic signal, not decoration.
 2. **The portfolio is a living system.** Companies should appear as connected but independent nodes, not a flat logo strip or four generic sector buttons.
-3. **Depth creates hierarchy.** Glass, blur, scale, light, and layering separate parent, sector, company, and evidence without relying on boxed layouts.
+3. **Depth creates hierarchy.** Glass, blur, scale, light, and layering separate parent, company, and evidence without relying on boxed layouts.
 4. **Scrolling directs the story.** Each scroll chapter intentionally reveals a relationship, milestone, capability, or change in scale. Motion supplies pacing and continuity.
 5. **Proof remains sharp.** Futuristic presentation must never blur legal names, certifications, locations, market status, documents, or contact routes.
 6. **Spectacle remains usable.** The default experience can be immersive, but it must retain semantic structure, reduced-motion behavior, readable contrast, natural input, and a complete mobile adaptation.
@@ -274,7 +251,7 @@ The CEO's story is a valuable differentiator, but it should support institutiona
 
 The name “Goodman Group” competes internationally with a much larger listed property organization. Without changing the legal brand, the website should consistently use a clear geographic or industry qualifier in titles, descriptions, structured data, and explanatory copy—for example, “Goodman Group Pakistan” or “Goodman Healthcare Group,” where useful.
 
-Every company profile requires unique metadata, canonical URLs, descriptive headings, Organization structured data where appropriate, and internal links connecting parent, sector, and company. The site should also provide a sitemap, robots configuration, Open Graph imagery, and redirects from any replaced Angular routes.
+Every company profile requires unique metadata, canonical URLs, descriptive headings, Organization structured data where appropriate, and internal links connecting parent and company. The site should also provide a sitemap, robots configuration, Open Graph imagery, and redirects from any replaced Angular routes.
 
 ## Technical Stack and Ownership
 
@@ -323,7 +300,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 #### GSAP and ScrollTrigger ownership
 
-GSAP is the cinematic director. It owns the homepage hero sequence, company constellation, full-viewport sector chapters, geographic map, numerical transitions, heritage timeline, scroll pinning, and any animation that coordinates multiple elements against one timeline. Scene components should use the supported React integration and scope animations so they revert cleanly during App Router navigation.
+GSAP is the cinematic director. It owns the homepage hero sequence, company constellation, direct company discovery chapter, geographic map, numerical transitions, heritage timeline, scroll pinning, and any animation that coordinates multiple elements against one timeline. Scene components should use the supported React integration and scope animations so they revert cleanly during App Router navigation.
 
 #### Lenis ownership
 
@@ -389,7 +366,7 @@ type CompanyProfile = {
   displayName: string;
   legalName: string;
   relationship: 'subsidiary' | 'associate' | 'joint-venture' | 'brand';
-  sector: string;
+  business: string;
   summary: string;
   logo: ImageAsset;
   accent?: string;
@@ -462,7 +439,7 @@ Rejected because an award-oriented presentation still has to expose every compan
 - **Inconsistent subsidiary branding:** obtain source logos and define endorsement and accent rules.
 - **Insufficient photography:** budget and schedule a real photo shoot before locking image-dependent layouts.
 - **Inflated expansion claims:** add explicit market-status labels and supporting context.
-- **Template rigidity:** separate required company facts from optional sector-specific modules.
+- **Template rigidity:** provide bespoke company pages where each entity owns its layout and hierarchy rather than forcing all businesses into one generic profile template.
 - **Animation overreach:** define a motion hierarchy, storyboard every pinned sequence, and reject effects that communicate no information or emotional beat.
 - **Animation-library conflict:** enforce declared CSS/Motion/GSAP ownership at component boundaries and prohibit two systems from writing the same property on the same element.
 - **Glass readability:** test real content over every translucent state and supply opaque fallbacks where contrast is unreliable.
@@ -481,7 +458,7 @@ Rejected because an award-oriented presentation still has to expose every compan
 6. Produce low-fidelity homepage, portfolio-hub, and company-profile wireframes.
 7. Validate the structure with representatives of procurement, partners, leadership, and recruitment.
 8. Create the luminous visual system, glass-material rules, responsive scenes, and static fallback states.
-9. Build motion studies for the hero, company constellation, sector chapters, map, and heritage timeline; set their pacing as one connected story.
+9. Build motion studies for the hero, company constellation, direct company discovery, map, and heritage timeline; set their pacing as one connected story.
 10. Implement the Next.js application and structured content layer.
 11. Migrate company content, metadata, documents, and redirects.
 12. Test accessibility, performance, analytics, forms, devices, and browsers before launch.
@@ -492,23 +469,23 @@ The decision is successfully implemented when:
 
 - “Our Companies” is available from primary navigation.
 - Every entity appears exactly once in the canonical portfolio data and has a stable profile URL.
-- Sector browsing never hides companies from semantic content or direct navigation.
-- Every profile identifies the legal company, Group relationship, sector, location, capabilities, and contact route.
+- Portfolio browsing presents all canonical companies directly without sector grouping or category archetypes.
+- Every company page identifies the legal company, Group relationship, business capability, location, and contact route.
 - Subsidiary logos remain recognizable within a consistent parent framework.
 - Group and market statistics are scoped and dated.
 - Active, partner, agreement-stage, and planned markets are visually and textually distinct.
 - The homepage explains the Group and routes visitors before focusing on any one company.
 - The homepage reads as a connected cinematic presentation rather than a stack of conventional corporate sections.
 - Dark atmospheric canvases, glass surfaces, blur, and glow follow a repeatable tokenized material system rather than one-off effects.
-- The company constellation and sector chapters communicate real portfolio relationships and link directly to every entity.
+- The company constellation and company discovery chapter communicate real portfolio relationships and link directly to every entity.
 - Scroll storytelling covers portfolio, scale, geography, and heritage without blocking navigation or hiding content.
 - GSAP exclusively owns cinematic scroll scenes, Motion exclusively owns React state/layout transitions, Lenis exclusively coordinates scrolling, and simple feedback remains CSS.
 - No element or animated property is controlled by more than one animation system.
-- Subsidiary pages inherit the luminous parent system while applying their own identity accent.
+- Subsidiary pages feature bespoke art direction and layout while remaining grounded by the minimal Goodman Group frame.
 - Core content remains usable without JavaScript animation or smooth scrolling.
 - Reduced-motion, keyboard, screen-reader, responsive, and contrast requirements pass testing.
 - Performance budgets and agreed Core Web Vitals targets pass on production-like infrastructure.
-- Content owners can update company facts without creating new one-off page layouts.
+- Content owners can update company facts within their verified records and bespoke company page implementations.
 
 ## Reference Pattern
 

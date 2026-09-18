@@ -1,14 +1,9 @@
-export type Sector =
-  | "Healthcare & Pharmaceuticals"
-  | "Medical Equipment"
-  | "Chemicals";
-
 export type CompanyProfile = {
   slug: string;
   displayName: string;
   legalName: string | null;
   relationship: string | null;
-  sector: Sector;
+  business: string;
   summary: string;
   logo: string;
   logoWidth: number;
@@ -31,7 +26,7 @@ export const companies = [
     displayName: "Goodman Laboratories",
     legalName: "Goodman Laboratories (Pvt.) Ltd.",
     relationship: null,
-    sector: "Healthcare & Pharmaceuticals",
+    business: "Pharmaceutical manufacturing",
     summary:
       "A pharmaceutical manufacturing company. Syed Talib Hussain Hashmi is its CEO since 2012.",
     logo: "/assets/logos/GoodmanLabLogo.png",
@@ -55,7 +50,7 @@ export const companies = [
     displayName: "Geron Pharma",
     legalName: "Geron Pharma Pvt. Ltd.",
     relationship: null,
-    sector: "Healthcare & Pharmaceuticals",
+    business: "Pharmaceuticals",
     summary:
       "A pharmaceutical company. Syed Talib Hussain Hashmi is its CEO since 2019.",
     logo: "/assets/logos/geronlogo.png",
@@ -79,7 +74,7 @@ export const companies = [
     displayName: "Goodman Medical Equipment Trading",
     legalName: null,
     relationship: null,
-    sector: "Medical Equipment",
+    business: "Medical equipment trading",
     summary:
       "A medical equipment trading operation in the United Arab Emirates and Pakistan. Syed Talib Hussain Hashmi is its director from July 2024.",
     logo: "/assets/logos/GG3.png",
@@ -103,7 +98,7 @@ export const companies = [
     displayName: "Wal Green Chemicals",
     legalName: "Wal Green Chemical Pvt. Ltd.",
     relationship: null,
-    sector: "Chemicals",
+    business: "Chemicals",
     summary:
       "A chemicals business. Syed Talib Hussain Hashmi is its CEO since 2021.",
     logo: "/assets/logos/walgreenLogo.png",
@@ -123,40 +118,6 @@ export const companies = [
     contacts: [],
   },
 ] as const satisfies readonly CompanyProfile[];
-
-export const sectors = [
-  {
-    name: "Healthcare & Pharmaceuticals",
-    index: "01",
-    description:
-      "The Group's healthcare areas include medical billing, pharmaceuticals, and laboratory services.",
-  },
-  {
-    name: "Medical Equipment",
-    index: "02",
-    description:
-      "The Group deals in medical equipment, medical devices, and surgical equipment.",
-  },
-  {
-    name: "Chemicals",
-    index: "03",
-    description:
-      "Chemicals are listed among Goodman Group's areas of activity.",
-  },
-  {
-    name: "Automotive",
-    index: "04",
-    description:
-      "Automobiles are among Goodman Group's areas of activity.",
-  },
-  {
-    name: "Real Estate",
-    index: "05",
-    description:
-      "Real estate is among Goodman Group's areas of activity.",
-  },
-] as const;
-
 export function getCompanyBySlug(slug: string) {
   return companies.find((company) => company.slug === slug);
 }

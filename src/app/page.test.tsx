@@ -48,15 +48,26 @@ describe('Home', () => {
     expect(screen.getByText('Many distinct company identities')).toBeInTheDocument();
   });
 
-  it('exposes every company through a normal profile link', () => {
+  it('exposes every company through direct discoverability without sector grouping', () => {
     render(<Home />);
 
     expect(
-      screen.getByRole('link', { name: 'View Goodman Laboratories' }),
-    ).toHaveAttribute('href', '/companies/goodman-laboratories');
+      screen.queryByRole('heading', { name: 'Different sectors. No false sameness.' }),
+    ).not.toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: 'View Wal Green Chemicals' }),
-    ).toHaveAttribute('href', '/companies/wal-green-chemicals');
+      screen.getByRole('heading', { name: 'Four operating companies. No false sameness.' }),
+    ).toBeInTheDocument();
+
+    for (const company of [
+      { name: 'Goodman Laboratories', slug: 'goodman-laboratories' },
+      { name: 'Geron Pharma', slug: 'geron-pharma' },
+      { name: 'Goodman Medical Equipment Trading', slug: 'goodman-medical-equipment' },
+      { name: 'Wal Green Chemicals', slug: 'wal-green-chemicals' },
+    ]) {
+      const links = screen.getAllByRole('link', { name: `View ${company.name}` });
+      expect(links.length).toBeGreaterThanOrEqual(1);
+      expect(links[0]).toHaveAttribute('href', `/companies/${company.slug}`);
+    }
   });
 
   it('opens and closes the accessible mobile navigation', async () => {

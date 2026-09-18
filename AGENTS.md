@@ -6,17 +6,13 @@ This repository is a Next.js 16 App Router site written in TypeScript. Applicati
 
 ## Product and Information Architecture
 
-`DESIGN_DECISION.md` is the source of truth. The site presents Goodman Group as a parent holding organization with an endorsed portfolio of distinct operating companies, not as one pharmaceutical company with several product lines. Preserve both organizing models:
+`DESIGN_DECISION.md` is the source of truth. The site presents Goodman Group as a parent holding organization with an endorsed portfolio of distinct operating companies, not as one pharmaceutical company with several product lines.
 
-- Parent/child hierarchy communicates Group relationships and provides stable company URLs.
-- Sector grouping supports portfolio discovery but must not replace or obscure individual companies.
+“Our Companies” is a primary navigation destination. Every entity must appear exactly once in canonical structured portfolio data, remain present in semantic page content, and be reachable by a normal link at a permanent `/companies/[slug]` route. Company discovery is direct and ungrouped; sector or category archetypes must not group or obscure individual companies. Clearly separate operating companies from partners, associates, joint ventures, and brands.
 
-“Our Companies” is a primary navigation destination. Every entity must appear exactly once in canonical structured portfolio data, remain present in semantic page content, and be reachable by a normal link at a permanent `/companies/[slug]` route. Filters, spatial panels, and animated exploration are progressive enhancements, never the only discovery mechanism. Clearly separate operating companies from partners, associates, joint ventures, and brands.
+The homepage must explain the Group before promoting a subsidiary. Its intended narrative order is Group proposition, company constellation, direct company discovery, scale, geographic presence, heritage and leadership, current activity, and audience-specific contact routing. Healthcare may be the strongest heritage story but must not be used to characterize the entire Group as a pharmaceutical manufacturer.
 
-The homepage must explain the Group before promoting a subsidiary. Its intended narrative order is Group proposition, company constellation, sector exploration, scale, geographic presence, heritage and leadership, current activity, and audience-specific contact routing. Healthcare may be the strongest heritage story but must not be used to characterize the entire Group as a pharmaceutical manufacturer.
-
-Company profiles share a parent shell while preserving each entity's logo, legal identity, content, leadership, evidence, contact route, and restrained identity accent. Required profile information includes identity and Group relationship, overview, facts, capabilities, leadership, presence, and contact. Add sector-specific modules only when supported by content; do not render empty pharmaceutical-oriented sections for unlike businesses.
-
+Company pages retain only a minimal shared Goodman Group frame (`CompanyGroupFrame`): an accessible skip link, compact Group return/navigation treatment, relationship disclosure (`A Goodman Group company`), `<main id="main-content" tabIndex={-1}>`, and a compact Group footer/return path. The frame must not supply content sections, grids, colors, typography, motion, or company-page layout. Each operating company has a bespoke implementation owning its information hierarchy, composition, typography, palette, media, interactions, and motion derived from its verified record and brand identity. Business category is descriptive content only and MUST NOT select a component, layout, theme, or module set. Add company modules only when supported by verified content; do not render empty pharmaceutical-oriented sections for unlike businesses.
 ## Content Accuracy and Data Modeling
 
 Treat company records, filenames, logos, and asset folders as source material for the site. Legal names, relationship types, leadership, dates, locations, statistics, certifications, products, market presence, and endorsement wording belong in the structured company data.
@@ -27,7 +23,7 @@ Treat company records, filenames, logos, and asset folders as source material fo
 - Do not create decorative forms. A form needs defined fields, submission handling, validation and error states, spam protection, privacy requirements, and an owner.
 - Use a clear geographic or industry qualifier in SEO metadata where it helps distinguish the Group.
 
-Represent companies as typed structured records rather than embedding facts in one-off JSX. The content source must support unique slugs, legal and display names, relationship type, sector, summary, logo, locations, leadership, capabilities, contacts, optional evidence and markets. Prefer reusable required modules plus optional sector-specific modules. Keep metadata, canonical URLs, structured data, sitemap entries, and internal links aligned with the same source of truth.
+Represent companies as typed structured records rather than embedding facts in one-off JSX. The content source must support unique slugs, legal and display names, relationship type, business description, summary, logo, locations, leadership, capabilities, contacts, optional evidence and markets. Bespoke company pages render verified content through route-specific implementations. Keep metadata, canonical URLs, structured data, sitemap entries, and internal links aligned with the same source of truth.
 
 ## Luminous Momentum Design Direction
 

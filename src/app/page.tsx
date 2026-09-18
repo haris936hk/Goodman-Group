@@ -14,7 +14,7 @@ import { CompanyCard } from "@/components/company-card";
 import { ScrollExperience } from "@/components/scroll-experience";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { companies, sectors } from "@/data/companies";
+import { companies } from "@/data/companies";
 
 const presenceStates = [
   {
@@ -112,9 +112,9 @@ export default function Home() {
                   <h2>A portfolio you can actually navigate.</h2>
                 </div>
                 <p>
-                  Sector context helps visitors explore. Permanent company
-                  profiles make every entity findable and accountable,
-                  and directly reachable.
+                  Direct company discovery makes every entity findable,
+                  accountable, and individually art-directed with permanent
+                  access to its verified facts and leadership.
                 </p>
               </header>
 
@@ -139,45 +139,53 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="chapter sector-chapter" id="group-story">
+          <section className="chapter company-focus-chapter" id="group-story">
             <div className="section-shell">
               <header className="chapter-heading chapter-heading-wide" data-reveal>
                 <div>
                   <p className="chapter-index">02 / Explore</p>
-                  <h2>Different sectors. No false sameness.</h2>
+                  <h2>Four operating companies. No false sameness.</h2>
                 </div>
                 <p>
-                  Each sector gets the context it needs while remaining part of
-                  one unmistakable Group experience.
+                  Each company receives a bespoke page reflecting its legal identity,
+                  leadership, capabilities, and authentic brand character.
                 </p>
               </header>
 
-              <div className="sector-stage">
-                <div className="sector-visual" data-reveal>
-                  <div className="sector-image-wrap">
+              <div className="company-focus-stage">
+                <div className="company-focus-visual" data-reveal>
+                  <div className="company-focus-image-wrap">
                     <Image
                       src="/assets/logos/hero2.png"
-                      alt="Illustrated healthcare manufacturing environment"
+                      alt="Goodman Group operations and manufacturing environment"
                       fill
                       sizes="(max-width: 900px) 100vw, 48vw"
                     />
                     <div className="image-wash" aria-hidden="true" />
                   </div>
-                  <div className="sector-visual-label glass-panel">
-                    <span>Goodman Group areas of activity</span>
+                  <div className="company-focus-visual-label glass-panel">
+                    <span>Goodman Group portfolio</span>
                     <strong>
-                      Healthcare, equipment, chemicals and laboratory services
+                      Four distinct companies with bespoke destinations
                     </strong>
                   </div>
                 </div>
 
-                <ol className="sector-list">
-                  {sectors.map((sector) => (
-                    <li key={sector.name} data-reveal>
-                      <span className="sector-number">{sector.index}</span>
-                      <div>
-                        <h3>{sector.name}</h3>
-                        <p>{sector.description}</p>
+                <ol className="company-focus-list">
+                  {companies.map((company, index) => (
+                    <li key={company.slug} data-reveal>
+                      <span className="company-focus-number">0{index + 1}</span>
+                      <div className="company-focus-body">
+                        <h3>{company.displayName}</h3>
+                        <p>{company.summary}</p>
+                        <Link
+                          href={`/companies/${company.slug}`}
+                          className="company-focus-link"
+                          aria-label={`View ${company.displayName}`}
+                        >
+                          <span>View {company.displayName}</span>
+                          <ArrowUpRight aria-hidden="true" className="w-4 h-4" />
+                        </Link>
                       </div>
                     </li>
                   ))}

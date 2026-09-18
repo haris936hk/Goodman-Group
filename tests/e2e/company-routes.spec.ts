@@ -8,6 +8,33 @@ const retiredCompanySlugs = [
   ['m', 'e', 'd', 'w', 'e', 'l', 'l', '-pharmaceuticals'].join(''),
 ] as const;
 
+const companyRouteExpectations = [
+  {
+    slug: 'goodman-laboratories',
+    displayName: 'Goodman Laboratories',
+    verifiedFact: 'CEO since 2012',
+    pageLandmarkHeading: 'Pharmaceutical Manufacturing',
+  },
+  {
+    slug: 'geron-pharma',
+    displayName: 'Geron Pharma',
+    verifiedFact: 'CEO since 2019',
+    pageLandmarkHeading: 'Company Structure & Activity',
+  },
+  {
+    slug: 'goodman-medical-equipment',
+    displayName: 'Goodman Medical Equipment Trading',
+    verifiedFact: 'United Arab Emirates',
+    pageLandmarkHeading: 'Dual-Region Trading Presence',
+  },
+  {
+    slug: 'wal-green-chemicals',
+    displayName: 'Wal Green Chemicals',
+    verifiedFact: 'CEO since 2021',
+    pageLandmarkHeading: 'Corporate Profile & Governance',
+  },
+] as const;
+
 test.describe('company directory', () => {
   test('exposes every company record as one normal link', async ({ page }) => {
     await page.goto('/companies');
@@ -44,103 +71,66 @@ test.describe('company directory', () => {
     }
   });
 
-  test('uses the audited directory grid states', async ({ page }) => {
-    for (const state of [
-      { width: 641, columns: 1 },
-      { width: 768, columns: 2 },
-      { width: 1440, columns: 4 },
-    ]) {
-      await page.setViewportSize({ width: state.width, height: 900 });
-      await page.goto('/companies');
+  test('renders individually composed directory panels without sector grouping', async ({
+    page,
+  }) => {
+    await page.goto('/companies');
 
-      const columns = await page
-        .locator('.company-grid-directory')
-        .first()
-        .evaluate((element) =>
-          getComputedStyle(element).gridTemplateColumns.split(' ').length,
-        );
-      expect(columns).toBe(state.columns);
-    }
+    const panels = page.locator('.directory-company-panel');
+    await expect(panels).toHaveCount(companies.length);
+
+    await expect(page.getByRole('heading', { name: 'Automotive' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Real Estate' })).toHaveCount(0);
+    await expect(page.getByText('Additional sectors')).toHaveCount(0);
   });
 });
 
-for (const company of companies) {
-  test(`renders the ${company.displayName} company profile`, async ({ page }) => {
+for (const company of companyRouteExpectations) {
+  test(`renders bespoke page for ${company.displayName}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    const response = await page.goto(`/companies/${company.slug}`);
 
+    // Test at desktop 1440
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const response = await page.goto(`/companies/${company.slug}`);
     expect(response?.status()).toBe(200);
+
+    // Company heading & logo
     await expect(
       page.getByRole('heading', { level: 1, name: company.displayName }),
     ).toBeVisible();
     await expect(
       page.getByRole('img', { name: `${company.displayName} logo` }),
     ).toBeVisible();
-    for (const heading of [
-      'Capabilities',
-      'Leadership',
-      'Evidence',
-      'Contact route',
-    ]) {
-      await expect(page.getByRole('heading', { name: heading })).toBeVisible();
-    }
-    const widths = await page.evaluate(() => ({
+
+    // Minimal Group return controls and relationship disclosure
+    await expect(page.getByRole('link', { name: 'All companies' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Goodman Group' }).first()).toBeVisible();
+    await expect(page.getByText('A Goodman Group company').first()).toBeVisible();
+
+    // Observable verified fact and page-specific landmark/heading
+    await expect(page.getByText(company.verifiedFact).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: company.pageLandmarkHeading })).toBeVisible();
+
+    // Verify desktop viewport has no horizontal overflow
+    const desktopWidths = await page.evaluate(() => ({
       viewport: window.innerWidth,
       content: document.documentElement.scrollWidth,
     }));
-    expect(widths.content).toBeLessThanOrEqual(widths.viewport);
+    expect(desktopWidths.content).toBeLessThanOrEqual(desktopWidths.viewport);
 
+    // Verify mobile 320px viewport has no horizontal overflow
+    await page.setViewportSize({ width: 320, height: 568 });
+    const mobileWidths = await page.evaluate(() => ({
+      viewport: window.innerWidth,
+      content: document.documentElement.scrollWidth,
+    }));
+    expect(mobileWidths.content).toBeLessThanOrEqual(mobileWidths.viewport);
+
+    // Accessibility check
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 }
-
-test('keeps a profile usable across the required viewport sizes', async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-
-  for (const viewport of [
-    { width: 320, height: 568 },
-    { width: 641, height: 900 },
-    { width: 768, height: 1024 },
-    { width: 1081, height: 800 },
-    { width: 1180, height: 900 },
-    { width: 1440, height: 900 },
-  ]) {
-    await page.setViewportSize(viewport);
-    await page.goto('/companies/goodman-laboratories');
-
-    const layout = await page.evaluate(() => {
-      const selectors = [
-        '.company-profile-logo',
-        '.company-masthead h1',
-        '.company-summary',
-        '.record-panel',
-        '.profile-modules',
-      ];
-      const elements = selectors.flatMap((selector) =>
-        Array.from(document.querySelectorAll(selector)),
-      );
-      const bounds = elements.map((element) => {
-        const rect = element.getBoundingClientRect();
-        return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
-      });
-
-      return { bounds, viewport: window.innerWidth };
-    });
-
-    expect(
-      layout.bounds.every(
-        (bound) =>
-          bound.left >= -1 &&
-          bound.right <= layout.viewport + 1 &&
-          bound.top >= 0 &&
-          bound.bottom > bound.top,
-      ),
-    ).toBe(true);
-  }
-});
 
 test('supports keyboard skip and directory navigation', async ({ page }) => {
   await page.goto('/companies/goodman-laboratories');
@@ -150,7 +140,7 @@ test('supports keyboard skip and directory navigation', async ({ page }) => {
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
 
-  const allCompanies = page.getByRole('link', { name: 'All companies' });
+  const allCompanies = page.getByRole('link', { name: 'All companies' }).first();
   await allCompanies.focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/companies$/);

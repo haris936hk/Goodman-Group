@@ -22,7 +22,7 @@ export function CompanyCard({ company, compact = false }: CompanyCardProps) {
         aria-label={`View ${company.displayName}`}
       >
         <div className="company-card-topline">
-          <span>{company.sector}</span>
+          <span>{company.business}</span>
         </div>
         <div className="company-logo-frame glass-opaque">
           <Image

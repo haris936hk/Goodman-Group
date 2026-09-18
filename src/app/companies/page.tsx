@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { ArrowLeft, Network } from "lucide-react";
+import type { CSSProperties } from "react";
+import { ArrowLeft, ArrowUpRight, Network } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-import { CompanyCard } from "@/components/company-card";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { companies } from "@/data/companies";
@@ -10,10 +11,8 @@ import { companies } from "@/data/companies";
 export const metadata: Metadata = {
   title: "Our Companies",
   description:
-    "Browse Goodman Group companies and capabilities by sector.",
+    "Browse Goodman Group companies and capabilities through direct portfolio discovery.",
 };
-
-const groupedCompanies = Map.groupBy(companies, (company) => company.sector);
 
 export default function CompaniesPage() {
   return (
@@ -33,9 +32,9 @@ export default function CompaniesPage() {
             </p>
             <h1>Distinct companies. One clear view.</h1>
             <p>
-              Browse every company in the Goodman Group portfolio. Each profile
-              has a stable URL with its facts, leadership, capabilities,
-              locations, and inquiry route.
+              Browse every company in the Goodman Group portfolio. Each company
+              has a bespoke destination with its verified facts, leadership,
+              capabilities, and direct inquiry route.
             </p>
           </div>
         </section>
@@ -47,39 +46,61 @@ export default function CompaniesPage() {
           <h2 id="directory-title" className="sr-only">
             Company directory
           </h2>
-          {[...groupedCompanies.entries()].map(([sector, records], index) => (
-            <section className="directory-sector" key={sector}>
-              <header>
-                <span>0{index + 1}</span>
-                <h2>{sector}</h2>
-                <p>
-                  {records.length}{" "}
-                  {records.length === 1 ? "record" : "records"}
-                </p>
-              </header>
-              <div
-                className={`company-grid company-grid-directory${
-                  records.length === 1 ? " company-grid-single" : ""
-                }`}
-              >
-                {records.map((company) => (
-                  <CompanyCard key={company.slug} company={company} compact />
-                ))}
-              </div>
-            </section>
-          ))}
 
-          <section className="additional-sectors glass-overlay">
-            <span>Additional sectors</span>
-            <div>
-              <h2>Automotive</h2>
-              <p>Automobiles are among Goodman Group&apos;s areas of activity.</p>
-            </div>
-            <div>
-              <h2>Real Estate</h2>
-              <p>Real estate is among Goodman Group&apos;s areas of activity.</p>
-            </div>
-          </section>
+          <ul className="company-directory-list">
+            {companies.map((company, index) => (
+              <li
+                key={company.slug}
+                className="directory-company-panel glass-panel"
+                style={{ "--company-accent": company.accent } as CSSProperties}
+              >
+                <div className="directory-panel-brand">
+                  <span className="directory-panel-index">0{index + 1}</span>
+                  <div className="directory-panel-logo glass-opaque">
+                    <Image
+                      src={company.logo}
+                      alt={`${company.displayName} logo`}
+                      width={company.logoWidth}
+                      height={company.logoHeight}
+                      sizes="(max-width: 640px) 180px, 220px"
+                    />
+                  </div>
+                </div>
+
+                <div className="directory-panel-content">
+                  <div className="directory-panel-header">
+                    <span className="directory-panel-business">
+                      {company.business}
+                    </span>
+                    <h3>{company.displayName}</h3>
+                    {company.legalName ? (
+                      <span className="directory-panel-legal">
+                        {company.legalName}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="directory-panel-summary">{company.summary}</p>
+
+                  {company.locations.length > 0 ? (
+                    <p className="directory-panel-locations">
+                      <strong>Locations:</strong> {company.locations.join(", ")}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="directory-panel-action">
+                  <Link
+                    href={`/companies/${company.slug}`}
+                    className="directory-view-link"
+                    aria-label={`View ${company.displayName}`}
+                  >
+                    <span>View {company.displayName}</span>
+                    <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
         </section>
       </main>
       <SiteFooter />

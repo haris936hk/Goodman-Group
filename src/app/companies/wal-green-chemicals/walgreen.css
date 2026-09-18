@@ -1,0 +1,243 @@
+/* Wal Green Chemicals: Ivory, charcoal, and restrained green composition */
+.wal-green-page {
+  --wg-ivory: #faf8f5;
+  --wg-surface: #ffffff;
+  --wg-charcoal: #1e2421;
+  --wg-heading: #141916;
+  --wg-body: #3b4440;
+  --wg-muted: #647069;
+  --wg-green: #236c4b;
+  --wg-green-light: #5fbf92;
+  --wg-green-tint: rgba(95, 191, 146, 0.12);
+  --wg-border: #e6e4df;
+  --wg-border-soft: #eeece7;
+
+  /* Frame token overrides */
+  --frame-fg: #1e2421;
+  --frame-bg: #faf8f5;
+  --frame-border: #e6e4df;
+  --frame-badge-bg: rgba(95, 191, 146, 0.15);
+  --frame-badge-fg: #236c4b;
+
+  background-color: var(--wg-ivory);
+  color: var(--wg-body);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  line-height: 1.65;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+.wg-hero {
+  padding: 4.5rem 1.5rem 5rem;
+  border-bottom: 1px solid var(--wg-border);
+  position: relative;
+  background: radial-gradient(circle at 10% 20%, rgba(95, 191, 146, 0.08), transparent 40%);
+}
+
+.wg-hero-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+}
+
+.wg-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--wg-border-soft);
+  margin-bottom: 3.5rem;
+  font-size: 0.8125rem;
+  color: var(--wg-muted);
+}
+
+.wg-legal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--wg-charcoal);
+}
+
+.wg-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+  gap: 4.5rem;
+  align-items: center;
+}
+
+.wg-copy-area h1 {
+  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--wg-heading);
+  margin: 0 0 1.25rem;
+}
+
+.wg-brand-descriptor {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--wg-green);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.5rem;
+}
+
+.wg-summary-lead {
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  color: var(--wg-body);
+  line-height: 1.6;
+  max-width: 38rem;
+  margin: 0;
+}
+
+/* Script Wordmark & Swoosh Stage */
+.wg-logo-stage {
+  background: var(--wg-surface);
+  border: 1px solid var(--wg-border);
+  border-radius: 1.5rem;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+}
+
+.wg-logo-stage img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.wg-swoosh-line {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  margin-top: 1.5rem;
+}
+
+/* Spacious Outlined Content Regions */
+.wg-body-sections {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+}
+
+.wg-region-card {
+  background: var(--wg-surface);
+  border: 1px solid var(--wg-border);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.03);
+}
+
+.wg-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--wg-border-soft);
+}
+
+.wg-card-header h2 {
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--wg-heading);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.wg-card-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wg-green);
+}
+
+.wg-two-col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 2.5rem;
+}
+
+.wg-detail-block h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--wg-heading);
+  margin: 0 0 0.5rem;
+}
+
+.wg-detail-role {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--wg-green);
+  margin-bottom: 0.75rem;
+}
+
+.wg-detail-block p {
+  color: var(--wg-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Focus and motion */
+.wal-green-page a:focus-visible,
+.wal-green-page button:focus-visible {
+  outline: 2px solid var(--wg-green);
+  outline-offset: 3px;
+}
+
+@media (max-width: 960px) {
+  .wg-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .wg-hero {
+    padding: 3rem 1rem 3.5rem;
+  }
+
+  .wg-body-sections {
+    padding: 3rem 1rem 4rem;
+    gap: 3rem;
+  }
+
+  .wg-two-col-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wg-region-card {
+    padding: 1.75rem 1rem;
+    border-radius: 1rem;
+  }
+
+  .wg-logo-stage {
+    padding: 2rem 1rem;
+  }
+  .wg-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wal-green-page * {
+    transition: none !important;
+  }
+}

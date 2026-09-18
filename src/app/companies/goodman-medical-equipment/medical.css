@@ -1,0 +1,316 @@
+/* Goodman Medical Equipment Trading: Technical blueprint & engineering composition */
+.medical-equipment-page {
+  --med-bg: #07172b;
+  --med-surface: #0e2440;
+  --med-surface-elevated: #153459;
+  --med-blueprint-grid: rgba(0, 162, 255, 0.08);
+  --med-blue-bright: #00a2ff;
+  --med-cyan: #38bdf8;
+  --med-line: rgba(0, 162, 255, 0.22);
+  --med-line-strong: rgba(0, 162, 255, 0.45);
+  --med-heading: #f0f9ff;
+  --med-body: #bae6fd;
+  --med-muted: #7dd3fc;
+
+  /* Frame token overrides */
+  --frame-fg: #f0f9ff;
+  --frame-bg: #07172b;
+  --frame-border: rgba(0, 162, 255, 0.25);
+  --frame-badge-bg: rgba(0, 162, 255, 0.18);
+  --frame-badge-fg: #38bdf8;
+
+  background-color: var(--med-bg);
+  background-image: 
+    linear-gradient(to right, var(--med-blueprint-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--med-blueprint-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--med-body);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+.med-hero {
+  border-bottom: 2px solid var(--med-line-strong);
+  padding: 3.5rem 1.5rem 4.5rem;
+  position: relative;
+  background: radial-gradient(circle at 80% 20%, rgba(0, 162, 255, 0.12), transparent 50%);
+}
+
+.med-hero-inner {
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+.med-tech-spec-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--med-line);
+  margin-bottom: 3rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  color: var(--med-cyan);
+  letter-spacing: 0.05em;
+}
+
+.med-spec-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.med-spec-indicator::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--med-blue-bright);
+  box-shadow: 0 0 8px var(--med-blue-bright);
+}
+
+.med-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.med-title-block h1 {
+  font-size: clamp(2.4rem, 5.5vw, 4.25rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--med-heading);
+  margin: 0 0 1rem;
+}
+
+.med-category-callout {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--med-blue-bright);
+  padding: 0.25rem 0.75rem;
+  background: rgba(0, 162, 255, 0.12);
+  border: 1px solid var(--med-line);
+  margin-bottom: 1.5rem;
+}
+
+.med-summary-text {
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  color: var(--med-body);
+  line-height: 1.6;
+  max-width: 42rem;
+  margin: 0;
+}
+
+/* Precision Stacked Logo Stage */
+.med-logo-module {
+  background: var(--med-surface);
+  border: 1px solid var(--med-line-strong);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 0 25px rgba(0, 162, 255, 0.08);
+}
+
+.med-corner-mark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--med-blue-bright);
+  border-style: solid;
+}
+.med-corner-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.med-corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.med-corner-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.med-corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.med-logo-wrap {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 2450 / 1961;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.med-logo-wrap img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.med-logo-meta {
+  margin-top: 1.5rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--med-muted);
+}
+
+/* Split UAE / Pakistan Technical Presence */
+.med-content-container {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 5.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.med-section-header {
+  border-bottom: 1px solid var(--med-line);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.med-section-header h2 {
+  font-size: clamp(1.6rem, 2.5vw, 2.25rem);
+  font-weight: 750;
+  color: var(--med-heading);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.med-section-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  color: var(--med-blue-bright);
+}
+
+.med-split-presence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.med-presence-card {
+  background: var(--med-surface);
+  border: 1px solid var(--med-line);
+  border-top: 3px solid var(--med-blue-bright);
+  padding: 2.25rem;
+}
+
+.med-presence-region {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  color: var(--med-cyan);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.med-presence-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--med-heading);
+  margin: 0 0 1rem;
+}
+
+.med-presence-card p {
+  color: var(--med-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Technical Details Grid */
+.med-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 2rem;
+}
+
+.med-detail-box {
+  background: var(--med-surface);
+  border: 1px solid var(--med-line);
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.med-detail-box h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--med-heading);
+  margin: 0 0 0.5rem;
+}
+
+.med-role-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  color: var(--med-blue-bright);
+  margin-bottom: 1rem;
+}
+
+.med-detail-box p {
+  color: var(--med-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Focus and motion */
+.medical-equipment-page a:focus-visible,
+.medical-equipment-page button:focus-visible {
+  outline: 2px solid var(--med-blue-bright);
+  outline-offset: 3px;
+}
+
+@media (max-width: 960px) {
+  .med-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .med-split-presence-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .med-hero {
+    padding: 2.5rem 1rem 3rem;
+  }
+
+  .med-content-container {
+    padding: 2.5rem 1rem 3.5rem;
+    gap: 3rem;
+  }
+
+  .med-tech-spec-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .med-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .med-presence-card,
+  .med-detail-box,
+  .med-logo-module {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medical-equipment-page * {
+    transition: none !important;
+  }
+}
