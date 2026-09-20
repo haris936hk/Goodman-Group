@@ -12,8 +12,8 @@ const companyRouteExpectations = [
   {
     slug: 'goodman-laboratories',
     displayName: 'Goodman Laboratories',
-    verifiedFact: 'CEO since 2012',
-    pageLandmarkHeading: 'Pharmaceutical Manufacturing',
+    verifiedFact: 'CEO since 2016',
+    pageLandmarkHeading: 'Registered and marketed products',
   },
   {
     slug: 'geron-pharma',
@@ -131,6 +131,35 @@ for (const company of companyRouteExpectations) {
     expect(results.violations).toEqual([]);
   });
 }
+
+test('simplifies Goodman Laboratories product disclosure', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto('/companies/goodman-laboratories');
+
+  await expect(
+    page.getByRole('heading', { name: 'Registered and marketed products' }),
+  ).toBeVisible();
+
+  const category = page.getByText(
+    'Neurology, psychiatry, and central nervous system',
+  );
+  const product = page.getByRole('heading', { name: 'Gavatin' });
+
+  await expect(category).toBeVisible();
+  await expect(product).toBeHidden();
+  await category.click();
+  await expect(product).toBeVisible();
+  await expect(page.getByText(/levetiracetam; 250 mg and 500 mg tablets/i)).toBeVisible();
+
+  const widths = await page.evaluate(() => ({
+    viewport: window.innerWidth,
+    content: document.documentElement.scrollWidth,
+  }));
+  expect(widths.content).toBeLessThanOrEqual(widths.viewport);
+
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
 
 test('supports keyboard skip and directory navigation', async ({ page }) => {
   await page.goto('/companies/goodman-laboratories');

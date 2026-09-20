@@ -28,22 +28,37 @@ export const companies = [
     relationship: null,
     business: "Pharmaceutical manufacturing",
     summary:
-      "A pharmaceutical manufacturing company. Syed Talib Hussain Hashmi is its CEO since 2012.",
+      "A Pakistan-based pharmaceutical manufacturer and national distributor serving government hospitals, private hospitals, retailers, and national distributors, with customers across Afghanistan, Cambodia, Ghana, Tajikistan, and Yemen.",
     logo: "/assets/logos/GoodmanLabLogo.png",
     logoWidth: 575,
     logoHeight: 279,
     accent: "#46b7e8",
     founded: null,
-    locations: [],
+    locations: [
+      "Head office: Flat No. 4, Block No. 26, Street No. 100, FGEHF Apartments, Sector G-11, Islamabad, Pakistan",
+      "Factory: Plot No. 5, Street S-5, National Industrial Zone, Rawat, Islamabad, Pakistan",
+    ],
     leadership: [
       {
         name: "Syed Talib Hussain Hashmi",
-        role: "CEO since 2012",
-        detail: "Leads the company as CEO.",
+        role: "Chief Executive Officer",
+        detail: "Chief Executive Officer since 2016.",
       },
     ],
-    capabilities: ["Pharmaceutical manufacturing"],
-    contacts: [],
+    capabilities: [
+      "Pharmaceutical production",
+      "Bulk production",
+      "Pharmaceutical marketing",
+      "Sales",
+      "Urgent-order fulfilment",
+      "Bulk-order fulfilment",
+    ],
+    contacts: [
+      "director.goodman786@gmail.com",
+      "www.goodmangoc.com",
+      "+92 51 4455193–195",
+      "+92 51 4499156",
+    ],
   },
   {
     slug: "geron-pharma",

@@ -347,8 +347,9 @@ export default function Home() {
                   <div>
                     <h3>Leadership across the Group</h3>
                     <p>
-                      Hashmi is listed as CEO or director across the named
-                      operations from 2012 through July 2024.
+                      Goodman Laboratories&apos; verified CEO tenure began in
+                      2016, while other documented appointments extend through
+                      July 2024.
                     </p>
                   </div>
                 </li>
