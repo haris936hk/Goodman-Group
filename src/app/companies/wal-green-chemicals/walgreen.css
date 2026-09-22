@@ -27,8 +27,9 @@
   overflow-x: clip;
 }
 
+/* Hero Section */
 .wg-hero {
-  padding: 4.5rem 1.5rem 5rem;
+  padding: 4.5rem 1.5rem 4rem;
   border-bottom: 1px solid var(--wg-border);
   position: relative;
   background: radial-gradient(circle at 10% 20%, rgba(95, 191, 146, 0.08), transparent 40%);
@@ -45,9 +46,9 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  padding-bottom: 2rem;
+  padding-bottom: 1.75rem;
   border-bottom: 1px solid var(--wg-border-soft);
-  margin-bottom: 3.5rem;
+  margin-bottom: 3rem;
   font-size: 0.8125rem;
   color: var(--wg-muted);
 }
@@ -58,6 +59,14 @@
   gap: 0.5rem;
   font-weight: 600;
   color: var(--wg-charcoal);
+  overflow-wrap: anywhere;
+}
+
+.wg-presence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--wg-muted);
 }
 
 .wg-hero-grid {
@@ -74,24 +83,37 @@
   letter-spacing: -0.03em;
   color: var(--wg-heading);
   margin: 0 0 1.25rem;
+  overflow-wrap: break-word;
 }
 
 .wg-brand-descriptor {
   display: inline-block;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--wg-green);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
 }
 
 .wg-summary-lead {
-  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+  color: var(--wg-heading);
+  line-height: 1.6;
+  max-width: 42rem;
+  margin: 0 0 1.25rem;
+  font-weight: 500;
+}
+
+.wg-core-offer {
+  font-size: 0.95rem;
   color: var(--wg-body);
   line-height: 1.6;
-  max-width: 38rem;
+  max-width: 42rem;
   margin: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--wg-green-light);
 }
 
 /* Script Wordmark & Swoosh Stage */
@@ -121,14 +143,65 @@
   margin-top: 1.5rem;
 }
 
-/* Spacious Outlined Content Regions */
+/* In-Page Profile Navigation */
+.wg-profile-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--wg-ivory);
+  border-bottom: 1px solid var(--wg-border);
+}
+
+.wg-nav-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.wg-nav-list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wg-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+.wg-nav-list li {
+  flex-shrink: 0;
+}
+
+.wg-nav-list a {
+  display: inline-block;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--wg-muted);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.wg-nav-list a:hover {
+  color: var(--wg-green);
+  background: var(--wg-green-tint);
+}
+
+/* Content Body Sections */
 .wg-body-sections {
   max-width: 76rem;
   margin: 0 auto;
-  padding: 5rem 1.5rem 6.5rem;
+  padding: 4rem 1.5rem 6rem;
   display: flex;
   flex-direction: column;
-  gap: 4.5rem;
+  gap: 4rem;
 }
 
 .wg-region-card {
@@ -137,6 +210,7 @@
   border-radius: 1.5rem;
   padding: 3rem;
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.03);
+  scroll-margin-top: 4.5rem;
 }
 
 .wg-card-header {
@@ -145,13 +219,13 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--wg-border-soft);
 }
 
 .wg-card-header h2 {
-  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-size: clamp(1.6rem, 2.3vw, 2.1rem);
   font-weight: 700;
   color: var(--wg-heading);
   letter-spacing: -0.02em;
@@ -166,31 +240,430 @@
   color: var(--wg-green);
 }
 
-.wg-two-col-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+.wg-section-body {
+  display: flex;
+  flex-direction: column;
   gap: 2.5rem;
 }
 
-.wg-detail-block h3 {
+.wg-section-body h3 {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--wg-heading);
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.wg-section-body h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--wg-charcoal);
   margin: 0 0 0.5rem;
 }
 
-.wg-detail-role {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--wg-green);
-  margin-bottom: 0.75rem;
+/* Overview Section */
+.wg-lead-block {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--wg-border-soft);
 }
 
-.wg-detail-block p {
+.wg-mission-text {
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  line-height: 1.65;
+  color: var(--wg-heading);
+  margin: 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--wg-green);
+}
+
+.wg-fact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.75rem 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.wg-fact-list dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wg-muted);
+  margin-bottom: 0.25rem;
+}
+
+.wg-fact-list dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--wg-heading);
+  font-weight: 500;
+  overflow-wrap: break-word;
+}
+
+/* Capabilities & Functions Section */
+.wg-strengths-wrapper {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--wg-border-soft);
+}
+
+.wg-strengths-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem 2rem;
+}
+
+.wg-strengths-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
   color: var(--wg-body);
+}
+
+.wg-strengths-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--wg-green);
+}
+
+.wg-functions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.wg-function-card {
+  background: var(--wg-ivory);
+  border: 1px solid var(--wg-border);
+  border-radius: 1rem;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.wg-function-card h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--wg-heading);
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--wg-border-soft);
+}
+
+.wg-function-responsibilities {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.wg-function-responsibilities li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--wg-body);
+}
+
+.wg-function-responsibilities li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--wg-green);
+  font-weight: 600;
+}
+
+/* Products Section */
+.wg-portfolio-disclaimer {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--wg-muted);
+  margin: 0;
+  max-width: 48rem;
+  padding: 1rem 1.25rem;
+  background: var(--wg-ivory);
+  border-left: 3px solid var(--wg-green-light);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.wg-product-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.875rem 1.5rem;
+}
+
+.wg-product-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--wg-border-soft);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--wg-heading);
+  font-weight: 500;
+}
+
+.wg-product-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--wg-green-light);
+  margin-top: 0.55rem;
+  flex-shrink: 0;
+}
+
+/* Coverage & Sourcing Section */
+.wg-coverage-block {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--wg-border-soft);
+}
+
+.wg-coverage-desc {
   font-size: 0.95rem;
   line-height: 1.6;
+  color: var(--wg-body);
+  margin: 0 0 1.25rem;
+}
+
+.wg-centres-chips {
+  list-style: none;
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.wg-centre-chip {
+  background: var(--wg-ivory);
+  border: 1px solid var(--wg-border);
+  border-radius: 9999px;
+  padding: 0.375rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--wg-charcoal);
+}
+
+.wg-objective-card {
+  margin-top: 1.75rem;
+  background: var(--wg-green-tint);
+  border: 1px solid rgba(95, 191, 146, 0.3);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.wg-objective-card h4 {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wg-green);
+  margin: 0 0 0.375rem;
+}
+
+.wg-objective-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--wg-heading);
+  font-weight: 500;
+}
+
+.wg-sourcing-subgroup {
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--wg-border-soft);
+}
+
+.wg-sourcing-subgroup:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.wg-sourcing-intro,
+.wg-local-statement,
+.wg-benefits-intro {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--wg-body);
+  margin: 0 0 1rem;
+}
+
+.wg-imports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.wg-import-card {
+  background: var(--wg-ivory);
+  border: 1px solid var(--wg-border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+}
+
+.wg-import-card h5 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--wg-green);
+  margin: 0 0 0.5rem;
+}
+
+.wg-import-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--wg-body);
+}
+
+.wg-model-benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.wg-model-benefits li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--wg-heading);
+}
+
+.wg-model-benefits li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--wg-green);
+}
+
+/* Leadership & Contact Section */
+.wg-leader-card {
+  background: var(--wg-ivory);
+  border: 1px solid var(--wg-border);
+  border-radius: 1.25rem;
+  padding: 2rem;
+}
+
+.wg-leader-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--wg-border-soft);
+  margin-bottom: 1.25rem;
+}
+
+.wg-leader-header h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--wg-heading);
+  margin: 0 0 0.25rem;
+}
+
+.wg-detail-role {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--wg-green);
+  margin: 0;
+}
+
+.wg-tenure-badge {
+  background: var(--wg-green-tint);
+  border: 1px solid rgba(95, 191, 146, 0.35);
+  border-radius: 9999px;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--wg-green);
+  white-space: nowrap;
+}
+
+.wg-leader-tenure-detail {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--wg-body);
+}
+
+.wg-partnership-card {
+  background: var(--wg-ivory);
+  border: 1px solid var(--wg-border);
+  border-left: 4px solid var(--wg-green);
+  border-radius: 0 1rem 1rem 0;
+  padding: 1.75rem;
+}
+
+.wg-partnership-card h3 {
+  margin: 0 0 0.5rem;
+}
+
+.wg-partnership-statement {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--wg-heading);
+  font-weight: 500;
+}
+
+.wg-contact-card {
+  padding-top: 1rem;
+}
+
+.wg-contact-card h3 {
+  margin: 0 0 0.5rem;
+}
+
+.wg-contact-card p {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--wg-body);
+  max-width: 42rem;
+}
+
+.wg-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--wg-charcoal);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.wg-contact-link:hover {
+  background: var(--wg-green);
 }
 
 /* Focus and motion */
@@ -200,10 +673,20 @@
   outline-offset: 3px;
 }
 
+/* Responsive Recomposition */
 @media (max-width: 960px) {
   .wg-hero-grid {
     grid-template-columns: 1fr;
     gap: 3rem;
+  }
+
+  .wg-body-sections {
+    gap: 3.5rem;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  .wg-region-card {
+    padding: 2.5rem 2rem;
   }
 }
 
@@ -212,24 +695,40 @@
     padding: 3rem 1rem 3.5rem;
   }
 
-  .wg-body-sections {
-    padding: 3rem 1rem 4rem;
-    gap: 3rem;
+  .wg-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
   }
 
-  .wg-two-col-grid {
-    grid-template-columns: 1fr;
+  .wg-body-sections {
+    padding: 2.5rem 1rem 4rem;
+    gap: 2.5rem;
   }
 
   .wg-region-card {
-    padding: 1.75rem 1rem;
+    padding: 1.75rem 1.25rem;
     border-radius: 1rem;
   }
 
   .wg-logo-stage {
     padding: 2rem 1rem;
   }
-  .wg-topline {
+
+  .wg-card-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .wg-functions-grid,
+  .wg-product-grid,
+  .wg-imports-grid,
+  .wg-strengths-list,
+  .wg-fact-list {
+    grid-template-columns: 1fr;
+  }
+
+  .wg-leader-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
@@ -239,5 +738,6 @@
 @media (prefers-reduced-motion: reduce) {
   .wal-green-page * {
     transition: none !important;
+    animation: none !important;
   }
 }

@@ -338,7 +338,7 @@ export default function Home() {
                     <h3>Healthcare and beyond</h3>
                     <p>
                       The current site names Goodman Laboratories, Geron Pharma,
-                      Wal Green Chemical, and medical equipment operations.
+                      Wal Green Chemicals, and medical equipment operations.
                     </p>
                   </div>
                 </li>

@@ -111,25 +111,32 @@ export const companies = [
   {
     slug: "wal-green-chemicals",
     displayName: "Wal Green Chemicals",
-    legalName: "Wal Green Chemical Pvt. Ltd.",
+    legalName: "Wal Green Chemicals (Pvt.) Ltd.",
     relationship: null,
-    business: "Chemicals",
+    business:
+      "Indenting and trading of pharmaceutical raw materials and chemicals",
     summary:
-      "A chemicals business. Syed Talib Hussain Hashmi is its CEO since 2021.",
+      "A Pakistan-based bridge between international manufacturers and local industry, supplying globally sourced pharmaceutical raw materials, intermediates, and chemicals nationwide.",
     logo: "/assets/logos/walgreenLogo.png",
     logoWidth: 528,
     logoHeight: 259,
     accent: "#5fbf92",
     founded: null,
-    locations: [],
+    locations: ["Pakistan"],
     leadership: [
       {
         name: "Syed Talib Hussain Hashmi",
-        role: "CEO since 2021",
-        detail: "Leads the company as CEO.",
+        role: "Chief Executive Officer",
+        detail: "Chief Executive Officer since 2021.",
       },
     ],
-    capabilities: ["Chemicals"],
+    capabilities: [
+      "Indenting and trading",
+      "Pharmaceutical raw materials and chemicals",
+      "International import channels",
+      "Nationwide customer and delivery coverage",
+      "Dual-channel procurement",
+    ],
     contacts: [],
   },
 ] as const satisfies readonly CompanyProfile[];

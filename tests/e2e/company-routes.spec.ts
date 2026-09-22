@@ -31,7 +31,7 @@ const companyRouteExpectations = [
     slug: 'wal-green-chemicals',
     displayName: 'Wal Green Chemicals',
     verifiedFact: 'CEO since 2021',
-    pageLandmarkHeading: 'Corporate Profile & Governance',
+    pageLandmarkHeading: 'Product & Material Portfolio',
   },
 ] as const;
 
