@@ -25,11 +25,11 @@ export default function GeronPharmaPage() {
             <div className="geron-pill">
               <span className="geron-pill-dot" aria-hidden="true" />
               <span>
-                Incorporated: {company.legalName ?? company.displayName}
+                Legal name: {company.legalName ?? company.displayName}
               </span>
             </div>
             <div className="geron-pill">
-              <span>Healthcare Network Entity</span>
+              <span>Pharmaceutical business</span>
             </div>
           </div>
 
@@ -63,10 +63,10 @@ export default function GeronPharmaPage() {
 
       <section className="geron-network-section" aria-labelledby="geron-structure-heading">
         <div className="geron-section-intro">
-          <h2 id="geron-structure-heading">Company Structure & Activity</h2>
+          <h2 id="geron-structure-heading">Verified company information</h2>
           <p>
-            Verified corporate details and pharmaceutical operations within the
-            Goodman Group healthcare portfolio.
+            The supplied company profile verifies Geron Pharma’s legal identity,
+            pharmaceutical sector context, and chief executive.
           </p>
         </div>
 
@@ -75,17 +75,15 @@ export default function GeronPharmaPage() {
             <span className="geron-node-badge">Corporate Entity</span>
             <h3>Legal Identity</h3>
             <p>
-              Registered as {company.legalName ?? company.displayName},
-              operating as an endorsed member company of the Goodman Group portfolio.
+              The company’s legal name is {company.legalName ?? company.displayName}
             </p>
           </article>
 
           <article className="geron-node-card">
             <span className="geron-node-badge">Operational Scope</span>
-            <h3>Pharmaceuticals</h3>
+            <h3>Sector Context</h3>
             <p>
-              Dedicated to core pharmaceutical activities, meeting clinical and
-              institutional health demands across established therapeutic networks.
+              The supplied profile identifies Geron Pharma as a pharmaceutical business.
             </p>
           </article>
 
@@ -97,6 +95,16 @@ export default function GeronPharmaPage() {
               <p>{leader.detail}</p>
             </article>
           ) : null}
+
+          <article className="geron-node-card">
+            <span className="geron-node-badge">Profile Boundary</span>
+            <h3>Profile Scope</h3>
+            <p>
+              The supplied profile does not provide a separate company overview,
+              address, product portfolio, services, markets, customers, or
+              contact details.
+            </p>
+          </article>
         </div>
 
         <div style={{ marginTop: "3.5rem", textAlign: "center" }}>

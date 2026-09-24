@@ -18,8 +18,8 @@ const companyRouteExpectations = [
   {
     slug: 'geron-pharma',
     displayName: 'Geron Pharma',
-    verifiedFact: 'CEO since 2019',
-    pageLandmarkHeading: 'Company Structure & Activity',
+    verifiedFact: 'Chief Executive Officer since 2019.',
+    pageLandmarkHeading: 'Verified company information',
   },
   {
     slug: 'goodman-medical-equipment',

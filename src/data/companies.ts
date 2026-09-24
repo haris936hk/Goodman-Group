@@ -1,3 +1,33 @@
+export type CompanyEntity = {
+  legalName: string;
+  jurisdiction: string;
+  leadership: readonly {
+    name: string;
+    role: string;
+    detail: string;
+  }[];
+  description: string | null;
+  messaging?: readonly {
+    label: string;
+    value: string;
+  }[];
+  products: readonly {
+    name: string;
+    description: string;
+  }[];
+  strengths: readonly string[];
+  customerPromise?: readonly string[];
+  customers: readonly string[];
+  domesticMarkets: readonly string[];
+  targetMarkets: readonly string[];
+  contacts: readonly {
+    label: string;
+    value: string;
+    href: string | null;
+  }[];
+  sourceNote?: string;
+};
+
 export type CompanyProfile = {
   slug: string;
   displayName: string;
@@ -18,6 +48,7 @@ export type CompanyProfile = {
   }[];
   capabilities: readonly string[];
   contacts: readonly string[];
+  entities?: readonly CompanyEntity[];
 };
 
 export const companies = [
@@ -63,11 +94,11 @@ export const companies = [
   {
     slug: "geron-pharma",
     displayName: "Geron Pharma",
-    legalName: "Geron Pharma Pvt. Ltd.",
+    legalName: "Geron Pharma (Pvt.) Ltd.",
     relationship: null,
-    business: "Pharmaceuticals",
+    business: "Pharmaceutical business",
     summary:
-      "A pharmaceutical company. Syed Talib Hussain Hashmi is its CEO since 2019.",
+      "Geron Pharma (Pvt.) Ltd. is a pharmaceutical business led by Chief Executive Officer Syed Talib Hussain Hashmi, who has served as CEO since 2019.",
     logo: "/assets/logos/geronlogo.png",
     logoWidth: 684,
     logoHeight: 357,
@@ -77,11 +108,11 @@ export const companies = [
     leadership: [
       {
         name: "Syed Talib Hussain Hashmi",
-        role: "CEO since 2019",
-        detail: "Leads the company as CEO.",
+        role: "Chief Executive Officer",
+        detail: "Chief Executive Officer since 2019.",
       },
     ],
-    capabilities: ["Pharmaceuticals"],
+    capabilities: ["Pharmaceutical business"],
     contacts: [],
   },
   {
@@ -91,7 +122,7 @@ export const companies = [
     relationship: null,
     business: "Medical equipment trading",
     summary:
-      "A medical equipment trading operation in the United Arab Emirates and Pakistan. Syed Talib Hussain Hashmi is its director from July 2024.",
+      "Goodman Medical Equipment Trading brings together three separately documented records: Goodman Medical & Surgical Equipment (Pvt.) Ltd. in Pakistan, Goodman Medical Equipment Trading LLC in the United Arab Emirates, and Goodman Medical Equipment Trading (Pvt.) Ltd. in Pakistan.",
     logo: "/assets/logos/GG3.png",
     logoWidth: 2450,
     logoHeight: 1961,
@@ -101,12 +132,143 @@ export const companies = [
     leadership: [
       {
         name: "Syed Talib Hussain Hashmi",
-        role: "Director since July 2024",
-        detail: "Directs the United Arab Emirates and Pakistan operations.",
+        role: "Leadership documented by entity",
+        detail:
+          "Leadership and tenure are recorded separately for each legal entity below.",
       },
     ],
-    capabilities: ["Medical equipment trading"],
+    capabilities: [
+      "Healthcare equipment, surgical instruments, and medical devices",
+      "Medical equipment trading",
+    ],
     contacts: [],
+    entities: [
+      {
+        legalName: "Goodman Medical & Surgical Equipment (Pvt.) Ltd.",
+        jurisdiction: "Pakistan",
+        leadership: [],
+        description:
+          "A healthcare supplier focused on product quality, safety, innovation, reliable service, and broad national access.",
+        messaging: [
+          {
+            label: "Primary headline",
+            value: "Delivering Excellence in Healthcare Solutions",
+          },
+          {
+            label: "Tagline",
+            value: "Partnering for a Healthier Tomorrow",
+          },
+          {
+            label: "Supporting message",
+            value: "Better Health, Better Life",
+          },
+          {
+            label: "Trust statement",
+            value: "Trust, Quality, Commitment",
+          },
+        ],
+        products: [
+          {
+            name: "Surgical instruments",
+            description:
+              "A complete range of surgical instruments designed for precision, durability, and high quality.",
+          },
+          {
+            name: "Medical devices",
+            description:
+              "A broad range of advanced medical devices intended to support modern healthcare needs and improve patient outcomes.",
+          },
+        ],
+        strengths: [
+          "Premium quality",
+          "International standards",
+          "Competitive prices",
+          "After-sales support",
+          "Quality-assured products",
+          "Reliable partnership",
+          "Innovative solutions",
+          "Nationwide supply",
+          "Experienced professional team with specialized industry knowledge and commitment",
+          "Five years of industry experience",
+          "Understanding of healthcare-provider requirements",
+          "Reliable healthcare solutions",
+          "Product compliance with international quality standards and regulatory requirements",
+          "Supply to healthcare facilities throughout Pakistan, including large cities and remote areas",
+          "Timely delivery and dependable service",
+        ],
+        customerPromise: [
+          "High-quality surgical instruments and medical devices",
+          "Broad product selection for varied healthcare needs",
+          "Trusted service for hospitals, clinics, and healthcare professionals",
+          "Customer satisfaction as the highest priority",
+        ],
+        customers: ["Hospitals", "Clinics", "Healthcare professionals"],
+        domesticMarkets: ["Nationwide coverage across Pakistan"],
+        targetMarkets: ["Africa", "Europe", "Japan", "United States of America"],
+        contacts: [
+          {
+            label: "Office",
+            value: "Islamabad, Pakistan",
+            href: null,
+          },
+          {
+            label: "Telephone",
+            value: "+92 336 777 0770",
+            href: "tel:+923367770770",
+          },
+          {
+            label: "Email",
+            value: "afgoodmangoc@gmail.com",
+            href: "mailto:afgoodmangoc@gmail.com",
+          },
+          {
+            label: "Website",
+            value: "www.goodmangoc.com",
+            href: "https://www.goodmangoc.com",
+          },
+        ],
+      },
+      {
+        legalName: "Goodman Medical Equipment Trading LLC",
+        jurisdiction: "United Arab Emirates",
+        leadership: [
+          {
+            name: "Syed Talib Hussain Hashmi",
+            role: "Director",
+            detail: "Directorship effective July 2024.",
+          },
+        ],
+        description:
+          "The supplied documents do not provide a separate product catalogue, address, customer list, or operational description for this company.",
+        products: [],
+        strengths: [],
+        customers: [],
+        domesticMarkets: [],
+        targetMarkets: [],
+        contacts: [],
+      },
+      {
+        legalName: "Goodman Medical Equipment Trading (Pvt.) Ltd.",
+        jurisdiction: "Pakistan",
+        leadership: [
+          {
+            name: "Syed Talib Hussain Hashmi",
+            role: "Chief Executive Officer",
+            detail: "Chief Executive Officer since 2024.",
+          },
+        ],
+        description:
+          "The supplied documents do not provide a separate product catalogue, address, customer list, or operational description for this company.",
+        products: [],
+        strengths: [],
+        customers: [],
+        domesticMarkets: [],
+        targetMarkets: [],
+        contacts: [],
+        sourceNote:
+          "A supplied personal business profile identifies Syed Talib Hussain Hashmi as Chief Executive Officer from 2024, while the Goodman Laboratories company profile identifies him as a Director of the Pakistan-based operation from July 2024. The supplied PDFs do not establish whether these are concurrent roles, a role change, or a documentation error.",
+      },
+    ],
   },
   {
     slug: "wal-green-chemicals",
@@ -140,6 +302,6 @@ export const companies = [
     contacts: [],
   },
 ] as const satisfies readonly CompanyProfile[];
-export function getCompanyBySlug(slug: string) {
+export function getCompanyBySlug(slug: string): CompanyProfile | undefined {
   return companies.find((company) => company.slug === slug);
 }

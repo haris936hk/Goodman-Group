@@ -11,6 +11,31 @@
 - Capabilities: Pharmaceutical production, bulk production, pharmaceutical marketing, sales, urgent-order fulfilment, and bulk-order fulfilment.
 - Stakeholder relationships: The company reports strong working relationships with the Drug Regulatory Authority of Pakistan (DRAP) and other relevant departments, supporting regulatory work and future exports.
 
+## Official website overview
+
+- Founded in 2008 by Mr. Syed Talib Hussain Hashmi.
+- Described as a pharmaceutical-manufacturing unit focused on innovation, quality, effective healthcare solutions, rigorous standards, reliability, scientific support, and proven customer benefits.
+- Website tagline: **Seeking for the Best**.
+
+## Five approved production sections
+
+- **Tablet:** High-quality tablets with precise dosing and effectiveness.
+- **Capsule:** Capsules designed for targeted delivery.
+- **Cephalosporin:** Cephalosporin products for different infections.
+- **Dry Suspension:** Reliable dry-suspension dosage forms.
+- **Liquid Syrup:** Liquid syrups designed for administration and absorption.
+
+## Website-reported departmental structure
+
+| Department | Employees |
+|---|---:|
+| Production | 90 |
+| Sales and Marketing | 270 |
+| Operations and Finance | 25 |
+| **Total represented by the table** | **385** |
+
+The About page also identifies a Quality Control Department responsible for testing and record keeping. The website’s 385-person departmental total, its homepage statement that Syed Talib Hussain Hashmi managed more than 360 staff, and the PDF’s statement of more than 150 staff are retained as source-specific historical or organizational figures rather than one current workforce count.
+
 ## Mission
 
 To provide affordable pharmaceutical products across the globe.
@@ -78,6 +103,48 @@ International customer markets:
 - Ghana.
 - Tajikistan.
 - Yemen.
+
+### Website-reported international activity
+
+- **Cambodia:** Expansion began after local demand generated supply inquiries.
+- **Ghana:** An exclusive distributorship agreement was signed for pharmaceutical products. The stated agreement term is five years from signing, and the first consignment was expected to reach Ghana in September 2024.
+- **Tajikistan:** A demand-based supply chain was developed in response to limited basic health facilities in several areas, with local stakeholders supporting development of healthcare units.
+- **Yemen:** A contract or memorandum of understanding was signed for bulk production. Supply was stated to begin after the Yemeni partners completed their local legal requirements.
+- **Afghanistan:** Pharmaceutical products are supplied through local stakeholders and distributors.
+
+## Corporate social responsibility
+
+- Provides medicines, life-saving drugs, and medical equipment free of charge to government charitable hospitals.
+- Provides medicines required for patients during emergencies.
+- Seeks to maintain low medicine prices and bids minimum prices in tenders to reach vulnerable populations.
+- Organizes free medical camps in rural areas with limited healthcare facilities.
+- Provides free medicine, health-and-hygiene awareness, and clean drinking water through rural medical camps.
+
+## Governance
+
+- Board of Directors.
+- Chief Executive Officer and primary shareholder.
+- Partners and secondary shareholders.
+- Operations and Finance.
+- Legal Department.
+- Quality Control.
+- Internal Audit.
+- Plant Manager.
+
+## Organizational structure
+
+- Chief Executive Officer.
+- Operations and Finance.
+- Administration and Accounts.
+- Sales and Marketing.
+- Sales Team.
+- Export Sales Team.
+- Quality Control.
+- Plant Manager.
+- Pharmacist.
+- Production Staff.
+- Store In-Charge.
+- Logistics Officers.
 
 ## Sustainability and growth position
 

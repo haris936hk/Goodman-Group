@@ -1,316 +1,789 @@
-/* Goodman Medical Equipment Trading: Technical blueprint & engineering composition */
+/* Goodman Medical Equipment Trading: light technical composition */
 .medical-equipment-page {
-  --med-bg: #07172b;
-  --med-surface: #0e2440;
-  --med-surface-elevated: #153459;
-  --med-blueprint-grid: rgba(0, 162, 255, 0.08);
-  --med-blue-bright: #00a2ff;
-  --med-cyan: #38bdf8;
-  --med-line: rgba(0, 162, 255, 0.22);
-  --med-line-strong: rgba(0, 162, 255, 0.45);
-  --med-heading: #f0f9ff;
-  --med-body: #bae6fd;
-  --med-muted: #7dd3fc;
+  --med-white: #ffffff;
+  --med-ice: #f3f9fd;
+  --med-ice-strong: #e4f3fb;
+  --med-navy: #092d4b;
+  --med-body: #294b63;
+  --med-muted: #526f82;
+  --med-blue: #174a87;
+  --med-cyan: #00688a;
+  --med-rule: #c9dce8;
+  --med-rule-strong: #7fb6d1;
+  --med-focus: #063f71;
 
-  /* Frame token overrides */
-  --frame-fg: #f0f9ff;
-  --frame-bg: #07172b;
-  --frame-border: rgba(0, 162, 255, 0.25);
-  --frame-badge-bg: rgba(0, 162, 255, 0.18);
-  --frame-badge-fg: #38bdf8;
+  --frame-fg: var(--med-navy);
+  --frame-bg: var(--med-white);
+  --frame-border: var(--med-rule);
+  --frame-badge-bg: var(--med-ice-strong);
+  --frame-badge-fg: var(--med-blue);
 
-  background-color: var(--med-bg);
-  background-image: 
-    linear-gradient(to right, var(--med-blueprint-grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--med-blueprint-grid) 1px, transparent 1px);
-  background-size: 32px 32px;
-  color: var(--med-body);
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
-  line-height: 1.6;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: clip;
+  background: var(--med-white);
+  color: var(--med-body);
+  font-family: var(--font-geist-sans, var(--font-sans, system-ui, sans-serif));
+  line-height: 1.7;
+}
+
+.medical-equipment-page main {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(23, 74, 135, 0.035) 50%, transparent calc(50% + 0.5px)),
+    var(--med-white);
+}
+
+.med-shell {
+  width: min(100% - 3rem, 78rem);
+  margin-inline: auto;
 }
 
 .med-hero {
-  border-bottom: 2px solid var(--med-line-strong);
-  padding: 3.5rem 1.5rem 4.5rem;
   position: relative;
-  background: radial-gradient(circle at 80% 20%, rgba(0, 162, 255, 0.12), transparent 50%);
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--med-rule);
+  background:
+    linear-gradient(135deg, rgba(228, 243, 251, 0.82), transparent 56%),
+    var(--med-white);
 }
 
-.med-hero-inner {
-  max-width: 78rem;
-  margin: 0 auto;
-}
-
-.med-tech-spec-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--med-line);
-  margin-bottom: 3rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
-  color: var(--med-cyan);
-  letter-spacing: 0.05em;
-}
-
-.med-spec-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.med-spec-indicator::before {
+.med-hero::before,
+.med-hero::after {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgba(8, 126, 164, 0.18);
+  border-radius: 50%;
   content: "";
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  background: var(--med-blue-bright);
-  box-shadow: 0 0 8px var(--med-blue-bright);
+  pointer-events: none;
+}
+
+.med-hero::before {
+  top: -18rem;
+  right: -10rem;
+  width: 42rem;
+  aspect-ratio: 1;
+}
+
+.med-hero::after {
+  top: -9rem;
+  right: -1rem;
+  width: 24rem;
+  aspect-ratio: 1;
+  border-color: rgba(23, 74, 135, 0.13);
 }
 
 .med-hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
-  gap: 3.5rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  gap: clamp(3rem, 8vw, 8rem);
   align-items: center;
+  min-height: min(46rem, calc(100dvh - 4.5rem));
+  padding-block: clamp(5rem, 10vw, 9rem);
+}
+
+.med-title-block {
+  position: relative;
+  z-index: 1;
+  max-width: 46rem;
+}
+
+.med-eyebrow,
+.med-jurisdiction,
+.med-market-status {
+  margin: 0 0 1rem;
+  color: var(--med-cyan);
+  font-size: 0.78rem;
+  font-weight: 720;
+  letter-spacing: 0.11em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
 .med-title-block h1 {
-  font-size: clamp(2.4rem, 5.5vw, 4.25rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--med-heading);
-  margin: 0 0 1rem;
-}
-
-.med-category-callout {
-  display: inline-block;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--med-blue-bright);
-  padding: 0.25rem 0.75rem;
-  background: rgba(0, 162, 255, 0.12);
-  border: 1px solid var(--med-line);
-  margin-bottom: 1.5rem;
-}
-
-.med-summary-text {
-  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
-  color: var(--med-body);
-  line-height: 1.6;
-  max-width: 42rem;
+  max-width: 12ch;
   margin: 0;
+  color: var(--med-navy);
+  font-size: clamp(3rem, 7vw, 6.7rem);
+  font-weight: 760;
+  letter-spacing: -0.065em;
+  line-height: 0.96;
+  text-wrap: balance;
 }
 
-/* Precision Stacked Logo Stage */
-.med-logo-module {
-  background: var(--med-surface);
-  border: 1px solid var(--med-line-strong);
-  padding: 2.5rem 2rem;
+.med-summary {
+  max-width: 66ch;
+  margin: 2rem 0 0;
+  color: var(--med-body);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.75;
+}
+
+.med-presence-list {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: inset 0 0 25px rgba(0, 162, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.med-corner-mark {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-color: var(--med-blue-bright);
-  border-style: solid;
+.med-presence-list li {
+  min-height: 2.75rem;
+  padding: 0.58rem 1rem;
+  border: 1px solid var(--med-rule-strong);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--med-navy);
+  font-size: 0.875rem;
+  font-weight: 650;
 }
-.med-corner-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-.med-corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-.med-corner-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-.med-corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.med-logo-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 27rem;
+  padding: clamp(2rem, 5vw, 4.5rem);
+  border: 1px solid var(--med-rule);
+  background:
+    linear-gradient(var(--med-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--med-rule) 1px, transparent 1px),
+    var(--med-white);
+  background-size: 3rem 3rem;
+  box-shadow: 0 2rem 5rem rgba(9, 45, 75, 0.09);
+}
+
+.med-logo-stage::before {
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  border: 1px solid var(--med-rule-strong);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
 
 .med-logo-wrap {
-  width: 100%;
-  max-width: 280px;
-  aspect-ratio: 2450 / 1961;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  width: min(100%, 22rem);
+  padding: 1.5rem;
+  background: var(--med-white);
 }
 
 .med-logo-wrap img {
+  display: block;
   width: 100%;
   height: auto;
   object-fit: contain;
 }
 
-.med-logo-meta {
-  margin-top: 1.5rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+.med-section-nav {
+  border-bottom: 1px solid var(--med-rule);
+  background: var(--med-white);
+}
+
+.med-section-nav-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0 1.75rem;
+  padding-block: 0.75rem;
+}
+
+.med-section-nav-inner span,
+.med-section-nav-inner a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.med-section-nav-inner span {
   color: var(--med-muted);
 }
 
-/* Split UAE / Pakistan Technical Presence */
-.med-content-container {
-  max-width: 78rem;
-  margin: 0 auto;
-  padding: 4rem 1.5rem 5.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
+.med-section-nav-inner a {
+  color: var(--med-blue);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.3em;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease,
+    text-decoration-color 160ms ease;
 }
 
-.med-section-header {
-  border-bottom: 1px solid var(--med-line);
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+.med-section-nav-inner a:hover {
+  color: var(--med-navy);
+  text-decoration-color: currentColor;
+  transform: translateY(-1px);
 }
 
-.med-section-header h2 {
-  font-size: clamp(1.6rem, 2.5vw, 2.25rem);
-  font-weight: 750;
-  color: var(--med-heading);
-  letter-spacing: -0.02em;
+.med-content {
+  overflow: hidden;
+}
+
+.med-chapter {
+  position: relative;
+  padding-block: clamp(5.5rem, 11vw, 10rem);
+  scroll-margin-top: 1.5rem;
+}
+
+.med-chapter + .med-chapter {
+  border-top: 1px solid var(--med-rule);
+}
+
+.med-chapter-heading {
+  max-width: 49rem;
+}
+
+.med-chapter-heading h2 {
+  max-width: 14ch;
   margin: 0;
+  color: var(--med-navy);
+  font-size: clamp(2.35rem, 5vw, 4.8rem);
+  font-weight: 735;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  text-wrap: balance;
 }
 
-.med-section-tag {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
-  color: var(--med-blue-bright);
+.med-chapter-heading > h3 {
+  max-width: 30ch;
+  margin: 2rem 0 0;
+  color: var(--med-blue);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
-.med-split-presence-grid {
+.med-chapter-heading > p:last-child {
+  max-width: 66ch;
+  margin: 1.5rem 0 0;
+  font-size: 1.05rem;
+}
+
+.med-presence {
+  background: var(--med-white);
+}
+
+.med-entity-list {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid var(--med-rule-strong);
+}
+
+.med-entity-record {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  grid-template-columns: minmax(5rem, 0.25fr) minmax(0, 1.75fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding-block: clamp(2.75rem, 5vw, 4.5rem);
+  border-bottom: 1px solid var(--med-rule);
 }
 
-.med-presence-card {
-  background: var(--med-surface);
-  border: 1px solid var(--med-line);
-  border-top: 3px solid var(--med-blue-bright);
-  padding: 2.25rem;
-}
-
-.med-presence-region {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
+.med-record-index {
   color: var(--med-cyan);
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
+  font-size: clamp(2.5rem, 5vw, 4.75rem);
+  font-weight: 650;
+  letter-spacing: -0.06em;
+  line-height: 1;
 }
 
-.med-presence-card h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--med-heading);
-  margin: 0 0 1rem;
+.med-record-body {
+  max-width: 52rem;
+  min-width: 0;
 }
 
-.med-presence-card p {
-  color: var(--med-body);
-  font-size: 0.95rem;
-  line-height: 1.6;
+.med-record-body h3 {
+  max-width: 31ch;
   margin: 0;
+  color: var(--med-navy);
+  font-size: clamp(1.65rem, 3vw, 2.55rem);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
-/* Technical Details Grid */
-.med-details-grid {
+.med-entity-leadership {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: 2rem;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--med-cyan);
 }
 
-.med-detail-box {
-  background: var(--med-surface);
-  border: 1px solid var(--med-line);
-  padding: 2.25rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.med-detail-box h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--med-heading);
-  margin: 0 0 0.5rem;
-}
-
-.med-role-tag {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.875rem;
-  color: var(--med-blue-bright);
-  margin-bottom: 1rem;
-}
-
-.med-detail-box p {
-  color: var(--med-body);
-  font-size: 0.95rem;
-  line-height: 1.6;
+.med-entity-leadership p {
+  display: grid;
+  gap: 0.12rem;
   margin: 0;
 }
 
-/* Focus and motion */
-.medical-equipment-page a:focus-visible,
-.medical-equipment-page button:focus-visible {
-  outline: 2px solid var(--med-blue-bright);
-  outline-offset: 3px;
+.med-entity-leadership strong {
+  color: var(--med-navy);
 }
 
-@media (max-width: 960px) {
+.med-entity-leadership span {
+  color: var(--med-blue);
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.med-entity-leadership small {
+  color: var(--med-muted);
+  font-size: 0.875rem;
+}
+
+.med-entity-muted,
+.med-entity-description {
+  max-width: 68ch;
+  margin: 2rem 0 0;
+}
+
+.med-entity-muted {
+  color: var(--med-muted);
+  font-size: 0.93rem;
+  font-style: italic;
+}
+
+.med-source-note {
+  max-width: 68ch;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--med-rule-strong);
+  color: var(--med-muted);
+  font-size: 0.9rem;
+}
+
+.med-source-note strong {
+  color: var(--med-blue);
+}
+
+.med-source-note p {
+  margin: 0.35rem 0 0;
+}
+
+.med-solutions {
+  background: var(--med-white);
+}
+
+.med-solutions::after {
+  position: absolute;
+  top: 6rem;
+  right: -14rem;
+  width: 32rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(8, 126, 164, 0.12);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.med-solutions-lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  gap: clamp(3rem, 8vw, 8rem);
+  align-items: start;
+}
+
+.med-message-rail {
+  position: relative;
+  z-index: 1;
+  border-top: 3px solid var(--med-cyan);
+}
+
+.med-message-rail blockquote {
+  margin: 0;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--med-rule);
+}
+
+.med-message-rail span {
+  color: var(--med-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.med-message-rail p {
+  margin: 0.35rem 0 0;
+  color: var(--med-navy);
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.med-product-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: clamp(5rem, 10vw, 9rem);
+  border: 1px solid var(--med-rule);
+  background: var(--med-rule);
+}
+
+.med-product {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.5rem;
+  min-height: 20rem;
+  padding: clamp(2rem, 4vw, 3.75rem);
+  background: var(--med-ice);
+}
+
+.med-product > span {
+  color: var(--med-cyan);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.med-product h3,
+.med-operating-grid h3,
+.med-market-group h3 {
+  margin: 0;
+  color: var(--med-navy);
+  font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.med-product div > p:last-child {
+  max-width: 52ch;
+  margin: 1.25rem 0 0;
+}
+
+.med-operating-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.65fr);
+  gap: clamp(3rem, 8vw, 7rem);
+  margin-top: clamp(5rem, 9vw, 8rem);
+  align-items: start;
+}
+
+.med-fact-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.med-strengths .med-fact-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+  margin-top: 2.25rem;
+}
+
+.med-fact-list li {
+  position: relative;
+  padding: 0.85rem 0 0.85rem 1.25rem;
+  border-top: 1px solid var(--med-rule);
+  overflow-wrap: anywhere;
+}
+
+.med-fact-list li::before {
+  position: absolute;
+  top: 1.55rem;
+  left: 0;
+  width: 0.38rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--med-cyan);
+  content: "";
+}
+
+.med-commitment {
+  padding: 2.25rem;
+  border-top: 4px solid var(--med-blue);
+  background: var(--med-ice-strong);
+}
+
+.med-commitment .med-fact-list {
+  margin-top: 1.75rem;
+}
+
+.med-markets {
+  background: var(--med-ice);
+}
+
+.med-market-list {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: clamp(4rem, 8vw, 7rem);
+}
+
+.med-market-group {
+  grid-column: span 5;
+  padding: clamp(2rem, 4vw, 3rem);
+  border-top: 3px solid var(--med-cyan);
+  background: var(--med-white);
+}
+
+.med-market-group:nth-child(2) {
+  grid-column: span 7;
+}
+
+.med-market-targets {
+  grid-column: 1 / span 9;
+  border-top-color: var(--med-blue);
+  background: var(--med-navy);
+  color: #e6f4fb;
+}
+
+.med-market-targets .med-market-status {
+  color: #8ed9ee;
+}
+
+.med-market-targets h3 {
+  color: var(--med-white);
+}
+
+.med-market-group .med-fact-list {
+  margin-top: 1.75rem;
+}
+
+.med-market-targets .med-fact-list li {
+  border-top-color: rgba(255, 255, 255, 0.22);
+}
+
+.med-market-targets .med-fact-list li::before {
+  background: #8ed9ee;
+}
+
+.med-contact {
+  background: var(--med-white);
+}
+
+.med-contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(20rem, 1.15fr);
+  gap: clamp(3rem, 10vw, 9rem);
+  align-items: start;
+}
+
+.med-contact-list {
+  margin: 0;
+  border-top: 1px solid var(--med-rule-strong);
+}
+
+.med-contact-list div {
+  display: grid;
+  grid-template-columns: minmax(6rem, 0.3fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--med-rule);
+}
+
+.med-contact-list dt {
+  color: var(--med-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.med-contact-list dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--med-navy);
+  font-weight: 630;
+  overflow-wrap: anywhere;
+}
+
+.med-contact-list a {
+  display: inline-block;
+  min-height: 2.75rem;
+  padding-block: 0.45rem;
+  color: var(--med-blue);
+  text-decoration: underline;
+  text-decoration-color: var(--med-cyan);
+  text-underline-offset: 0.25em;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.med-contact-list a:hover {
+  color: var(--med-navy);
+  transform: translateY(-1px);
+}
+
+.med-group-routing-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  margin-top: 2rem;
+  color: var(--med-blue);
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.med-group-routing-link svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+}
+
+.med-group-routing-link:hover {
+  color: var(--med-navy);
+  transform: translateY(-1px);
+}
+
+.medical-equipment-page a:focus-visible {
+  border-radius: 2px;
+  outline: 3px solid var(--med-focus);
+  outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .med-hero-grid,
+  .med-solutions-lead,
+  .med-operating-grid,
+  .med-contact-layout {
+    grid-template-columns: 1fr;
+  }
+
   .med-hero-grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+    min-height: 0;
   }
 
-  .med-split-presence-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .med-logo-stage {
+    min-height: 23rem;
+  }
+
+  .med-solutions-lead,
+  .med-operating-grid {
+    gap: 4rem;
+  }
+
+  .med-market-group,
+  .med-market-group:nth-child(2),
+  .med-market-targets {
+    grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 640px) {
-  .med-hero {
-    padding: 2.5rem 1rem 3rem;
+@media (max-width: 680px) {
+  .med-shell {
+    width: min(100% - 2rem, 78rem);
   }
 
-  .med-content-container {
-    padding: 2.5rem 1rem 3.5rem;
-    gap: 3rem;
+  .med-hero-grid {
+    gap: 3.5rem;
+    padding-block: 4.5rem;
   }
 
-  .med-tech-spec-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+  .med-hero::before {
+    top: -8rem;
+    right: -9rem;
+    width: 22rem;
   }
 
-  .med-details-grid {
+  .med-hero::after,
+  .med-solutions::after {
+    display: none;
+  }
+
+  .med-title-block h1 {
+    font-size: clamp(2.75rem, 14vw, 4.5rem);
+  }
+
+  .med-logo-stage {
+    min-height: 18rem;
+    padding: 2rem;
+    background-size: 2rem 2rem;
+  }
+
+  .med-section-nav-inner {
+    gap: 0 1.15rem;
+  }
+
+  .med-section-nav-inner span {
+    width: 100%;
+  }
+
+  .med-chapter {
+    padding-block: 5rem;
+  }
+
+
+  .med-entity-record {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .med-record-index {
+    font-size: 2.25rem;
+  }
+
+  .med-product-list,
+  .med-strengths .med-fact-list {
     grid-template-columns: 1fr;
   }
 
-  .med-presence-card,
-  .med-detail-box,
-  .med-logo-module {
+  .med-product {
+    min-height: 0;
+    padding: 2rem 1.25rem;
+  }
+
+  .med-market-list {
+    grid-template-columns: 1fr;
+  }
+
+  .med-market-group,
+  .med-market-group:nth-child(2),
+  .med-market-targets {
+    grid-column: 1;
+    padding: 2rem 1.25rem;
+  }
+
+  .med-contact-list div {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .med-shell {
+    width: min(100% - 1.25rem, 78rem);
+  }
+
+  .med-presence-list {
+    display: grid;
+  }
+
+  .med-logo-stage {
+    min-height: 15rem;
+    padding: 1.25rem;
+  }
+
+  .med-logo-wrap {
+    padding: 0.75rem;
+  }
+
+  .med-chapter-heading h2 {
+    font-size: 2.2rem;
+  }
+
+  .med-commitment {
     padding: 1.5rem 1rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .medical-equipment-page * {
+  .medical-equipment-page *,
+  .medical-equipment-page *::before,
+  .medical-equipment-page *::after {
+    scroll-behavior: auto !important;
     transition: none !important;
   }
 }

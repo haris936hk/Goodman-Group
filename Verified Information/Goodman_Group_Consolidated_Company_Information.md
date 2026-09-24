@@ -2,6 +2,63 @@
 
 This document consolidates the information contained in the five supplied PDFs. Information is organized by legal or operating entity. Obvious typographical errors have been corrected and exact repetitions have been merged. Distinct brands remain separate even when they share the same active ingredient. When the PDFs disagree and the conflict cannot be resolved from the supplied material, both source-specific values are retained and clearly attributed rather than silently combined.
 
+## Goodman Group
+
+### Identity and positioning
+
+- Website title: **Goodman Group — Seeking for Best**.
+- Homepage message: **Empowering Health, Wellness, Progress**.
+- Description: A diversified conglomerate operating across healthcare and non-healthcare sectors.
+- Group mission: To improve lives through innovative products, services, and solutions while fostering growth, excellence, and social responsibility.
+
+### Sectors
+
+- Medical billing.
+- Pharmaceuticals.
+- Medical equipment.
+- Chemicals.
+- Laboratory operations.
+- Automotive.
+- Real estate.
+
+### Products, services, and business interests
+
+- Pharmaceutical products.
+- Medical devices.
+- Nutraceutical products.
+- Surgical equipment.
+- Medical equipment.
+- Real estate.
+- Restaurants.
+- Automobiles.
+
+### Group customers
+
+- Government hospitals.
+- Private hospitals.
+- Retailers.
+- National distributors.
+
+### Website leadership statement
+
+The homepage identifies Syed Talib Hussain Hashmi as Group Chief Executive Officer, describes more than 30 years of administrative, marketing, and pharmaceutical-sector experience, states that he entered the family business at age 16, and gives 34 years of pharmaceutical-manufacturing experience. It states that he managed more than 360 office and field team members.
+
+Homepage positions:
+
+- Goodman Laboratories (Pvt.) Ltd. — Chief Executive Officer since 2012.
+- Geron Pharma (Pvt.) Ltd. — Chief Executive Officer since 2019.
+- Wal Green Chemical (Pvt.) Ltd. — Chief Executive Officer since 2021.
+- Goodman Medical Equipment Trading LLC, UAE — Director since July 2024.
+- Goodman Medical Equipment Trading, Pakistan — Director since July 2024.
+
+### Group contact and engagement
+
+- The homepage invites inquiries concerning partnerships, careers, and general business matters.
+- General website: https://goodmangoc.com/.
+- General email displayed on the Contact page: goodman@goodmangoc.com.
+- United States address displayed on the Contact page: 15650 Grosvenor Lane, Macomb, MI 48044.
+- Social icons are displayed for Twitter/X, LinkedIn, Instagram, YouTube, and Facebook, but their link destinations are empty.
+
 ## Goodman Laboratories (Pvt.) Ltd.
 
 ### Company identity
@@ -14,6 +71,31 @@ This document consolidates the information contained in the five supplied PDFs. 
 - Current position: An established national distribution operation serving patients through government hospitals, private hospitals, retailers, and national distributors.
 - Capabilities: Pharmaceutical production, bulk production, pharmaceutical marketing, sales, urgent-order fulfilment, and bulk-order fulfilment.
 - Stakeholder relationships: The company reports strong working relationships with the Drug Regulatory Authority of Pakistan (DRAP) and other relevant departments, supporting regulatory work and future exports.
+
+### Official website overview
+
+- Founded in 2008 by Mr. Syed Talib Hussain Hashmi.
+- Described as a pharmaceutical-manufacturing unit focused on innovation, quality, effective healthcare solutions, rigorous standards, reliability, scientific support, and proven customer benefits.
+- Website tagline: **Seeking for the Best**.
+
+### Five approved production sections
+
+- **Tablet:** High-quality tablets with precise dosing and effectiveness.
+- **Capsule:** Capsules designed for targeted delivery.
+- **Cephalosporin:** Cephalosporin products for different infections.
+- **Dry Suspension:** Reliable dry-suspension dosage forms.
+- **Liquid Syrup:** Liquid syrups designed for administration and absorption.
+
+### Website-reported departmental structure
+
+| Department | Employees |
+|---|---:|
+| Production | 90 |
+| Sales and Marketing | 270 |
+| Operations and Finance | 25 |
+| **Total represented by the table** | **385** |
+
+The About page also identifies a Quality Control Department responsible for testing and record keeping. The website’s 385-person departmental total, its homepage statement that Syed Talib Hussain Hashmi managed more than 360 staff, and the PDF’s statement of more than 150 staff are retained as source-specific historical or organizational figures rather than one current workforce count.
 
 ### Mission
 
@@ -80,6 +162,48 @@ International customer markets:
 - Ghana.
 - Tajikistan.
 - Yemen.
+
+#### Website-reported international activity
+
+- **Cambodia:** Expansion began after local demand generated supply inquiries.
+- **Ghana:** An exclusive distributorship agreement was signed for pharmaceutical products. The stated agreement term is five years from signing, and the first consignment was expected to reach Ghana in September 2024.
+- **Tajikistan:** A demand-based supply chain was developed in response to limited basic health facilities in several areas, with local stakeholders supporting development of healthcare units.
+- **Yemen:** A contract or memorandum of understanding was signed for bulk production. Supply was stated to begin after the Yemeni partners completed their local legal requirements.
+- **Afghanistan:** Pharmaceutical products are supplied through local stakeholders and distributors.
+
+### Corporate social responsibility
+
+- Provides medicines, life-saving drugs, and medical equipment free of charge to government charitable hospitals.
+- Provides medicines required for patients during emergencies.
+- Seeks to maintain low medicine prices and bids minimum prices in tenders to reach vulnerable populations.
+- Organizes free medical camps in rural areas with limited healthcare facilities.
+- Provides free medicine, health-and-hygiene awareness, and clean drinking water through rural medical camps.
+
+### Governance
+
+- Board of Directors.
+- Chief Executive Officer and primary shareholder.
+- Partners and secondary shareholders.
+- Operations and Finance.
+- Legal Department.
+- Quality Control.
+- Internal Audit.
+- Plant Manager.
+
+### Organizational structure
+
+- Chief Executive Officer.
+- Operations and Finance.
+- Administration and Accounts.
+- Sales and Marketing.
+- Sales Team.
+- Export Sales Team.
+- Quality Control.
+- Plant Manager.
+- Pharmacist.
+- Production Staff.
+- Store In-Charge.
+- Logistics Officers.
 
 ### Sustainability and growth position
 
@@ -448,17 +572,58 @@ The import-plus-local model is intended to:
 
 Wal Green Chemicals states that it looks forward to building long-term supply partnerships with customers.
 
-## Goodman Medical & Surgical Equipment (Pvt.) Ltd.
+## Goodman Medical Equipment Trading LLC
 
 ### Company identity
 
-- Legal name: Goodman Medical & Surgical Equipment (Pvt.) Ltd.
-- Industry: Healthcare equipment, surgical instruments, and medical devices.
-- Positioning: A healthcare supplier focused on product quality, safety, innovation, reliable service, and broad national access.
+- Official website name: Goodman Medical Equipment Trading LLC.
+- Website headline: Goodman Medical Equipment LLC.
+- Alternate PDF label: Goodman Medical & Surgical Equipment (Pvt.) Ltd.
+- Established: July 2024.
+- Base: Dubai, United Arab Emirates.
+- Pakistan presence and contact office: Islamabad, Pakistan.
+- Industry: Surgical instruments, medical equipment, and medical devices.
+- Positioning: A healthcare supplier focused on quality, safety, innovation, dependable service, and solutions that improve patient care.
 - Primary headline: **Delivering Excellence in Healthcare Solutions**.
+- Website statement: **Quality Health Solutions**.
 - Tagline: **Partnering for a Healthier Tomorrow**.
 - Supporting message: **Better Health, Better Life**.
 - Trust statement: **Trust, Quality, Commitment**.
+- Group tagline: **Seeking for the Best**.
+
+The official company webpage presents the Dubai LLC, the medical-and-surgical equipment activity, and the related Pakistan market presence as one company profile. They are therefore consolidated here rather than treated as three separate companies.
+
+### Founders
+
+The official website states that the company was established in July 2024 by:
+
+- Mr. Malik Munir Awan.
+- Mr. Syed Talib Hussain Hashmi.
+- Mr. Taj Muhammad.
+- Mr. Syed Ahmed Ali.
+
+### Company profile
+
+- Specializes in surgical products, medical equipment, and medical devices.
+- Has contract agreements with leading manufacturers and suppliers to support high-quality healthcare solutions.
+- Is committed to providing healthcare solutions that make a difference.
+- Supplies healthcare facilities across Pakistan, from major cities to remote areas.
+- Targets international markets while operating from Dubai and maintaining a Pakistan presence.
+
+### Mission
+
+To provide clients with the highest-quality products and improve patient care across the globe.
+
+### Vision
+
+Through innovation, ingenuity, dedication, and customer focus, to become a diversified healthcare company providing best-in-class products and services that improve patient care and enhance quality of life.
+
+### Values
+
+- Focus on goals and results in every thought and action.
+- Accept responsibility for assigned tasks and projects.
+- Build working relationships based on trust and the belief that trusted relationships can grow.
+- Maintain quality, safety, innovation, reliability, and customer satisfaction.
 
 ### Products
 
@@ -466,9 +631,9 @@ Wal Green Chemicals states that it looks forward to building long-term supply pa
 
 A complete range of surgical instruments designed for precision, durability, and high quality.
 
-#### Medical devices
+#### Medical equipment and devices
 
-A broad range of advanced medical devices intended to support modern healthcare needs and improve patient outcomes.
+A broad range of advanced medical equipment and medical devices intended to support modern healthcare requirements and improve patient outcomes.
 
 ### Service proposition
 
@@ -479,31 +644,81 @@ A broad range of advanced medical devices intended to support modern healthcare 
 - Quality-assured products.
 - Reliable partnership.
 - Innovative solutions.
-- Nationwide supply.
+- Nationwide supply in Pakistan.
+- International supply capability.
 
 ### Expertise and operating strengths
 
 - Experienced professional team with specialized industry knowledge and commitment.
-- Five years of industry experience.
+- Five years of industry experience stated in the supplied brochure.
 - Understanding of healthcare-provider requirements.
-- Reliable healthcare solutions.
 - Product compliance with international quality standards and regulatory requirements.
-- Supply to healthcare facilities throughout Pakistan, including large cities and remote areas.
 - Timely delivery and dependable service.
+- Contracted relationships with manufacturers and suppliers.
+- Quality-control, internal-audit, logistics, sales, marketing, and export-sales functions.
+
+### Production, cleaning, sterilization, packing, and handling workflow
+
+1. Soiled surgical instruments are collected.
+2. Instruments are transported to a STERIS Offsite Reprocessing Center (ORC).
+3. Instruments are cleaned and decontaminated according to manufacturer instructions for use, then placed in a washer.
+4. A technician inspects and assembles the instruments.
+5. Sterilized instruments are cooled and returned to transport carts.
+6. Sterilized instruments are transported back to the facility.
+7. Instruments are stored in a temperature- and humidity-controlled environment until ready for use.
+
+### Supply-chain management
+
+1. Production orders are generated for manufacturers and received for processing.
+2. Finished items are received into the Goodman Medical Equipment Trading warehouse.
+3. Quality-control staff examine product samples for quality assurance.
+4. Marketing staff generate customer orders.
+5. Items are transported from the port through dispatch for delivery against customer demand.
+
+### Governance
+
+#### Board of directors
+
+- Mr. Malik Munir Awan — Director.
+- Mr. Syed Talib Hussain Hashmi — Director.
+- Mr. Taj Muhammad — Director.
+- Mr. Ahmed Ali — Director. The founders section of the same webpage gives the fuller name “Mr. Syed Ahmed Ali.”
+
+#### Governance and control functions
+
+- Legal Department.
+- Quality Control.
+- Internal Audit.
+- Sales and Marketing Head.
+- International Sales Team.
+
+### Organizational structure
+
+- Managing Director.
+- Operations and Finance.
+- Administration and Accounts.
+- Store In-Charge.
+- Logistics Officers.
+- Quality Control.
+- Sales and Marketing Head.
+- Sales Team.
+- Export Sales Team.
 
 ### Customers
 
 - Hospitals.
 - Clinics.
 - Healthcare professionals.
+- Other healthcare facilities and buyers requiring surgical instruments, medical equipment, or medical devices.
 
 ### Markets
 
-Domestic market:
+#### Current operating markets
 
-- Nationwide coverage across Pakistan.
+- United Arab Emirates, with the company based in Dubai.
+- Pakistan, with nationwide supply from large cities to remote areas.
 
-Target export markets:
+#### Target international markets stated in the brochure
 
 - Africa.
 - Europe.
@@ -512,36 +727,22 @@ Target export markets:
 
 ### Customer promise
 
-- High-quality surgical instruments and medical devices.
-- Broad product selection for varied healthcare needs.
+- High-quality surgical instruments, medical equipment, and medical devices.
+- Broad product selection for diverse healthcare needs.
 - Trusted service for hospitals, clinics, and healthcare professionals.
 - Customer satisfaction as the highest priority.
+- Best-in-class products and services intended to improve patient care and quality of life.
+
+### Leadership-source clarification
+
+The official website identifies Syed Talib Hussain Hashmi as a founder and board director. This supports the director designation in `GOODMAN.pdf`. `Profile Syed Talib Hussain Hashmi.pdf` separately describes him as Chief Executive Officer of Goodman Medical Equipment Trading (Pvt.) Ltd. from 2024; that title may refer to the Pakistan operation or an earlier internal designation, but the supplied sources do not resolve it.
 
 ### Contact
 
-- Office: Islamabad, Pakistan.
+- Pakistan office: Islamabad, Pakistan.
 - Telephone: +92 336 777 0770.
 - Email: afgoodmangoc@gmail.com.
-- Website: www.goodmangoc.com.
-
-## Goodman Medical Equipment Trading
-
-### Pakistan operation
-
-- Legal name: Goodman Medical Equipment Trading (Pvt.) Ltd.
-- Jurisdiction: Pakistan.
-- Chief Executive Officer: Syed Talib Hussain Hashmi.
-- CEO tenure: Since 2024.
-- Source conflict: The personal business profile identifies him as Chief Executive Officer from 2024, while the Goodman Laboratories company profile identifies him as a Director of the Pakistan-based operation from July 2024. The supplied PDFs do not establish whether these are concurrent roles, a role change, or a documentation error.
-
-### United Arab Emirates operation
-
-- Legal name: Goodman Medical Equipment Trading LLC.
-- Jurisdiction: United Arab Emirates.
-- Director: Syed Talib Hussain Hashmi.
-- Directorship effective: July 2024.
-
-The supplied documents do not provide a separate product catalogue, address, customer list, or operational description for these two trading entities.
+- Website: https://goodmangoc.com/goodman-medical-equipment.
 
 ## Goodman Billing (Pvt.) Ltd.
 
@@ -612,6 +813,220 @@ Supporting statement: **Maximizing Revenue, Improving Care**.
 
 **Your Partner in Better Revenue and Better Healthcare.**
 
+### Official website positioning
+
+- Headline: **Medical Billing. Redefined.**
+- Goodman Billing states that it improves the complete revenue cycle rather than only processing claims.
+- Its stated objectives are faster and cleaner reimbursement, precision, discretion, compliance, security, scalability, and reduced administrative burden.
+- Core promises: accurate claims, faster reimbursements, HIPAA compliance, proactive denial resolution, optimized cash flow, and transparent reporting.
+- The Contact page states that Goodman Billing is backed by Goodman Laboratories and Goodman Medical Equipment Trading.
+- Website claim: specialty-focused billing for more than 75 specialties across the United States, regardless of practice size or type.
+
+### Website-listed medical billing specialties
+
+The dedicated specialties page displays the following 40 specialties:
+
+- **Orthopedics:** Billing intended to maximize profit, improve reimbursements, and support patient satisfaction.
+- **Cardiology:** Accuracy- and compliance-focused billing intended to reduce denials and accelerate payment.
+- **Pediatrics:** Revenue-cycle support tailored to pediatric practices.
+- **Anesthesia:** Billing intended to increase revenue and reduce denials for anesthesiologists.
+- **Family Medicine:** End-to-end billing support for high-volume family and general practices.
+- **Oral and Maxillofacial Surgery:** Tailored billing and health-record-management support for maxillofacial surgeons.
+- **General Practice:** Customized billing and coding intended to accelerate reimbursement.
+- **Chiropractic:** Tailored billing intended to improve revenue and patient satisfaction.
+- **Dermatology:** Procedure-focused billing intended to reduce denials and improve reimbursement.
+- **Podiatry:** Billing intended to increase profitability and reduce denials for podiatrists.
+- **Endocrinology:** Coding intended to reduce denials and improve claim-submission rates.
+- **Osteopathic Medicine:** Billing intended to improve profitability and reduce claim rejection.
+- **Gastroenterology:** Revenue-cycle optimization for digestive-health specialists.
+- **Neurology:** Support for complex diagnostic and treatment claims.
+- **Ophthalmology:** Revenue-focused billing for eye-care professionals.
+- **Physical Therapy:** Billing intended to reduce administrative burden and increase collections.
+- **Psychiatry:** Revenue-cycle services for mental-health providers.
+- **Radiology:** Accurate coding and timely reimbursement support.
+- **Urology:** Billing intended to maximize revenue and minimize claim denials.
+- **Oncology:** Revenue-cycle optimization for cancer-care specialists.
+- **Pulmonology:** Claims-processing support for respiratory care.
+- **Geriatrics:** Revenue-cycle optimization for elderly-care services.
+- **Nephrology:** Revenue-cycle optimization for kidney-care services.
+- **Allergy and Immunology:** Claims management for allergy and immunology specialists.
+- **Otolaryngology (ENT):** Reimbursement support for ear, nose, and throat specialists.
+- **Obstetrics and Gynecology:** Revenue-cycle support for women’s healthcare providers.
+- **Emergency Medicine:** Billing for fast-paced emergency-department environments.
+- **Pain Management:** Claims support for chronic-pain treatment.
+- **Sports Medicine:** Billing for athletic-injury and performance specialists.
+- **Infectious Disease:** Claims support for complex treatment protocols.
+- **Pathology:** Billing for laboratory and diagnostic specialists.
+- **Hematology:** Claims support for blood-disorder treatment.
+- **Vascular Surgery:** Billing for circulatory-system specialists.
+- **Plastic Surgery:** Revenue support for cosmetic and reconstructive procedures.
+- **Bariatric Surgery:** Billing for weight-loss surgery specialists.
+- **Sleep Medicine:** Claims support for sleep-disorder treatment.
+- **Hospice and Palliative Care:** Billing for end-of-life care.
+- **Wound Care:** Claims support for complex wound treatment.
+- **Neonatology:** Billing for newborn intensive-care services.
+- **Occupational Medicine:** Billing for workplace-health specialists.
+
+The specialties page also promises customized billing by specialty, efficient claims management, error reduction, specialty-specific reporting, accurate billing, faster reimbursement, and regulatory compliance.
+
+### Software integrations and compatibility
+
+- **Epic:** Electronic health records and practice management.
+- **athenahealth:** Cloud-based medical solutions.
+- **ADP:** Human-resources and payroll management.
+- **NextGen:** Medical billing and electronic health records.
+- **ECW/eClinicalWorks:** Electronic health records and practice management.
+- **Office Ally:** Healthcare software and hospital solutions.
+- **TherapyNotes:** Practice management.
+- **Raintree:** Rehabilitation and physical-therapy software.
+- **AdvancedMD:** Practice management, patient engagement, and electronic health records.
+- **TriZetto:** Medical billing and electronic health records.
+- **Change Healthcare:** Medical billing and payment processing.
+- **CollaborateMD:** Medical-billing software.
+- The company also states that it supports other platforms and custom systems.
+
+### Complete website service catalogue
+
+#### Front-desk support
+
+- Prior authorizations.
+- Eligibility and coverage verification.
+- Verification of benefits.
+
+#### Medical coding
+
+- Removal of coding inaccuracies.
+- Improved reimbursement rates.
+- Comprehensive claims-coding coverage.
+
+#### Medical billing
+
+- Accurate, secure, and fast billing.
+- Practice-specific solutions.
+- Streamlined payment processing.
+
+#### Patient help desk
+
+- Patient-billing review.
+- Inbound and outbound patient calls.
+- Coordination-of-benefits updates with payers.
+- Itemized billing emails.
+
+#### Credentialing and enrolments
+
+- Credentialing and enrolment with government and commercial payers.
+- Electronic data interchange and electronic funds transfer setup and agreements.
+- Payer recredentialing and provider-profile revalidation.
+- Demographic updates.
+
+#### Denial management
+
+- Recovery of rightfully payable denied claims.
+- Denial analysis and appeals.
+- Free accounts-receivable analysis as an entry service.
+
+#### Medical accounts receivable
+
+- Reduction of accounts-receivable days and improvement of cash flow.
+- Accounts-receivable management strategies.
+- Recovery of lost revenue.
+
+#### Durable medical equipment credentialing
+
+- Credentialing for CPAP equipment, diabetic strips, and braces.
+- Prevention of denials caused by incomplete credentialing files.
+- Management of credentialing requirements.
+
+#### Nurse-practitioner credentialing
+
+- Reduction of approval delays.
+- Faster payer-panel access.
+- Earlier billing eligibility.
+
+#### Telemedicine credentialing
+
+- Accelerated telehealth-provider credentialing.
+- Management of CAQH, payer, and licensing requirements.
+- Faster approval for virtual-care delivery.
+
+#### Audit services
+
+- Preparation for payer audits.
+- Identification and correction of billing vulnerabilities.
+- Protection against recoupments and penalties.
+
+#### Medical underpayment recovery
+
+- Recovery of underpaid claims.
+- Analysis of payment discrepancies.
+- Maximization of rightful reimbursement.
+
+#### Revenue-cycle-management services
+
+- Website claim of a 98% clean-claim rate.
+- Faster cash flow through specialist support.
+- 24/7 revenue-cycle management.
+
+#### Behavioral-health credentialing
+
+- Faster approval for mental-health providers.
+- Partnership with major insurance networks.
+- Support for practice growth.
+
+#### Prior authorization
+
+- Website claim of a 75% reduction in patient delays.
+- Streamlined prior-authorization requests.
+- Reduced administrative burden.
+
+#### Physician billing
+
+- Financial-efficiency support for physicians.
+- Accurate and timely claim submission.
+- Revenue maximization.
+
+#### Claim submission
+
+- Faster payment.
+- Accurate claim submission.
+- Reduced rejection rates.
+
+#### Medical credentialing
+
+- Credentialing with commercial insurers.
+- Access to non-commercial payer networks.
+- Specialist credentialing support.
+
+### Differentiators and commitment
+
+- Certified and experienced billing specialists.
+- Customized solutions for each practice.
+- Regular reports and analytics.
+- Transparent performance reporting.
+- Commitment to maximizing revenue while minimizing administrative burden.
+- Optimization of every stage of the billing process.
+
+### Website testimonials
+
+- **Dr. Sarah Johnson, Family Practice, New York:** States that Goodman Billing transformed revenue-cycle management, remained responsive and knowledgeable, and significantly improved collections.
+- **Michael Chen, Practice Manager, California:** Reports a 60% reduction in denial rate and a 25% increase in collections after partnering with Goodman Billing.
+- **Dr. Emily Rodriguez, Pediatrics, Texas:** Describes the service as professional, efficient, available, and seamless.
+
+These testimonials are website-published statements and have not been independently verified.
+
+### Website contact information
+
+- Email: goodman@goodmangoc.com.
+- Address: 15650 Grosvenor Lane, Macomb, Michigan 48044, United States.
+- The contact form requests full name, email address, telephone number, service of interest, and message.
+- Form service choices: Family Medicine, Internal Medicine, Pediatrics, Geriatrics, Adolescent Medicine, General Surgery, Orthopedic Surgery, Neurosurgery, Cardiovascular Surgery, Plastic Surgery, Cardiology, Dermatology, Endocrinology, Gastroenterology, Nephrology, Radiology, Pathology, Nuclear Medicine, Clinical Laboratory, Emergency Medicine, Critical Care, Hospital Medicine, Trauma Surgery, Obstetrics and Gynecology, Reproductive Endocrinology, Maternal-Fetal Medicine, Psychiatry, Psychology, Addiction Medicine, Child Psychiatry, Oncology, Rheumatology, Pulmonology, Infectious Disease, Allergy and Immunology, Physical Medicine, Occupational Therapy, Speech Therapy, Pain Management, Sleep Medicine, Sports Medicine, Palliative Care, and Other.
+
+### Website source distinctions
+
+- The website claims support for more than 75 specialties, while the dedicated specialties page visibly displays 40 specialty cards and the contact form contains a different service-selection list.
+- The website’s 75-plus-specialty claim supersedes neither the brochure’s older 20-plus-specialty statement nor its 15-plus-practice figure; all are retained as source-specific claims.
+
+
 ## Geron Pharma (Pvt.) Ltd.
 
 ### Available company information
@@ -650,9 +1065,8 @@ He has developed manufacturing operations, maintained regulatory compliance, exp
 | Chief Executive Officer | Goodman Laboratories (Pvt.) Ltd. | 2012 in `GOODMAN.pdf`; 2016 in the personal business profile — unresolved source conflict |
 | Chief Executive Officer | Geron Pharma (Pvt.) Ltd. | 2019 |
 | Chief Executive Officer | Wal Green Chemicals (Pvt.) Ltd. | 2021 |
-| Chief Executive Officer / Director | Goodman Medical Equipment Trading (Pvt.) Ltd., Pakistan | CEO from 2024 in the personal profile; Director from July 2024 in `GOODMAN.pdf` — unresolved source conflict |
 | Chief Executive Officer | Goodman Billing (Pvt.) Ltd. | 2026 |
-| Director | Goodman Medical Equipment Trading LLC, UAE | July 2024 |
+| Founder and Director | Goodman Medical Equipment Trading LLC | July 2024; confirmed by the official company webpage and `GOODMAN.pdf`. The personal profile separately uses the CEO title for a Pakistan-labelled operation. |
 | Director | F Co Pharmaceuticals (Pvt.) Ltd. | 2024 |
 
 ### Core expertise
@@ -684,6 +1098,6 @@ He has developed manufacturing operations, maintained regulatory compliance, exp
 - Different brands sharing the same active ingredient — including Sulpir/Eprobe, Mepsal/Hamzome, and Somicid/Esogood — remain separate.
 - Unresolved Goodman Laboratories product discrepancies are explicitly attributed in their product records: Gemirex pack size, Goodcef capsule pack sizes, Itopri strength, and Goodgesic Plus pack size.
 - The contradictory Malgro “suspension” catalogue label is recorded as a source anomaly, not as a verified dosage form.
-- Syed Talib Hussain Hashmi’s role at Goodman Medical Equipment Trading (Pvt.) Ltd., Pakistan, remains unresolved because one source states CEO and another states Director.
+- The official company webpage consolidates the previously separated medical-equipment labels into Goodman Medical Equipment Trading LLC and confirms Syed Talib Hussain Hashmi as a founder and board director. The CEO title in the personal PDF is retained as an alternate source-specific designation rather than evidence of a separate company.
 - Distinct telephone numbers were retained when they appear to serve different offices, factories, or business entities; none was presented as a replacement for another.
 - Marketing claims and operational metrics are presented as company-supplied statements, not independently verified claims.
