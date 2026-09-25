@@ -33,9 +33,20 @@ export type Certificate = {
   readonly certificateNumber: string;
 };
 
+export type ProductionSection = {
+  readonly name: string;
+  readonly description: string;
+};
+
+export type InternationalActivityReport = {
+  readonly market: string;
+  readonly status: string;
+};
+
 export type GoodmanLaboratoriesProfile = {
   readonly identity: {
     readonly legalName: string;
+    readonly founded: string;
     readonly industry: string;
     readonly purpose: string;
     readonly capabilities: readonly string[];
@@ -48,19 +59,25 @@ export type GoodmanLaboratoriesProfile = {
     readonly name: string;
     readonly role: string;
     readonly biography: string;
-    readonly tenureStart: "2016";
+    readonly tenureNote: string;
     readonly expertise: readonly string[];
     readonly teamSizeClaim: string;
     readonly manufacturingExperience: string;
     readonly totalExperience: string;
     readonly familyBusinessStartAge: number;
   };
+  readonly productionSections: readonly ProductionSection[];
+  readonly websiteFunctions: readonly string[];
+  readonly governance: readonly string[];
+  readonly organizationalFunctions: readonly string[];
+  readonly socialResponsibility: readonly string[];
   readonly facilitiesAndOperations: readonly string[];
   readonly customers: readonly string[];
   readonly geographicPresence: {
     readonly nationalCoverage: readonly string[];
     readonly internationalCustomerMarkets: readonly string[];
   };
+  readonly internationalActivity: readonly InternationalActivityReport[];
   readonly sustainabilityAndGrowth: {
     readonly foundationSummary: string;
     readonly leadershipFoundationClaim: string;
@@ -102,6 +119,7 @@ export type GoodmanLaboratoriesProfile = {
 export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
   identity: {
     legalName: "Goodman Laboratories (Pvt.) Ltd.",
+    founded: "2008",
     industry:
       "Pharmaceutical manufacturing, marketing, sales, supply, distribution, export, wholesale, retail, and trading.",
     purpose:
@@ -131,7 +149,8 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     role: "Chief Executive Officer",
     biography:
       "The consolidated leadership record describes him as a pharmaceutical entrepreneur and industry executive with more than 30 years of experience, including approximately 34 years in pharmaceutical manufacturing. He took responsibility for his family business at age 16. GOODMAN.pdf states that he managed more than 150 office and field team members.",
-    tenureStart: "2016",
+    tenureNote:
+      "GOODMAN.pdf reports 2012; Profile Syed Talib Hussain Hashmi.pdf reports 2016; start year unresolved.",
     expertise: [
       "Pharmaceutical manufacturing and operations",
       "Administration, marketing, and sales",
@@ -146,6 +165,65 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     totalExperience: "More than 30 years of industry and entrepreneurial experience",
     familyBusinessStartAge: 16,
   },
+  productionSections: [
+    {
+      name: "Tablet",
+      description: "High-quality tablets with precise dosing and effectiveness.",
+    },
+    {
+      name: "Capsule",
+      description: "Capsules designed for targeted delivery.",
+    },
+    {
+      name: "Cephalosporin",
+      description: "Cephalosporin products for different infections.",
+    },
+    {
+      name: "Dry Suspension",
+      description: "Reliable dry-suspension dosage forms.",
+    },
+    {
+      name: "Liquid Syrup",
+      description: "Liquid syrups designed for administration and absorption.",
+    },
+  ],
+  websiteFunctions: [
+    "Production",
+    "Sales and Marketing",
+    "Operations and Finance",
+    "Quality Control (testing and record keeping)",
+  ],
+  governance: [
+    "Board of Directors",
+    "Chief Executive Officer and primary shareholder",
+    "Partners and secondary shareholders",
+    "Operations and Finance",
+    "Legal Department",
+    "Quality Control",
+    "Internal Audit",
+    "Plant Manager",
+  ],
+  organizationalFunctions: [
+    "Chief Executive Officer",
+    "Operations and Finance",
+    "Administration and Accounts",
+    "Sales and Marketing",
+    "Sales Team",
+    "Export Sales Team",
+    "Quality Control",
+    "Plant Manager",
+    "Pharmacist",
+    "Production Staff",
+    "Store In-Charge",
+    "Logistics Officers",
+  ],
+  socialResponsibility: [
+    "Provides medicines, life-saving drugs, and medical equipment free of charge to government charitable hospitals.",
+    "Provides medicines required for patients during emergencies.",
+    "Seeks to maintain low medicine prices and bids minimum prices in tenders to reach vulnerable populations.",
+    "Organizes free medical camps in rural areas with limited healthcare facilities.",
+    "Provides free medicine, health-and-hygiene awareness, and clean drinking water through rural medical camps.",
+  ],
   facilitiesAndOperations: [
     "Supplies products at competitive prices in both minimum and maximum quantities according to customer requirements.",
     "Handles urgent and bulk requirements.",
@@ -179,6 +257,33 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
       "Yemen",
     ],
   },
+  internationalActivity: [
+    {
+      market: "Afghanistan",
+      status:
+        "Pharmaceutical products are supplied through local stakeholders and distributors.",
+    },
+    {
+      market: "Cambodia",
+      status:
+        "Expansion began after local demand generated supply inquiries.",
+    },
+    {
+      market: "Ghana",
+      status:
+        "An exclusive distributorship agreement was signed for pharmaceutical products with a five-year term from signing; the first consignment was expected to reach Ghana in September 2024.",
+    },
+    {
+      market: "Tajikistan",
+      status:
+        "A demand-based supply chain was developed in response to limited basic health facilities in several areas, with local stakeholders supporting development of healthcare units.",
+    },
+    {
+      market: "Yemen",
+      status:
+        "A contract or memorandum of understanding was signed for bulk production, with supply stated to begin after Yemeni partners complete local legal requirements.",
+    },
+  ],
   sustainabilityAndGrowth: {
     foundationSummary:
       "The company presents its long operating history, experienced leadership, national reach, and international business expansion as the foundation of its sustainability.",

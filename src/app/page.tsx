@@ -144,7 +144,7 @@ export default function Home() {
               <header className="chapter-heading chapter-heading-wide" data-reveal>
                 <div>
                   <p className="chapter-index">02 / Explore</p>
-                  <h2>Four operating companies. No false sameness.</h2>
+                  <h2>{companies.length} operating companies. No false sameness.</h2>
                 </div>
                 <p>
                   Each company receives a bespoke page reflecting its legal identity,
@@ -166,7 +166,7 @@ export default function Home() {
                   <div className="company-focus-visual-label glass-panel">
                     <span>Goodman Group portfolio</span>
                     <strong>
-                      Four distinct companies with bespoke destinations
+                      {companies.length} distinct companies with bespoke destinations
                     </strong>
                   </div>
                 </div>
@@ -347,8 +347,9 @@ export default function Home() {
                   <div>
                     <h3>Leadership across the Group</h3>
                     <p>
-                      Goodman Laboratories&apos; verified CEO tenure began in
-                      2016, while other documented appointments extend through
+                      Goodman Laboratories was founded in 2008, followed by
+                      subsequent documented appointments across Geron Pharma,
+                      Wal Green Chemicals, and Goodman Medical Equipment through
                       July 2024.
                     </p>
                   </div>

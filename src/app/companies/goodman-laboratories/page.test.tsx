@@ -4,41 +4,55 @@ import { describe, expect, it } from "vitest";
 import GoodmanLaboratoriesPage, { metadata } from "./page";
 
 describe("GoodmanLaboratoriesPage", () => {
-  it("exports canonical metadata without promotional or obsolete tenure wording", () => {
+  it("exports canonical metadata without promotional wording", () => {
     expect(metadata.title).toBe("Goodman Laboratories");
     expect(metadata.description).toContain("Goodman Laboratories (Pvt.) Ltd.");
     expect(metadata.description).not.toContain("Tagline:");
     expect(metadata.description).not.toContain("Seeking for the Best");
-    expect(metadata.description).not.toContain("2012");
   });
 
-  it("renders legal identity, mission, and the verified leadership tenure", () => {
+  it("renders legal identity, 2008 founding, mission, and source-qualified leadership tenure", () => {
     render(<GoodmanLaboratoriesPage />);
 
     expect(screen.getByRole("heading", { level: 1, name: "Goodman Laboratories" })).toBeInTheDocument();
     expect(screen.getAllByText("Goodman Laboratories (Pvt.) Ltd.").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("A Goodman Group company").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/2008 by Syed Talib Hussain Hashmi/)).toBeInTheDocument();
     expect(screen.getByText("To provide affordable pharmaceutical products across the globe.")).toBeInTheDocument();
     expect(screen.getByText("Syed Talib Hussain Hashmi")).toBeInTheDocument();
-    expect(screen.getByText("Chief Executive Officer")).toBeInTheDocument();
-    expect(screen.getByText("CEO since 2016")).toBeInTheDocument();
+    expect(screen.getAllByText("Chief Executive Officer").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/GOODMAN\.pdf reports 2012; Profile Syed Talib Hussain Hashmi\.pdf reports 2016; start year unresolved/i)).toBeInTheDocument();
 
-    expect(screen.queryByText("2012")).not.toBeInTheDocument();
-    expect(screen.queryByText("Documented Source Conflict")).not.toBeInTheDocument();
-    expect(screen.queryByText(/Tagline:/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Product slogan:/)).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Corporate social responsibility" })).toBeInTheDocument();
+    expect(screen.getByText(/Provides medicines, life-saving drugs, and medical equipment free of charge/i)).toBeInTheDocument();
   });
 
-  it("renders national coverage and qualified international customer markets", () => {
+  it("renders national coverage, differentiated international statuses, production sections, and functions", () => {
     render(<GoodmanLaboratoriesPage />);
 
     expect(screen.getByRole("heading", { level: 3, name: "National coverage" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "International customer markets" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "International activity & reach" })).toBeInTheDocument();
     expect(screen.getByText("Islamabad")).toBeInTheDocument();
     expect(screen.getByText("Punjab")).toBeInTheDocument();
-    expect(screen.getByText("Afghanistan")).toBeInTheDocument();
-    expect(screen.getByText("Yemen")).toBeInTheDocument();
-    expect(screen.getByText(/do not represent foreign manufacturing facilities/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/Pharmaceutical products are supplied through local stakeholders and distributors/i)).toBeInTheDocument();
+    expect(screen.getByText(/exclusive distributorship agreement was signed/i)).toBeInTheDocument();
+    expect(screen.getByText(/supply stated to begin after Yemeni partners complete local legal requirements/i)).toBeInTheDocument();
+    expect(screen.getByText(/differing stages of distribution, inquiries, agreements, and conditional supply/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Approved production sections" })).toBeInTheDocument();
+    expect(screen.getByText("Tablet")).toBeInTheDocument();
+    expect(screen.getByText("Capsule")).toBeInTheDocument();
+    expect(screen.getByText("Cephalosporin")).toBeInTheDocument();
+    expect(screen.getByText("Dry Suspension")).toBeInTheDocument();
+    expect(screen.getByText("Liquid Syrup")).toBeInTheDocument();
+
+    expect(screen.getByText("Quality Control (testing and record keeping)")).toBeInTheDocument();
+    expect(screen.getByText("Board of Directors")).toBeInTheDocument();
+    expect(screen.getByText("Internal Audit")).toBeInTheDocument();
+    expect(screen.getByText("Logistics Officers")).toBeInTheDocument();
+
+    expect(screen.getByText(/Manufacturing licence no\. shown on product artwork:/i)).toBeInTheDocument();
+    expect(screen.getByText("000613")).toBeInTheDocument();
   });
 
   it("keeps dense product content collapsed until its named summary is activated", () => {

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
-
+import { companies } from '@/data/companies';
 import Home from './page';
 
 describe('Home', () => {
@@ -55,7 +55,9 @@ describe('Home', () => {
       screen.queryByRole('heading', { name: 'Different sectors. No false sameness.' }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'Four operating companies. No false sameness.' }),
+      screen.getByRole('heading', {
+        name: `${companies.length} operating companies. No false sameness.`,
+      }),
     ).toBeInTheDocument();
 
     for (const company of [
@@ -63,6 +65,7 @@ describe('Home', () => {
       { name: 'Geron Pharma', slug: 'geron-pharma' },
       { name: 'Goodman Medical Equipment Trading', slug: 'goodman-medical-equipment' },
       { name: 'Wal Green Chemicals', slug: 'wal-green-chemicals' },
+      { name: 'Goodman Billing', slug: 'goodman-billing' },
     ]) {
       const links = screen.getAllByRole('link', { name: `View ${company.name}` });
       expect(links.length).toBeGreaterThanOrEqual(1);

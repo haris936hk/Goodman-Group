@@ -57,13 +57,19 @@ export default function CompaniesPage() {
                 <div className="directory-panel-brand">
                   <span className="directory-panel-index">0{index + 1}</span>
                   <div className="directory-panel-logo glass-opaque">
-                    <Image
-                      src={company.logo}
-                      alt={`${company.displayName} logo`}
-                      width={company.logoWidth}
-                      height={company.logoHeight}
-                      sizes="(max-width: 640px) 180px, 220px"
-                    />
+                    {company.logo ? (
+                      <Image
+                        src={company.logo.src}
+                        alt={`${company.displayName} logo`}
+                        width={company.logo.width}
+                        height={company.logo.height}
+                        sizes="(max-width: 640px) 180px, 220px"
+                      />
+                    ) : (
+                      <span className="directory-text-identity">
+                        {company.displayName}
+                      </span>
+                    )}
                   </div>
                 </div>
 

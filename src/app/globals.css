@@ -906,6 +906,19 @@ main,
   object-fit: contain;
 }
 
+.company-text-identity {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #06111f;
+  text-align: center;
+  line-height: 1.25;
+  padding: 0.5rem;
+}
+
 .company-card-copy {
   position: relative;
   z-index: 1;
@@ -1807,6 +1820,16 @@ main,
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+.directory-text-identity {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #06111f;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .directory-panel-content {

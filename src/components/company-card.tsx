@@ -25,13 +25,17 @@ export function CompanyCard({ company, compact = false }: CompanyCardProps) {
           <span>{company.business}</span>
         </div>
         <div className="company-logo-frame glass-opaque">
-          <Image
-            src={company.logo}
-            alt={`${company.displayName} logo`}
-            width={company.logoWidth}
-            height={company.logoHeight}
-            sizes="(max-width: 720px) calc(100vw - 68px), (max-width: 1180px) 42vw, 220px"
-          />
+          {company.logo ? (
+            <Image
+              src={company.logo.src}
+              alt={`${company.displayName} logo`}
+              width={company.logo.width}
+              height={company.logo.height}
+              sizes="(max-width: 720px) calc(100vw - 68px), (max-width: 1180px) 42vw, 220px"
+            />
+          ) : (
+            <span className="company-text-identity">{company.displayName}</span>
+          )}
         </div>
         <div className="company-card-copy">
           <div>

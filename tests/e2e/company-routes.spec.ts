@@ -12,7 +12,8 @@ const companyRouteExpectations = [
   {
     slug: 'goodman-laboratories',
     displayName: 'Goodman Laboratories',
-    verifiedFact: 'CEO since 2016',
+    verifiedFact:
+      'GOODMAN.pdf reports 2012; Profile Syed Talib Hussain Hashmi.pdf reports 2016; start year unresolved.',
     pageLandmarkHeading: 'Registered and marketed products',
   },
   {
@@ -32,6 +33,12 @@ const companyRouteExpectations = [
     displayName: 'Wal Green Chemicals',
     verifiedFact: 'CEO since 2021',
     pageLandmarkHeading: 'Product & Material Portfolio',
+  },
+  {
+    slug: 'goodman-billing',
+    displayName: 'Goodman Billing',
+    verifiedFact: '15650 Grosvenor Lane, Macomb, Michigan 48044, United States',
+    pageLandmarkHeading: 'Revenue-Cycle Workflow',
   },
 ] as const;
 
@@ -98,9 +105,16 @@ for (const company of companyRouteExpectations) {
     await expect(
       page.getByRole('heading', { level: 1, name: company.displayName }),
     ).toBeVisible();
-    await expect(
-      page.getByRole('img', { name: `${company.displayName} logo` }),
-    ).toBeVisible();
+    const canonical = companies.find((c) => c.slug === company.slug);
+    if (canonical?.logo) {
+      await expect(
+        page.getByRole('img', { name: `${company.displayName} logo` }),
+      ).toBeVisible();
+    } else {
+      await expect(
+        page.getByRole('heading', { level: 1, name: company.displayName }),
+      ).toBeVisible();
+    }
 
     // Minimal Group return controls and relationship disclosure
     await expect(page.getByRole('link', { name: 'All companies' }).first()).toBeVisible();
@@ -131,6 +145,46 @@ for (const company of companyRouteExpectations) {
     expect(results.violations).toEqual([]);
   });
 }
+
+test('keeps Goodman Billing readable with optional details at desktop and 320px', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [1440, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/companies/goodman-billing');
+    await expect(page.getByRole('heading', { level: 1, name: 'Goodman Billing' })).toBeVisible();
+    await expect(page.getByText(/medical billing and revenue-cycle management.*United States/i).first()).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Services' }).getByRole('heading', { name: 'Front Desk & Coding' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Revenue-Cycle Workflow' }).locator('ol > li')).toHaveCount(6);
+    await expect(page.getByRole('link', { name: 'Email Goodman Billing' })).toHaveAttribute('href', 'mailto:goodman@goodmangoc.com');
+
+    const services = page.getByRole('region', { name: 'Services' });
+    const firstService = services.locator('details').first();
+    await expect(firstService).not.toHaveAttribute('open');
+    await firstService.locator('summary').click();
+    await expect(firstService.getByRole('heading', { name: 'Medical coding' })).toBeVisible();
+    await expect(services.locator('details').nth(1)).not.toHaveAttribute('open');
+
+    const targets = page.getByRole('region', { name: 'Evidence & source notes' }).locator('details').first();
+    await expect(targets).not.toHaveAttribute('open');
+    await targets.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    await expect(targets.getByText('≥ 98%').first()).toBeVisible();
+    await expect(targets.getByText(/Source-published figure with reporting period not provided/)).toBeVisible();
+
+    const specialties = page.locator('.billing-catalogue').first();
+    await specialties.locator('summary').click();
+    await expect(specialties.getByText('Orthopedics')).toBeVisible();
+    const platforms = page.locator('.billing-catalogue').nth(1);
+    await platforms.locator('summary').click();
+    await expect(platforms.getByText('Epic')).toBeVisible();
+    await expect(platforms.getByText(/does not establish a commercial partnership/)).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Contact Goodman Billing' }).getByRole('link', { name: 'goodman@goodmangoc.com' })).toBeVisible();
+
+    const widths = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
+    expect(widths.content).toBeLessThanOrEqual(widths.viewport);
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  }
+});
 
 test('simplifies Goodman Laboratories product disclosure', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });

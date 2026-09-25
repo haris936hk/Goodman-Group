@@ -47,14 +47,16 @@ export default function WalGreenChemicalsPage() {
             </div>
 
             <div className="wg-logo-stage">
-              <Image
-                src={company.logo}
-                alt={`${company.displayName} logo`}
-                width={company.logoWidth}
-                height={company.logoHeight}
-                priority
-                sizes="(max-width: 640px) 220px, 280px"
-              />
+              {company.logo ? (
+                <Image
+                  src={company.logo.src}
+                  alt={`${company.displayName} logo`}
+                  width={company.logo.width}
+                  height={company.logo.height}
+                  priority
+                  sizes="(max-width: 640px) 220px, 280px"
+                />
+              ) : null}
               <svg
                 className="wg-swoosh-line"
                 viewBox="0 0 160 20"
@@ -258,8 +260,7 @@ export default function WalGreenChemicalsPage() {
                 <p className="wg-sourcing-intro">
                   Wal Green Chemicals maintains established international
                   import channels connecting global manufacturers to
-                  Pakistan-based industrial customers (distinct from company
-                  facilities):
+                  Pakistan-based industrial customers:
                 </p>
                 <div className="wg-imports-grid">
                   {profile.sourcingNetwork.internationalImports.map((imp) => (
@@ -318,9 +319,7 @@ export default function WalGreenChemicalsPage() {
                 </div>
               </div>
               <p className="wg-leader-tenure-detail">
-                CEO tenure stated in the group profile: {leader.tenure}. Leading
-                commercial operations, supplier relationships, and nationwide
-                raw-material distribution.
+                CEO tenure stated in the group profile: {leader.tenure}.
               </p>
             </div>
 

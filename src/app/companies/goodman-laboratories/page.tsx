@@ -33,14 +33,16 @@ export default function GoodmanLaboratoriesPage() {
             <p className="lab-summary">{company.summary}</p>
           </div>
           <div className="lab-logo-stage">
-            <Image
-              src={company.logo}
-              alt={`${company.displayName} logo`}
-              width={company.logoWidth}
-              height={company.logoHeight}
-              priority
-              sizes="(max-width: 640px) 240px, 320px"
-            />
+            {company.logo ? (
+              <Image
+                src={company.logo.src}
+                alt={`${company.displayName} logo`}
+                width={company.logo.width}
+                height={company.logo.height}
+                priority
+                sizes="(max-width: 640px) 240px, 320px"
+              />
+            ) : null}
           </div>
         </div>
       </header>
@@ -73,6 +75,7 @@ export default function GoodmanLaboratoriesPage() {
             </div>
           </div>
           <dl className="lab-fact-rows">
+            <div><dt>Founded</dt><dd>{profile.identity.founded} by Syed Talib Hussain Hashmi</dd></div>
             <div><dt>Industry and activities</dt><dd>{profile.identity.industry}</dd></div>
             <div><dt>Stakeholder relationships</dt><dd>{profile.identity.stakeholderRelationships}</dd></div>
           </dl>
@@ -92,6 +95,12 @@ export default function GoodmanLaboratoriesPage() {
               </ul>
             </div>
           </div>
+          <div className="lab-subsection">
+            <h3>Corporate social responsibility</h3>
+            <ul className="lab-ruled-list">
+              {profile.socialResponsibility.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
         </section>
 
         <section id="leadership" className="lab-section" aria-labelledby="leadership-heading">
@@ -101,7 +110,7 @@ export default function GoodmanLaboratoriesPage() {
           </header>
           <div className="lab-leader-heading">
             <div><h3>{leader.name}</h3><p>{leader.role}</p></div>
-            <strong>CEO since {leader.tenureStart}</strong>
+            <p className="lab-leader-tenure">{leader.tenureNote}</p>
           </div>
           <p className="lab-prose">{leader.biography}</p>
           <dl className="lab-metrics">
@@ -143,6 +152,38 @@ export default function GoodmanLaboratoriesPage() {
               {profile.facilitiesAndOperations.map((statement) => <li key={statement}>{statement}</li>)}
             </ul>
           </div>
+          <div className="lab-subsection">
+            <h3>Approved production sections</h3>
+            <dl className="lab-fact-rows">
+              {profile.productionSections.map((section) => (
+                <div key={section.name}>
+                  <dt>{section.name}</dt>
+                  <dd>{section.description}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div className="lab-two-column lab-subsection">
+            <div>
+              <h3>Website-reported departments</h3>
+              <ul className="lab-chip-list">
+                {profile.websiteFunctions.map((dept) => <li key={dept}>{dept}</li>)}
+              </ul>
+              <p className="lab-note">Website-reported departmental structure and Quality Control testing functions (undated source workforce figures withheld per verification policy).</p>
+            </div>
+            <div>
+              <h3>Governance structure</h3>
+              <ul className="lab-chip-list">
+                {profile.governance.map((role) => <li key={role}>{role}</li>)}
+              </ul>
+            </div>
+          </div>
+          <div className="lab-subsection">
+            <h3>Organizational roles</h3>
+            <ul className="lab-chip-list">
+              {profile.organizationalFunctions.map((role) => <li key={role}>{role}</li>)}
+            </ul>
+          </div>
           <div className="lab-two-column lab-market-groups">
             <div>
               <h3>National coverage</h3>
@@ -152,12 +193,16 @@ export default function GoodmanLaboratoriesPage() {
               </ul>
             </div>
             <div>
-              <h3>International customer markets</h3>
-              <p>Export markets receiving supplied pharmaceutical shipments.</p>
-              <ul className="lab-chip-list">
-                {profile.geographicPresence.internationalCustomerMarkets.map((market) => <li key={market}>{market}</li>)}
+              <h3>International activity &amp; reach</h3>
+              <p>Website-reported international activity; market statuses differ.</p>
+              <ul className="lab-ruled-list">
+                {profile.internationalActivity.map((activity) => (
+                  <li key={activity.market}>
+                    <strong>{activity.market}:</strong> {activity.status}
+                  </li>
+                ))}
               </ul>
-              <p className="lab-note">International customer markets represent export sales channels and supplied institutional clients; they do not represent foreign manufacturing facilities or locally registered corporate subsidiaries.</p>
+              <p className="lab-note">Website-reported international activity reflects differing stages of distribution, inquiries, agreements, and conditional supply; it does not represent confirmed shipments to all markets or foreign manufacturing facilities.</p>
             </div>
           </div>
           <div className="lab-subsection">
@@ -269,7 +314,7 @@ export default function GoodmanLaboratoriesPage() {
           </header>
           <div className="lab-two-column">
             <div><h3>Head office</h3><address>{contact.headOffice}</address></div>
-            <div><h3>Factory</h3><address>{contact.factory}</address><p>DRAP Manufacturing Licence No. <strong>{contact.manufacturingLicenceNumber}</strong></p></div>
+            <div><h3>Factory</h3><address>{contact.factory}</address><p>Manufacturing licence no. shown on product artwork: <strong>{contact.manufacturingLicenceNumber}</strong></p></div>
           </div>
           <dl className="lab-fact-rows lab-contact-rows">
             <div><dt>Email</dt><dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd></div>

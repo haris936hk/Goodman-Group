@@ -18,6 +18,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+The [Goodman Billing company page](http://localhost:3000/companies/goodman-billing) presents its service categories, six-stage workflow, and provider contact without interaction. Open the native disclosures for the full service catalogue, source-qualified evidence, specialty listings, and platform experience; printing the page includes those optional records.
+
 ## Quality Checks
 
 ```bash

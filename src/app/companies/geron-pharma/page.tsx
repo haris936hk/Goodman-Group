@@ -47,14 +47,16 @@ export default function GeronPharmaPage() {
                 <span className="geron-orbit-node" />
               </div>
               <div className="geron-circle-center">
-                <Image
-                  src={company.logo}
-                  alt={`${company.displayName} logo`}
-                  width={company.logoWidth}
-                  height={company.logoHeight}
-                  priority
-                  sizes="(max-width: 640px) 200px, 280px"
-                />
+                {company.logo ? (
+                  <Image
+                    src={company.logo.src}
+                    alt={`${company.displayName} logo`}
+                    width={company.logo.width}
+                    height={company.logo.height}
+                    priority
+                    sizes="(max-width: 640px) 200px, 280px"
+                  />
+                ) : null}
               </div>
             </div>
           </div>

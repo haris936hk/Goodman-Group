@@ -134,7 +134,9 @@
 
 .lab-leader-heading { display: flex; justify-content: space-between; gap: 2rem; align-items: start; padding-bottom: 1.5rem; border-bottom: 1px solid var(--lab-rule); }
 .lab-leader-heading p { margin: 0; color: var(--lab-muted); }
-.lab-leader-heading > strong { color: var(--lab-red-dark); font-size: 1.15rem; white-space: nowrap; }
+.lab-leader-heading > strong,
+.lab-leader-tenure { color: var(--lab-red-dark); font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+.lab-leader-tenure { margin: 0; max-width: 42ch; text-align: right; }
 .lab-leader-heading + .lab-prose { margin-top: 1.5rem; }
 .lab-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 3rem 0 0; border-top: 1px solid var(--lab-rule); }
 .lab-metrics div { padding: 1.25rem 1.5rem 1.25rem 0; border-bottom: 1px solid var(--lab-rule); }
@@ -209,6 +211,7 @@
   .lab-logo-stage { max-width: 18rem; }
   .lab-leader-heading { flex-direction: column; gap: 0.75rem; }
   .lab-leader-heading > strong { white-space: normal; }
+  .lab-leader-tenure { text-align: left; max-width: none; }
   .lab-fact-rows > div,
   .lab-product-list article,
   .lab-certificates article { grid-template-columns: 1fr; gap: 0.35rem; }

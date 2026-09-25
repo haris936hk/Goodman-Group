@@ -638,10 +638,137 @@
   transform: translateY(-1px);
 }
 
-.medical-equipment-page a:focus-visible {
+.medical-equipment-page a:focus-visible,
+.med-disclosure summary:focus-visible {
   border-radius: 2px;
   outline: 3px solid var(--med-focus);
   outline-offset: 4px;
+}
+
+/* Presence cards & principles */
+.med-presence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.med-presence-card {
+  padding: clamp(2rem, 4vw, 3rem);
+  border: 1px solid var(--med-rule);
+  background: var(--med-ice);
+}
+
+.med-presence-card-wide {
+  grid-column: 1 / -1;
+}
+
+.med-card-sub {
+  margin: 0.5rem 0 1.5rem;
+  color: var(--med-muted);
+  font-size: 0.95rem;
+}
+
+.med-lead-block {
+  margin-top: 1.5rem;
+}
+
+.med-lead-block strong {
+  display: block;
+  color: var(--med-navy);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.med-lead-block p {
+  margin: 0.35rem 0 0;
+  color: var(--med-body);
+}
+
+.med-values-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Disclosures & procedural workflows */
+.med-disclosures {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  border-top: 1px solid var(--med-rule-strong);
+}
+
+.med-disclosure {
+  border-bottom: 1px solid var(--med-rule);
+}
+
+.med-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4rem;
+  padding: 1.25rem 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--med-navy);
+  font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.med-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.med-disclosure summary::after {
+  content: "+";
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--med-cyan);
+  margin-left: 1rem;
+}
+
+.med-disclosure[open] summary::after {
+  content: "−";
+}
+
+.med-disclosure-content {
+  padding: 0.5rem 0 2rem;
+}
+
+.med-disclosure-note {
+  max-width: 68ch;
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--med-cyan);
+  background: var(--med-ice-strong);
+  color: var(--med-muted);
+  font-size: 0.875rem;
+}
+
+.med-workflow-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.med-workflow-list li {
+  position: relative;
+  padding: 0.85rem 0 0.85rem 1.25rem;
+  border-top: 1px solid var(--med-rule);
+  color: var(--med-body);
+}
+
+.med-workflow-list li::before {
+  position: absolute;
+  top: 1.55rem;
+  left: 0;
+  width: 0.38rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--med-cyan);
+  content: "";
 }
 
 @media (max-width: 900px) {
@@ -749,6 +876,10 @@
   .med-contact-list div {
     grid-template-columns: 1fr;
     gap: 0.35rem;
+  }
+  .med-presence-grid,
+  .med-values-list {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -4,13 +4,13 @@ import { describe, expect, it } from "vitest";
 import GoodmanMedicalEquipmentPage, { metadata } from "./page";
 
 describe("GoodmanMedicalEquipmentPage", () => {
-  it("exports metadata from the verified multi-record summary", () => {
+  it("exports metadata from the verified company summary", () => {
     expect(metadata.title).toBe("Goodman Medical Equipment Trading");
     expect(metadata.description).toContain(
-      "Goodman Medical & Surgical Equipment (Pvt.) Ltd.",
+      "Dubai-based healthcare supplier with a Pakistan supply presence",
     );
-    expect(metadata.description).toContain(
-      "Goodman Medical Equipment Trading LLC",
+    expect(metadata.description).not.toContain(
+      "brings together three separately documented records",
     );
   });
 
@@ -35,7 +35,7 @@ describe("GoodmanMedicalEquipmentPage", () => {
     }
   });
 
-  it("renders each legal record with its qualified leadership data", () => {
+  it("renders official legal identity, founders, board, and source-attributed designations", () => {
     render(<GoodmanMedicalEquipmentPage />);
 
     expect(
@@ -48,72 +48,139 @@ describe("GoodmanMedicalEquipmentPage", () => {
       screen.getAllByText("A Goodman Group company").length,
     ).toBeGreaterThanOrEqual(1);
 
-    for (const legalName of [
-      "Goodman Medical & Surgical Equipment (Pvt.) Ltd.",
-      "Goodman Medical Equipment Trading LLC",
-      "Goodman Medical Equipment Trading (Pvt.) Ltd.",
-    ]) {
-      expect(screen.getAllByText(legalName).length).toBeGreaterThanOrEqual(1);
-    }
-
-    expect(screen.getAllByText("Pakistan").length).toBeGreaterThanOrEqual(2);
     expect(
-      screen.getAllByText("United Arab Emirates").length,
+      screen.getAllByText("Goodman Medical Equipment Trading LLC").length,
     ).toBeGreaterThanOrEqual(1);
     expect(
-      screen.getByText("Directorship effective July 2024."),
+      screen.getByText("United Arab Emirates & Pakistan"),
+    ).toBeInTheDocument();
+
+    // Four founders
+    for (const founder of [
+      "Malik Munir Awan",
+      "Syed Talib Hussain Hashmi",
+      "Taj Muhammad",
+      "Syed Ahmed Ali",
+    ]) {
+      expect(screen.getAllByText(founder).length).toBeGreaterThanOrEqual(1);
+    }
+
+    // Board member naming boundary
+    expect(screen.getByText("Ahmed Ali")).toBeInTheDocument();
+    expect(
+      screen.getByText("Founders section names Syed Ahmed Ali"),
+    ).toBeInTheDocument();
+
+    // Alternate source labels and leadership clarification
+    expect(
+      screen.getByText(/Website headline: Goodman Medical Equipment LLC/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Chief Executive Officer since 2024."),
+      screen.getByText(/Alternate PDF label: Goodman Medical & Surgical Equipment \(Pvt\.\) Ltd\./i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Personal profile title: Goodman Medical Equipment Trading \(Pvt\.\) Ltd\./i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Profile Syed Talib Hussain Hashmi\.pdf separately describes him as Chief Executive Officer/i),
     ).toBeInTheDocument();
   });
 
-  it("keeps supplier products, service evidence, markets, and customers scoped", () => {
+  it("renders messaging, equipment categories, strengths, promises, and procedural workflows", () => {
     render(<GoodmanMedicalEquipmentPage />);
 
-    expect(screen.getByText("Delivering Excellence in Healthcare Solutions")).toBeInTheDocument();
-    expect(screen.getByText("Partnering for a Healthier Tomorrow")).toBeInTheDocument();
+    expect(
+      screen.getAllByText("Delivering Excellence in Healthcare Solutions").length,
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText("Quality Health Solutions"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Partnering for a Healthier Tomorrow"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Better Health, Better Life")).toBeInTheDocument();
-    expect(screen.getByText("Trust, Quality, Commitment")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Surgical instruments" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Medical devices" })).toBeInTheDocument();
-    expect(screen.getByText("Five years of industry experience")).toBeInTheDocument();
-    expect(screen.getByText("After-sales support")).toBeInTheDocument();
-    expect(screen.getByText("Product compliance with international quality standards and regulatory requirements")).toBeInTheDocument();
-    expect(screen.getByText("Customer satisfaction as the highest priority")).toBeInTheDocument();
+    expect(
+      screen.getByText("Trust, Quality, Commitment"),
+    ).toBeInTheDocument();
 
-    for (const customer of ["Hospitals", "Clinics", "Healthcare professionals"]) {
+    expect(
+      screen.getByRole("heading", { name: "Surgical instruments" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Medical equipment and devices" }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Brochure-stated five years of industry experience."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Contracted relationships with manufacturers and suppliers."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Customer satisfaction as the highest priority."),
+    ).toBeInTheDocument();
+
+    // Offsite sterilization workflow and procedural distinction
+    expect(
+      screen.getAllByText(/STERIS Offsite Reprocessing Center \(ORC\)/i).length,
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText(/indicates procedures rather than owned Goodman sterilization facilities/i),
+    ).toBeInTheDocument();
+
+    // Supply-chain process and governance functions
+    expect(
+      screen.getByText(/Production orders are generated for manufacturers and received for processing/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Legal Department")).toBeInTheDocument();
+    expect(screen.getByText("Internal Audit")).toBeInTheDocument();
+  });
+
+  it("renders qualified operating markets versus brochure targets, and direct contact", () => {
+    render(<GoodmanMedicalEquipmentPage />);
+
+    // Customers
+    for (const customer of [
+      "Hospitals",
+      "Clinics",
+      "Healthcare professionals",
+    ]) {
       expect(screen.getByText(customer, { exact: true })).toBeInTheDocument();
     }
-    expect(screen.getByText("Nationwide coverage across Pakistan")).toBeInTheDocument();
-    for (const market of ["Africa", "Europe", "Japan", "United States of America"]) {
+
+    // Current operating markets
+    expect(
+      screen.getByText("United Arab Emirates, with the company based in Dubai"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Pakistan, with nationwide supply from large cities to remote areas"),
+    ).toBeInTheDocument();
+
+    // Target markets
+    for (const market of [
+      "Africa",
+      "Europe",
+      "Japan",
+      "United States of America",
+    ]) {
       expect(screen.getByText(market, { exact: true })).toBeInTheDocument();
     }
-  });
 
-  it("renders source limitations, conflict notes, and scoped contact links", () => {
-    render(<GoodmanMedicalEquipmentPage />);
-
+    // Direct contact
+    expect(screen.getAllByText("Islamabad, Pakistan").length).toBeGreaterThanOrEqual(1);
     expect(
-      screen.getAllByText(
-        "The supplied documents do not provide a separate product catalogue, address, customer list, or operational description for this company.",
-      ),
-    ).toHaveLength(2);
-    expect(screen.getByText(/Source note/i)).toBeInTheDocument();
-    expect(screen.getByText(/concurrent roles, a role change, or a documentation error/i)).toBeInTheDocument();
-
-    expect(screen.getByText("Islamabad, Pakistan")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "+92 336 777 0770" })).toHaveAttribute(
+      screen.getByRole("link", { name: "+92 336 777 0770" }),
+    ).toHaveAttribute("href", "tel:+923367770770");
+    expect(
+      screen.getByRole("link", { name: "afgoodmangoc@gmail.com" }),
+    ).toHaveAttribute("href", "mailto:afgoodmangoc@gmail.com");
+    expect(
+      screen.getByRole("link", {
+        name: /goodmangoc\.com\/goodman-medical-equipment/i,
+      }),
+    ).toHaveAttribute(
       "href",
-      "tel:+923367770770",
-    );
-    expect(screen.getByRole("link", { name: "afgoodmangoc@gmail.com" })).toHaveAttribute(
-      "href",
-      "mailto:afgoodmangoc@gmail.com",
-    );
-    expect(screen.getByRole("link", { name: "www.goodmangoc.com" })).toHaveAttribute(
-      "href",
-      "https://www.goodmangoc.com",
+      "https://goodmangoc.com/goodman-medical-equipment",
     );
 
     for (const unsupportedPhrase of [
@@ -122,7 +189,9 @@ describe("GoodmanMedicalEquipmentPage", () => {
       "specialized clinical devices",
       "hospital technology systems",
     ]) {
-      expect(screen.queryByText(new RegExp(unsupportedPhrase, "i"))).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(new RegExp(unsupportedPhrase, "i")),
+      ).not.toBeInTheDocument();
     }
   });
 });
