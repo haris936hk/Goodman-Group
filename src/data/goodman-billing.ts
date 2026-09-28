@@ -82,6 +82,11 @@ export type GoodmanBillingProfile = {
     readonly indicators: readonly PerformanceIndicator[];
   };
   readonly differentiators: readonly string[];
+  readonly testimonials: readonly {
+    readonly name: string;
+    readonly context: string;
+    readonly report: string;
+  }[];
 };
 
 export const goodmanBillingProfile: GoodmanBillingProfile = {
@@ -95,7 +100,7 @@ export const goodmanBillingProfile: GoodmanBillingProfile = {
     complianceClaim:
       "Company-stated HIPAA compliance (self-represented standard, not an external certification).",
     groupEndorsement:
-      "Backed by Goodman Laboratories and Goodman Medical Equipment Trading as an operating company within Goodman Group.",
+      "The Goodman Group website describes Goodman Billing as backed by Goodman Laboratories and Goodman Medical Equipment Trading.",
     contactAddressLabel: "Website-listed contact address",
   },
 
@@ -630,5 +635,25 @@ export const goodmanBillingProfile: GoodmanBillingProfile = {
     "Regular reports and analytics delivering transparent visibility into financial performance.",
     "Commitment to maximizing revenue while reducing provider administrative burden.",
     "Optimization of every stage of the billing lifecycle, from eligibility verification to final collection.",
+  ],
+  testimonials: [
+    {
+      name: "Dr. Sarah Johnson",
+      context: "Family Practice, New York",
+      report:
+        "States that Goodman Billing transformed revenue-cycle management, remained responsive and knowledgeable, and significantly improved collections.",
+    },
+    {
+      name: "Michael Chen",
+      context: "Practice Manager, California",
+      report:
+        "Reports a 60% reduction in denial rate and a 25% increase in collections after partnering with Goodman Billing (Chen's reported outcome, not an independently audited universal rate).",
+    },
+    {
+      name: "Dr. Emily Rodriguez",
+      context: "Pediatrics, Texas",
+      report:
+        "Describes the service as professional, efficient, available, and seamless.",
+    },
   ],
 } as const;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { companies } from '@/data/companies';
+import { SITE_ORIGIN } from '@/data/goodman-group';
 
 import { GET } from './route';
 
@@ -10,15 +11,15 @@ const retiredCompanySlugs = [
 ] as const;
 
 describe('sitemap.xml', () => {
-  it('lists all company routes and preserves XML escaping', async () => {
+  it('lists fixed-origin URLs and exactly home + directory + five company paths', async () => {
     const response = GET(new Request('https://example.test/sitemap.xml'));
     const xml = await response.text();
 
     expect(response.headers.get('content-type')).toContain('application/xml');
-    expect(xml).toContain('<loc>https://example.test/</loc>');
-    expect(xml).toContain('<loc>https://example.test/companies</loc>');
+    expect(xml).toContain(`<loc>${SITE_ORIGIN}/</loc>`);
+    expect(xml).toContain(`<loc>${SITE_ORIGIN}/companies</loc>`);
     for (const company of companies) {
-      const route = `<loc>https://example.test/companies/${company.slug}</loc>`;
+      const route = `<loc>${SITE_ORIGIN}/companies/${company.slug}</loc>`;
       expect(xml).toContain(route);
     }
     for (const slug of retiredCompanySlugs) {

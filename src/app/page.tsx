@@ -3,8 +3,9 @@ import {
   Check,
   Clock3,
   FileCheck2,
-  MapPin,
+  Mail,
   Network,
+  Phone,
   Sparkles,
 } from "lucide-react";
 import Image from "next/image";
@@ -15,44 +16,19 @@ import { ScrollExperience } from "@/components/scroll-experience";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { companies } from "@/data/companies";
+import { goodmanBillingProfile } from "@/data/goodman-billing";
+import { goodmanGroup } from "@/data/goodman-group";
+import { goodmanLaboratoriesProfile } from "@/data/goodman-laboratories";
+import { goodmanMedicalEquipmentProfile } from "@/data/goodman-medical-equipment";
+import { walGreenChemicalsProfile } from "@/data/wal-green-chemicals";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 
-const presenceStates = [
-  {
-    label: "Active operation",
-    copy: "An operating location with an effective date.",
-    className: "state-active",
-  },
-  {
-    label: "Partner market",
-    copy: "A market served through a commercial partner.",
-    className: "state-partner",
-  },
-  {
-    label: "Agreement stage",
-    copy: "A signed agreement that is not yet an active operation.",
-    className: "state-agreement",
-  },
-  {
-    label: "Planned market",
-    copy: "Future intent, always shown separately from current presence.",
-    className: "state-planned",
-  },
-] as const;
-
-const audienceRoutes = [
-  [
-    "Procurement",
-    "Government hospitals, private hospitals, retailers and national distributors",
-  ],
-  ["Partnerships", "Inquiries and partnership opportunities"],
-  ["Careers", "Career opportunities across the Group"],
-  ["Press", "Group profile, leadership and business areas"],
-] as const;
 
 export default function Home() {
   return (
     <ScrollExperience>
       <div className="site-shell" id="top">
+        <OrganizationJsonLd />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
@@ -123,10 +99,41 @@ export default function Home() {
                   <Sparkles aria-hidden="true" />
                 </div>
                 <p>Goodman Group</p>
-                <span>A parent framework connecting distinct businesses</span>
+                <span>A parent brand connecting distinct company identities</span>
                 <Link href="/companies">
                   View complete company index <ArrowUpRight aria-hidden="true" />
                 </Link>
+              </div>
+              <div className="group-narrative-panel glass-panel" data-reveal>
+                <div className="group-narrative-header">
+                  <p className="group-narrative-eyebrow">{goodmanGroup.websiteTitle}</p>
+                  <h3 className="group-narrative-message">{goodmanGroup.message}</h3>
+                  <p className="group-narrative-mission">{goodmanGroup.mission}</p>
+                </div>
+                <div className="group-narrative-grid">
+                  <div className="group-narrative-col">
+                    <h4>Operating Sectors</h4>
+                    <p className="group-narrative-caption">
+                      Conglomerate sectors described across Group profile materials (descriptive sectors, not separate company routes):
+                    </p>
+                    <ul className="group-sector-list" aria-label="Goodman Group operating sectors">
+                      {goodmanGroup.sectors.map((sector) => (
+                        <li key={sector}>{sector}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="group-narrative-col">
+                    <h4>Business Interests</h4>
+                    <p className="group-narrative-caption">
+                      Products, services, and commercial activities documented in Group records:
+                    </p>
+                    <ul className="group-interest-list" aria-label="Goodman Group business interests">
+                      {goodmanGroup.businessInterests.map((interest) => (
+                        <li key={interest}>{interest}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="company-grid" aria-label="Company portfolio">
@@ -144,7 +151,7 @@ export default function Home() {
               <header className="chapter-heading chapter-heading-wide" data-reveal>
                 <div>
                   <p className="chapter-index">02 / Explore</p>
-                  <h2>{companies.length} operating companies. No false sameness.</h2>
+                  <h2>{companies.length} portfolio companies under the parent Group. No false sameness.</h2>
                 </div>
                 <p>
                   Each company receives a bespoke page reflecting its legal identity,
@@ -236,75 +243,132 @@ export default function Home() {
               <header className="chapter-heading" data-reveal>
                 <div>
                   <p className="chapter-index">04 / Expand</p>
-                  <h2>Every point on the map says what it means.</h2>
+                  <h2>Geographic presence and market status ledger.</h2>
                 </div>
                 <p>
-                  Operations, partners, agreements, and plans are four different
-                  realities. The presence system makes that distinction visible.
+                  Operations, partner distribution, signed agreements, sourcing channels, and planned target markets are distinct realities. This ledger groups verified presence by company and source.
                 </p>
               </header>
 
-              <div className="presence-layout">
-                <div className="presence-map glass-panel" data-presence-map data-reveal>
-                  <div className="map-grid" aria-hidden="true" />
-                  <svg
-                    viewBox="0 0 760 520"
-                    role="img"
-                    aria-labelledby="presence-map-title presence-map-description"
-                  >
-                    <title id="presence-map-title">Market status visualization</title>
-                    <desc id="presence-map-description">
-                      A market status illustration using distinct markers for
-                      active, partner, agreement-stage, and planned markets.
-                    </desc>
-                    <path
-                      className="map-route map-route-muted"
-                      d="M75 375 C180 305, 230 405, 336 300 S515 125, 684 175"
-                    />
-                    <path
-                      className="map-route"
-                      d="M75 375 C180 305, 230 405, 336 300 S515 125, 684 175"
-                      pathLength="1"
-                      strokeDasharray="1"
-                      data-map-route
-                    />
-                    <g className="map-marker state-active" transform="translate(75 375)">
-                      <circle r="17" />
-                      <circle r="5" />
-                    </g>
-                    <g className="map-marker state-partner" transform="translate(336 300)">
-                      <circle r="17" />
-                      <circle r="5" />
-                    </g>
-                    <g className="map-marker state-agreement" transform="translate(515 176)">
-                      <circle r="17" />
-                      <circle r="5" />
-                    </g>
-                    <g className="map-marker state-planned" transform="translate(684 175)">
-                      <circle r="17" />
-                      <circle r="5" />
-                    </g>
-                  </svg>
-                  <div className="map-label glass-overlay">
-                    <MapPin aria-hidden="true" />
-                    <span>
-                      Status-aware geography
-                      <small>Active, partner, agreement-stage, and planned markets</small>
-                    </span>
+              <div className="presence-ledger-grid">
+                {/* Goodman Laboratories */}
+                <article className="presence-ledger-card glass-panel" data-reveal>
+                  <div className="presence-card-header">
+                    <span className="presence-card-company">Goodman Laboratories</span>
+                    <h3>Manufacturing Base & International Markets</h3>
+                    <p className="presence-card-base">
+                      Base: Rawat Industrial Triangle, Islamabad, Pakistan (manufacturing facility and nationwide distribution)
+                    </p>
                   </div>
-                </div>
+                  <ul className="presence-market-list" aria-label="Goodman Laboratories international markets">
+                    {goodmanLaboratoriesProfile.internationalActivity.map((activity) => (
+                      <li key={activity.market} className="presence-market-item">
+                        <div className="presence-market-title-row">
+                          <span className="presence-market-name">{activity.market}</span>
+                          <span className="presence-market-tag">
+                            {activity.market === "Afghanistan"
+                              ? "Partner distribution"
+                              : activity.market === "Cambodia"
+                                ? "Inquiry-driven expansion"
+                                : activity.market === "Ghana"
+                                  ? "Signed agreement (2024 expected consignment)"
+                                  : activity.market === "Tajikistan"
+                                    ? "Developing supply chain"
+                                    : "Signed agreement / MOU"}
+                          </span>
+                        </div>
+                        <p className="presence-market-detail">{activity.status}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
 
-                <ul className="presence-legend" aria-label="Market status definitions">
-                  {presenceStates.map((state) => (
-                    <li key={state.label} className={state.className} data-reveal>
-                      <span className="legend-marker" aria-hidden="true" />
-                      <div>
-                        <h3>{state.label}</h3>
-                        <p>{state.copy}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                {/* Goodman Medical Equipment Trading */}
+                <article className="presence-ledger-card glass-panel" data-reveal>
+                  <div className="presence-card-header">
+                    <span className="presence-card-company">Goodman Medical Equipment Trading</span>
+                    <h3>Operating Base & Target Markets</h3>
+                    <p className="presence-card-base">
+                      Base: Dubai, United Arab Emirates · Supply: Nationwide distribution in Pakistan
+                    </p>
+                  </div>
+                  <div className="presence-market-subsections">
+                    <div className="presence-market-subsection">
+                      <h4 className="presence-subhead">Current markets (Active operations)</h4>
+                      <ul className="presence-simple-list">
+                        {goodmanMedicalEquipmentProfile.currentMarkets.map((m) => (
+                          <li key={m}>
+                            <span className="presence-status-badge status-active">Active</span>
+                            <span>{m}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="presence-market-subsection">
+                      <h4 className="presence-subhead">Target markets (Brochure plans)</h4>
+                      <ul className="presence-simple-list">
+                        {goodmanMedicalEquipmentProfile.targetMarkets.map((m) => (
+                          <li key={m}>
+                            <span className="presence-status-badge status-target">Target market</span>
+                            <span>{m}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+
+                {/* Wal Green Chemicals */}
+                <article className="presence-ledger-card glass-panel" data-reveal>
+                  <div className="presence-card-header">
+                    <span className="presence-card-company">Wal Green Chemicals</span>
+                    <h3>Sourcing Hub & Import Channels</h3>
+                    <p className="presence-card-base">
+                      Sourcing hub: {walGreenChemicalsProfile.sourcingNetwork.localSourcing.hub}, Pakistan (procurement/sourcing, not an operating facility)
+                    </p>
+                  </div>
+                  <div className="presence-market-subsections">
+                    <div className="presence-market-subsection">
+                      <h4 className="presence-subhead">International sourcing channels (Procurement)</h4>
+                      <ul className="presence-market-list" aria-label="Wal Green Chemicals sourcing channels">
+                        {walGreenChemicalsProfile.sourcingNetwork.internationalImports.map((imp) => (
+                          <li key={imp.origin} className="presence-market-item">
+                            <div className="presence-market-title-row">
+                              <span className="presence-market-name">{imp.origin}</span>
+                              <span className="presence-status-badge status-sourcing">Sourcing import</span>
+                            </div>
+                            <p className="presence-market-detail">{imp.details}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+
+                {/* Goodman Billing & Geron Pharma */}
+                <article className="presence-ledger-card glass-panel" data-reveal>
+                  <div className="presence-card-header">
+                    <span className="presence-card-company">Goodman Billing & Geron Pharma</span>
+                    <h3>Service Reach & Boundary Status</h3>
+                  </div>
+                  <div className="presence-market-subsections">
+                    <div className="presence-market-subsection">
+                      <h4 className="presence-subhead">Goodman Billing (United States)</h4>
+                      <p className="presence-market-detail">
+                        <strong>Contact address:</strong> {goodmanGroup.contacts.usContactAddress} ({goodmanBillingProfile.identity.contactAddressLabel}; website-listed contact, not an inspected service centre).
+                      </p>
+                      <p className="presence-market-detail">
+                        <strong>Service reach:</strong> {goodmanBillingProfile.customersServed[goodmanBillingProfile.customersServed.length - 1]}.
+                      </p>
+                    </div>
+                    <div className="presence-market-subsection">
+                      <h4 className="presence-subhead">Geron Pharma (Scope Boundary)</h4>
+                      <p className="presence-market-detail">
+                        Legal identity and CEO documented; source profile does not substantiate separate operating facilities, distribution markets, or customer locations.
+                      </p>
+                    </div>
+                  </div>
+                </article>
               </div>
             </div>
           </section>
@@ -315,42 +379,77 @@ export default function Home() {
                 <p className="chapter-index">05 / Remember</p>
                 <h2>Heritage, told with the precision it deserves.</h2>
                 <p>
-                  The current site describes a family-business origin and a
-                  leadership journey spanning more than three decades in
-                  pharmaceutical manufacturing.
+                  {goodmanGroup.leadership.name} serves as {goodmanGroup.leadership.role}.
+                  Group source materials distinguish specific historical leadership claims
+                  rather than merging them into a single unverified census.
                 </p>
+
+                <div className="heritage-executive-contacts glass-panel">
+                  <span className="executive-contacts-badge">Executive Contact</span>
+                  <h3>{goodmanGroup.executiveContacts.leaderName}</h3>
+                  <p className="executive-contacts-role">{goodmanGroup.leadership.role}</p>
+                  <p className="executive-contacts-note">
+                    {goodmanGroup.executiveContacts.note}
+                  </p>
+                  <div className="executive-contacts-links">
+                    {goodmanGroup.executiveContacts.phones.map((phone) => (
+                      <a
+                        key={phone}
+                        href={`tel:${phone.replace(/\s+/g, "")}`}
+                        className="executive-contact-phone"
+                      >
+                        <Phone aria-hidden="true" className="w-4 h-4" />
+                        <span>{phone}</span>
+                      </a>
+                    ))}
+                    <a
+                      href={`mailto:${goodmanGroup.executiveContacts.email}`}
+                      className="executive-contact-phone"
+                    >
+                      <Mail aria-hidden="true" className="w-4 h-4" />
+                      <span>{goodmanGroup.executiveContacts.email}</span>
+                    </a>
+                  </div>
+                  <p className="executive-contacts-provenance">
+                    Source: {goodmanGroup.executiveContacts.provenance}
+                  </p>
+                </div>
               </div>
 
               <ol className="timeline" aria-label="Group history">
                 <li data-reveal>
                   <span>Origin</span>
                   <div>
-                    <h3>A family-business beginning</h3>
+                    <h3>Family-business beginning at age 16</h3>
                     <p>
-                      Syed Talib Hussain Hashmi says he took over the family
-                      business at age 16.
+                      {goodmanGroup.leadership.name} {goodmanGroup.leadership.familyBusinessEntry.toLowerCase()}.
                     </p>
                   </div>
                 </li>
                 <li data-reveal>
-                  <span>Growth</span>
+                  <span>Experience</span>
                   <div>
-                    <h3>Healthcare and beyond</h3>
+                    <h3>Administrative and manufacturing experience</h3>
                     <p>
-                      The current site names Goodman Laboratories, Geron Pharma,
-                      Wal Green Chemicals, and medical equipment operations.
+                      {goodmanGroup.leadership.moreThan30Years}. Separately, historical profile text cites {goodmanGroup.leadership.manufacturingExperience.toLowerCase()}.
+                    </p>
+                  </div>
+                </li>
+                <li data-reveal>
+                  <span>Scale claim</span>
+                  <div>
+                    <h3>Legacy managed workforce claim</h3>
+                    <p>
+                      {goodmanGroup.leadership.moreThan360Managed}. Separately, company-specific materials cite more than 150 team members historically managed, preserved on its own surface.
                     </p>
                   </div>
                 </li>
                 <li data-reveal>
                   <span>Now</span>
                   <div>
-                    <h3>Leadership across the Group</h3>
+                    <h3>Documented leadership appointments</h3>
                     <p>
-                      Goodman Laboratories was founded in 2008, followed by
-                      subsequent documented appointments across Geron Pharma,
-                      Wal Green Chemicals, and Goodman Medical Equipment through
-                      July 2024.
+                      Goodman Laboratories was founded in 2008 (CEO since 2012 or 2016 per conflicting sources), followed by appointments at Geron Pharma (CEO since 2019), Wal Green Chemicals (CEO since 2021), and Goodman Medical Equipment Trading (Director since July 2024).
                     </p>
                   </div>
                 </li>
@@ -413,18 +512,71 @@ export default function Home() {
                   Contact Goodman Group for inquiries, partnerships, or career
                   opportunities.
                 </p>
+                <div className="connect-general-cta">
+                  <a
+                    href={`mailto:${goodmanGroup.contacts.email}?subject=${encodeURIComponent("Goodman Group General Inquiry")}`}
+                    className="connect-general-link"
+                  >
+                    <Mail aria-hidden="true" className="w-4 h-4" />
+                    <span>General inquiry: {goodmanGroup.contacts.email}</span>
+                  </a>
+                </div>
               </div>
 
               <div className="audience-grid">
-                {audienceRoutes.map(([title, copy], index) => (
-                  <article key={title} className="audience-route" data-reveal>
-                    <span>0{index + 1}</span>
-                    <div>
-                      <h3>{title}</h3>
-                      <p>{copy}</p>
-                    </div>
-                  </article>
-                ))}
+                <Link
+                  href="/companies"
+                  className="audience-route audience-route-link"
+                  data-reveal
+                >
+                  <span>01</span>
+                  <div>
+                    <h3>Procurement</h3>
+                    <p>
+                      Government hospitals, private hospitals, retailers and national distributors
+                    </p>
+                  </div>
+                  <ArrowUpRight aria-hidden="true" />
+                </Link>
+
+                <a
+                  href={`mailto:${goodmanGroup.contacts.email}?subject=${encodeURIComponent("Goodman Group Partnerships Inquiry")}`}
+                  className="audience-route audience-route-link"
+                  data-reveal
+                >
+                  <span>02</span>
+                  <div>
+                    <h3>Partnerships</h3>
+                    <p>Inquiries and partnership opportunities</p>
+                  </div>
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+
+                <a
+                  href={`mailto:${goodmanGroup.contacts.email}?subject=${encodeURIComponent("Goodman Group Careers Inquiry")}`}
+                  className="audience-route audience-route-link"
+                  data-reveal
+                >
+                  <span>03</span>
+                  <div>
+                    <h3>Careers</h3>
+                    <p>Career opportunities across the Group</p>
+                  </div>
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+
+                <a
+                  href={`mailto:${goodmanGroup.contacts.email}?subject=${encodeURIComponent("Goodman Group Press Inquiry")}`}
+                  className="audience-route audience-route-link"
+                  data-reveal
+                >
+                  <span>04</span>
+                  <div>
+                    <h3>Press</h3>
+                    <p>Group profile, leadership and business areas</p>
+                  </div>
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
               </div>
             </div>
           </section>

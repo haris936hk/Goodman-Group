@@ -52,7 +52,10 @@ export function CompanyGroupFrame({
               Goodman Group
             </Link>
             <p className="group-frame-footer-desc">
-              Parent holding organization · {relationshipText}
+              Goodman Group parent brand · {relationshipText}
+            </p>
+            <p className="group-frame-footer-clarification">
+              Parent describes the shared Group identity; legal ownership is not established by these profiles.
             </p>
           </div>
           <div className="group-frame-footer-links">

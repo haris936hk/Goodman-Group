@@ -112,10 +112,26 @@ export const companies = [
     locations: ["Dubai, United Arab Emirates", "Islamabad, Pakistan"],
     leadership: [
       {
+        name: "Malik Munir Awan",
+        role: "Founder and Director",
+        detail: "Founder and board director effective July 2024.",
+      },
+      {
         name: "Syed Talib Hussain Hashmi",
         role: "Founder and Director",
         detail:
-          "Founder and board director effective July 2024; also cited as CEO in a personal profile.",
+          "Founder and board director effective July 2024; alternate personal-profile CEO designation unconfirmed.",
+      },
+      {
+        name: "Taj Muhammad",
+        role: "Founder and Director",
+        detail: "Founder and board director effective July 2024.",
+      },
+      {
+        name: "Syed Ahmed Ali",
+        role: "Founder and Director",
+        detail:
+          "Founder and board director effective July 2024 (source board listing variation: Ahmed Ali).",
       },
     ],
     capabilities: [

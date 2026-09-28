@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
 import { goodmanLaboratoriesProfile } from "@/data/goodman-laboratories";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 import "./laboratories.css";
 
 const company = getCompanyBySlug("goodman-laboratories")!;
@@ -14,6 +15,9 @@ const profile = goodmanLaboratoriesProfile;
 export const metadata: Metadata = {
   title: company.displayName,
   description: `${profile.identity.legalName} — ${company.summary}`,
+  alternates: {
+    canonical: "/companies/goodman-laboratories",
+  },
 };
 
 export default function GoodmanLaboratoriesPage() {
@@ -23,10 +27,12 @@ export default function GoodmanLaboratoriesPage() {
 
   return (
     <CompanyGroupFrame company={company} className="laboratories-page">
+      <OrganizationJsonLd company={company} />
       <header className="lab-hero">
         <div className="lab-shell lab-hero-grid">
           <div className="lab-hero-copy">
             <p className="lab-eyebrow">{profile.identity.legalName}</p>
+            <p className="lab-tagline">Company tagline: &ldquo;{profile.identity.tagline}&rdquo;</p>
             <p className="lab-descriptor">{company.business}</p>
             <h1>{company.displayName}</h1>
             <p className="lab-purpose">{profile.identity.purpose}</p>
@@ -169,7 +175,34 @@ export default function GoodmanLaboratoriesPage() {
               <ul className="lab-chip-list">
                 {profile.websiteFunctions.map((dept) => <li key={dept}>{dept}</li>)}
               </ul>
-              <p className="lab-note">Website-reported departmental structure and Quality Control testing functions (undated source workforce figures withheld per verification policy).</p>
+              <div className="lab-table-wrapper" tabIndex={0} role="region" aria-label="Website-reported historical departmental table">
+                <table>
+                  <caption>
+                    Website-reported historical departmental table. Source does not provide a reporting date; not a current payroll census.
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Department</th>
+                      <th scope="col">Reported employees</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {profile.websiteDepartmentHeadcounts.rows.map((row) => (
+                      <tr key={row.department}>
+                        <td>{row.department}</td>
+                        <td>{row.employees}</td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <th scope="row">Total</th>
+                      <td><strong>{profile.websiteDepartmentHeadcounts.total}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="lab-note">
+                Quality Control is identified as an active testing and record-keeping department in source records without a reported headcount. Source does not provide a reporting date; not a current payroll census.
+              </p>
             </div>
             <div>
               <h3>Governance structure</h3>
@@ -252,6 +285,11 @@ export default function GoodmanLaboratoriesPage() {
                     <small>{literature.genericOrSubtitle ?? "Product literature"}</small>
                   </summary>
                   <div className="lab-literature-body">
+                    {literature.slogan ? (
+                      <p className="lab-literature-slogan">
+                        <strong>Literature slogan:</strong> &ldquo;{literature.slogan}&rdquo;
+                      </p>
+                    ) : null}
                     <ul className="lab-ruled-list">
                       {literature.points.map((point) => <li key={point}>{point}</li>)}
                     </ul>

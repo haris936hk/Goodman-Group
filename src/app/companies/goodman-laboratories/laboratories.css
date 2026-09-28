@@ -43,6 +43,13 @@
   font-weight: 750;
   letter-spacing: 0.03em;
 }
+.lab-tagline {
+  margin: 0 0 0.85rem;
+  color: var(--lab-red-dark);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 0.95rem;
+}
 .lab-descriptor { margin: 0 0 1.25rem; color: var(--lab-muted); }
 .lab-hero h1 {
   max-width: 12ch;
@@ -114,6 +121,8 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(2rem, 6vw, 5rem);
 }
+.lab-two-column > * { min-width: 0; }
+.lab-two-column .lab-table-wrapper table { min-width: 100%; }
 .lab-lead-split { margin-bottom: 3rem; padding-block: 2rem; border-block: 1px solid var(--lab-rule); }
 
 .lab-fact-rows { margin: 0; border-top: 1px solid var(--lab-rule); }
@@ -167,6 +176,13 @@
 .lab-disclosure summary small { color: var(--lab-muted); font-size: 0.85rem; font-weight: 600; }
 .lab-product-list,
 .lab-literature-body { padding: 0.5rem 0 2rem clamp(1rem, 3vw, 2rem); }
+.lab-literature-slogan {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--lab-tint);
+  border-left: 3px solid var(--lab-red);
+  font-size: 0.875rem;
+}
 .lab-product-list article { display: grid; grid-template-columns: minmax(8rem, 0.3fr) minmax(0, 1fr); gap: 1.5rem; padding: 1rem 0; border-top: 1px solid var(--lab-rule); }
 .lab-product-list h3,
 .lab-product-list p { margin: 0; }
@@ -175,7 +191,7 @@
 .lab-warning { max-width: 68ch; margin-top: 1.5rem; padding: 1.25rem 1.5rem; border-left: 4px solid var(--lab-red); background: #faf4f4; }
 .lab-warning strong { color: var(--lab-red-dark); }
 .lab-warning p { margin: 0.35rem 0 0; }
-.lab-table-wrapper { max-width: 100%; margin-top: 1.5rem; overflow-x: auto; border: 1px solid var(--lab-rule); }
+.lab-table-wrapper { max-width: 100%; min-width: 0; margin-top: 1.5rem; overflow-x: auto; border: 1px solid var(--lab-rule); }
 .lab-table-wrapper table { width: 100%; min-width: 38rem; border-collapse: collapse; }
 .lab-table-wrapper th,
 .lab-table-wrapper td { padding: 0.8rem 1rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--lab-rule); }

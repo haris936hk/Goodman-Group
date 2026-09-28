@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { goodmanGroup } from "@/data/goodman-group";
+
 const navigation = [
   { label: "About the Group", href: "/#about" },
   { label: "Our Companies", href: "/companies" },
@@ -142,7 +144,7 @@ export function SiteHeader() {
         ))}
       </nav>
 
-      <span className="header-status">Health · Wellness · Progress</span>
+      <span className="header-status">{goodmanGroup.message}</span>
 
       <button
         ref={menuButtonRef}

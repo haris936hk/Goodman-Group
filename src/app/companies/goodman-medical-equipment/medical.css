@@ -468,6 +468,23 @@
   list-style: none;
 }
 
+.med-propositions {
+  margin-top: clamp(4rem, 7vw, 6rem);
+}
+
+.med-proposition-note {
+  max-width: 60ch;
+  margin: 0.5rem 0 1.5rem;
+  font-size: 0.85rem;
+  color: var(--med-muted);
+}
+
+.med-proposition-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 2.5rem;
+}
+
 .med-strengths .med-fact-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -853,7 +870,8 @@
   }
 
   .med-product-list,
-  .med-strengths .med-fact-list {
+  .med-strengths .med-fact-list,
+  .med-proposition-list {
     grid-template-columns: 1fr;
   }
 

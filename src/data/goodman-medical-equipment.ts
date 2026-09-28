@@ -34,6 +34,7 @@ export type GoodmanMedicalEquipmentProfile = {
   readonly values: readonly string[];
   readonly messaging: readonly MedicalMessaging[];
   readonly products: readonly MedicalProduct[];
+  readonly servicePropositions: readonly string[];
   readonly strengths: readonly string[];
   readonly customerPromise: readonly string[];
   readonly customers: readonly string[];
@@ -114,6 +115,17 @@ export const goodmanMedicalEquipmentProfile: GoodmanMedicalEquipmentProfile = {
         "A broad range of advanced medical equipment and medical devices intended to support modern healthcare requirements and improve patient outcomes.",
     },
   ],
+  servicePropositions: [
+    "Premium quality",
+    "International standards",
+    "Competitive prices",
+    "After-sales support",
+    "Quality-assured products",
+    "Reliable partnership",
+    "Innovative solutions",
+    "Nationwide supply in Pakistan",
+    "International supply capability",
+  ],
   strengths: [
     "Experienced professional team with specialized industry knowledge and commitment.",
     "Brochure-stated five years of industry experience.",
@@ -122,8 +134,6 @@ export const goodmanMedicalEquipmentProfile: GoodmanMedicalEquipmentProfile = {
     "Timely delivery and dependable service.",
     "Contracted relationships with manufacturers and suppliers.",
     "Quality-control, internal-audit, logistics, sales, marketing, and export-sales functions.",
-    "Nationwide supply in Pakistan from major cities to remote areas.",
-    "International supply capability operating from Dubai.",
   ],
   customerPromise: [
     "High-quality surgical instruments, medical equipment, and medical devices.",

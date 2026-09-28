@@ -3,14 +3,18 @@ import type { Metadata } from "next";
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
 import { goodmanBillingProfile } from "@/data/goodman-billing";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 import "./billing.css";
 
 const company = getCompanyBySlug("goodman-billing")!;
 const profile = goodmanBillingProfile;
 
 export const metadata: Metadata = {
-  title: `${company.displayName} | Goodman Group`,
+  title: company.displayName,
   description: company.summary,
+  alternates: {
+    canonical: "/companies/goodman-billing",
+  },
 };
 
 export default function GoodmanBillingPage() {
@@ -19,16 +23,24 @@ export default function GoodmanBillingPage() {
 
   return (
     <CompanyGroupFrame company={company} className="billing-page">
+      <OrganizationJsonLd company={company} />
       <header className="billing-hero">
         <div className="billing-shell">
           <p className="billing-kicker">{company.business}</p>
           <h1>{company.displayName}</h1>
+          <p className="billing-headline">{profile.identity.headline}</p>
+          <p className="billing-positioning">{profile.identity.positioning}</p>
+          <p className="billing-positioning-statement">{profile.identity.positioningStatement}</p>
           <p className="billing-intro">{company.summary}</p>
+          <p className="billing-objective"><strong>Objective:</strong> {profile.identity.objective}</p>
           <p className="billing-legal">{company.legalName}</p>
           <a className="billing-action" href={`mailto:${contact}`}>Email Goodman Billing</a>
           <nav className="billing-nav" aria-label="On this page">
             <a href="#services">Services</a>
+            <a href="#tasks">Core Tasks</a>
             <a href="#workflow">Workflow</a>
+            <a href="#differentiators">Differentiators</a>
+            <a href="#testimonials">Testimonials</a>
             <a href="#evidence">Evidence</a>
             <a href="#contact">Contact</a>
           </nav>
@@ -69,6 +81,35 @@ export default function GoodmanBillingPage() {
           </div>
         </div>
       </section>
+      <section className="billing-section" id="tasks" aria-labelledby="tasks-heading">
+        <div className="billing-shell">
+          <h2 id="tasks-heading">Core Tasks</h2>
+          <p className="billing-lead">Essential revenue-cycle operational tasks across front-desk and billing stages.</p>
+          <div className="billing-tasks-grid">
+            <div className="billing-task-group">
+              <h3>Front-Desk Tasks</h3>
+              <ul className="billing-task-list">
+                {profile.coreTasks
+                  .filter((t) => t.category === "front-desk")
+                  .map((task) => (
+                    <li key={task.title}>{task.title}</li>
+                  ))}
+              </ul>
+            </div>
+            <div className="billing-task-group">
+              <h3>Billing &amp; RCM Tasks</h3>
+              <ul className="billing-task-list">
+                {profile.coreTasks
+                  .filter((t) => t.category === "billing-rcm")
+                  .map((task) => (
+                    <li key={task.title}>{task.title}</li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       <section className="billing-section" id="workflow" aria-labelledby="workflow-heading">
         <div className="billing-shell">
@@ -83,6 +124,37 @@ export default function GoodmanBillingPage() {
           </ol>
         </div>
       </section>
+      <section className="billing-section" id="differentiators" aria-labelledby="diff-heading">
+        <div className="billing-shell">
+          <h2 id="diff-heading">Differentiators &amp; Value Proposition</h2>
+          <p className="billing-lead">Key operational differentiators stated by Goodman Billing.</p>
+          <ul className="billing-differentiators-list">
+            {profile.differentiators.map((diff) => (
+              <li key={diff}>{diff}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="billing-section" id="testimonials" aria-labelledby="testimonials-heading">
+        <div className="billing-shell">
+          <h2 id="testimonials-heading">Client Testimonials</h2>
+          <p className="billing-lead">Website-published client statements; independently verified outcomes were not supplied.</p>
+          <div className="billing-testimonials-grid">
+            {profile.testimonials.map((t) => (
+              <article key={t.name} className="billing-testimonial-card">
+                <h3>{t.name}</h3>
+                <p className="billing-testimonial-context">{t.context}</p>
+                <p className="billing-testimonial-report">{t.report}</p>
+              </article>
+            ))}
+          </div>
+          <p className="billing-source-note">
+            Website-published client statements; independently verified outcomes were not supplied. Metrics reflect Michael Chen&apos;s reported individual practice outcome rather than a certified universal benchmark.
+          </p>
+        </div>
+      </section>
+
 
       <section className="billing-section" id="evidence" aria-labelledby="evidence-heading">
         <div className="billing-shell">

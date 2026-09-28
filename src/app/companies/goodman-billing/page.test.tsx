@@ -13,7 +13,7 @@ function section(name: string) {
 
 describe("GoodmanBillingPage", () => {
   it("derives metadata from canonical company facts", () => {
-    expect(metadata.title).toBe(`${company.displayName} | Goodman Group`);
+    expect(metadata.title).toBe(company.displayName);
     expect(metadata.description).toBe(company.summary);
   });
 

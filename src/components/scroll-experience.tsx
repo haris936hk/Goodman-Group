@@ -147,16 +147,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
             },
           });
 
-          gsap.from("[data-map-route]", {
-            strokeDashoffset: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "[data-presence-map]",
-              start: "top 80%",
-              end: "bottom 65%",
-              scrub: 0.8,
-            },
-          });
         });
 
         const previousCleanup = cleanupExperience;

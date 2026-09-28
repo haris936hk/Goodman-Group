@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { goodmanGroup } from "@/data/goodman-group";
 const footerLinks = [
   ["About the Group", "/#about"],
   ["Our Companies", "/companies"],
@@ -23,8 +24,7 @@ export function SiteFooter() {
             sizes="(max-width: 640px) 170px, 200px"
           />
           <p>
-            A diversified conglomerate driving innovation and excellence across
-            healthcare and multiple business areas.
+            {goodmanGroup.description}
           </p>
         </div>
         <nav className="footer-nav" aria-label="Footer navigation">
@@ -35,7 +35,19 @@ export function SiteFooter() {
           ))}
         </nav>
         <div className="footer-action footer-action-status">
-          Contact us for inquiries, partnerships, or career opportunities.
+          <p className="footer-action-heading">
+            Contact us for inquiries, partnerships, or career opportunities:
+          </p>
+          <a
+            href={`mailto:${goodmanGroup.contacts.email}?subject=${encodeURIComponent("Goodman Group General Inquiry")}`}
+            className="footer-email-link"
+          >
+            {goodmanGroup.contacts.email}
+          </a>
+          <address className="footer-address">
+            <span className="footer-address-label">US contact address:</span>
+            <span>{goodmanGroup.contacts.usContactAddress}</span>
+          </address>
         </div>
       </div>
       <div className="footer-meta">

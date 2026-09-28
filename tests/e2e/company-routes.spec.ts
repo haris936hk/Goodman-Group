@@ -258,3 +258,94 @@ test('includes every company profile in the sitemap', async ({ request }) => {
     expect(xml).not.toContain(`/companies/${slug}`);
   }
 });
+test('exposes canonical URL and non-ownership JSON-LD on every company route', async ({ page }) => {
+  for (const company of companies) {
+    await page.goto(`/companies/${company.slug}`);
+
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveAttribute('href', `https://goodmangoc.com/companies/${company.slug}`);
+
+    const jsonLd = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLd).toHaveCount(1);
+    const content = await jsonLd.textContent();
+    expect(content).toBeTruthy();
+    const parsed = JSON.parse(content!);
+    expect(parsed['@type']).toBe('Organization');
+    expect(parsed.name).toBe(company.displayName);
+    expect(parsed.url).toBe(`https://goodmangoc.com/companies/${company.slug}`);
+    expect(parsed.brand).toEqual({ '@type': 'Brand', name: 'Goodman Group' });
+    expect(parsed).not.toHaveProperty('parentOrganization');
+    expect(parsed).not.toHaveProperty('subOrganization');
+  }
+});
+
+test('renders Goodman Laboratories historical departmental table with undated caveat', async ({ page }) => {
+  await page.goto('/companies/goodman-laboratories');
+
+  const table = page.getByRole('table', { name: /Website-reported historical departmental table/i });
+  await expect(table).toBeVisible();
+  await expect(page.getByText('Production').first()).toBeVisible();
+  await expect(page.getByText('90').first()).toBeVisible();
+  await expect(page.getByText('Sales and Marketing').first()).toBeVisible();
+  await expect(page.getByText('270').first()).toBeVisible();
+  await expect(page.getByText('Operations and Finance').first()).toBeVisible();
+  await expect(page.getByText('25').first()).toBeVisible();
+  await expect(page.getByText('385').first()).toBeVisible();
+  await expect(
+    page.getByText('Source does not provide a reporting date; not a current payroll census.').first(),
+  ).toBeVisible();
+});
+
+test('renders Goodman Medical Equipment service propositions and four founders', async ({ page }) => {
+  await page.goto('/companies/goodman-medical-equipment');
+
+  await expect(page.getByRole('heading', { name: 'Service proposition' })).toBeVisible();
+  for (const prop of [
+    'Premium quality',
+    'International standards',
+    'Competitive prices',
+    'After-sales support',
+    'Quality-assured products',
+    'Reliable partnership',
+    'Innovative solutions',
+    'Nationwide supply in Pakistan',
+    'International supply capability',
+  ]) {
+    await expect(page.getByText(prop).first()).toBeVisible();
+  }
+
+  for (const founder of [
+    'Malik Munir Awan',
+    'Syed Talib Hussain Hashmi',
+    'Taj Muhammad',
+    'Syed Ahmed Ali',
+  ]) {
+    await expect(page.getByText(founder).first()).toBeVisible();
+  }
+});
+
+test('renders Goodman Billing core tasks, differentiators, and attributed testimonials', async ({ page }) => {
+  await page.goto('/companies/goodman-billing');
+
+  await expect(page.getByRole('heading', { name: 'Core Tasks' })).toBeVisible();
+  const tasksRegion = page.getByRole('region', { name: 'Core Tasks' });
+  await expect(tasksRegion.getByText('Prior authorizations')).toBeVisible();
+  await expect(tasksRegion.getByText('Eligibility and coverage verification')).toBeVisible();
+  await expect(tasksRegion.getByText('Charge entry')).toBeVisible();
+  await expect(tasksRegion.getByText('Payment posting')).toBeVisible();
+  await expect(tasksRegion.getByText('Denial management')).toBeVisible();
+
+  await expect(page.getByRole('heading', { name: 'Differentiators & Value Proposition' })).toBeVisible();
+  await expect(
+    page.getByText('Certified and experienced billing specialists dedicated to practice revenue optimization.'),
+  ).toBeVisible();
+
+  await expect(page.getByRole('heading', { name: 'Client Testimonials' })).toBeVisible();
+  await expect(page.getByText('Dr. Sarah Johnson')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Michael Chen' })).toBeVisible();
+  await expect(page.getByText(/60% reduction in denial rate and a 25% increase in collections/)).toBeVisible();
+  await expect(page.getByText('Dr. Emily Rodriguez')).toBeVisible();
+  await expect(
+    page.getByText('Website-published client statements; independently verified outcomes were not supplied.').first(),
+  ).toBeVisible();
+});

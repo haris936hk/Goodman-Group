@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
 import { walGreenChemicalsProfile } from "@/data/wal-green-chemicals";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 import "./walgreen.css";
 
 const company = getCompanyBySlug("wal-green-chemicals")!;
@@ -14,6 +15,9 @@ const profile = walGreenChemicalsProfile;
 export const metadata: Metadata = {
   title: company.displayName,
   description: `${profile.identity.legalName} — Indenter and trader supplying globally sourced pharmaceutical raw materials, intermediates, and chemicals across Pakistan.`,
+  alternates: {
+    canonical: "/companies/wal-green-chemicals",
+  },
 };
 
 export default function WalGreenChemicalsPage() {
@@ -21,6 +25,7 @@ export default function WalGreenChemicalsPage() {
 
   return (
     <CompanyGroupFrame company={company} className="wal-green-page">
+      <OrganizationJsonLd company={company} />
       <header className="wg-hero">
         <div className="wg-hero-inner">
           <div className="wg-topline">

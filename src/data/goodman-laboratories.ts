@@ -10,6 +10,7 @@ export type ProductCategory = {
 
 export type LiteratureRecord = {
   readonly title: string;
+  readonly slogan?: string;
   readonly genericOrSubtitle?: string;
   readonly points: readonly string[];
   readonly dosageTable?: readonly {
@@ -46,6 +47,7 @@ export type InternationalActivityReport = {
 export type GoodmanLaboratoriesProfile = {
   readonly identity: {
     readonly legalName: string;
+    readonly tagline: string;
     readonly founded: string;
     readonly industry: string;
     readonly purpose: string;
@@ -68,6 +70,15 @@ export type GoodmanLaboratoriesProfile = {
   };
   readonly productionSections: readonly ProductionSection[];
   readonly websiteFunctions: readonly string[];
+  readonly websiteDepartmentHeadcounts: {
+    readonly sourceLabel: string;
+    readonly sourceDate: null;
+    readonly rows: readonly {
+      readonly department: string;
+      readonly employees: number;
+    }[];
+    readonly total: number;
+  };
   readonly governance: readonly string[];
   readonly organizationalFunctions: readonly string[];
   readonly socialResponsibility: readonly string[];
@@ -119,6 +130,7 @@ export type GoodmanLaboratoriesProfile = {
 export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
   identity: {
     legalName: "Goodman Laboratories (Pvt.) Ltd.",
+    tagline: "Seeking for the Best",
     founded: "2008",
     industry:
       "Pharmaceutical manufacturing, marketing, sales, supply, distribution, export, wholesale, retail, and trading.",
@@ -193,6 +205,16 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     "Operations and Finance",
     "Quality Control (testing and record keeping)",
   ],
+  websiteDepartmentHeadcounts: {
+    sourceLabel: "Website-reported historical departmental table",
+    sourceDate: null,
+    rows: [
+      { department: "Production", employees: 90 },
+      { department: "Sales and Marketing", employees: 270 },
+      { department: "Operations and Finance", employees: 25 },
+    ],
+    total: 385,
+  },
   governance: [
     "Board of Directors",
     "Chief Executive Officer and primary shareholder",
@@ -838,6 +860,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     },
     {
       title: "Desgood",
+      slogan: "Vision for Better Care",
       genericOrSubtitle: "desloratadine",
       points: [
         "Promoted for seasonal allergic rhinitis and associated asthma symptoms.",
@@ -878,6 +901,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     },
     {
       title: "Omigood",
+      slogan: "Provides Good Care & Longer Acid Suppression",
       genericOrSubtitle: "omeprazole",
       points: [
         "Positioned as maintenance therapy for severe gastro-oesophageal reflux disease.",

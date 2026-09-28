@@ -1162,155 +1162,366 @@ main,
   line-height: 1.55;
 }
 
-.presence-layout {
+.presence-ledger-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
-  gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.presence-map {
-  position: relative;
-  min-height: 38rem;
-  overflow: hidden;
+.presence-ledger-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(circle at 70% 25%, rgba(58, 173, 193, 0.12), transparent 20rem),
-    rgba(8, 27, 46, 0.56);
 }
 
-.map-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.3;
-  background-image:
-    linear-gradient(rgba(120, 185, 220, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 185, 220, 0.09) 1px, transparent 1px);
-  background-size: 3rem 3rem;
-  mask-image: linear-gradient(to bottom right, black, transparent 85%);
-}
-
-.presence-map svg {
-  position: absolute;
-  inset: 5%;
-  width: 90%;
-  height: 90%;
-}
-
-.map-route {
-  fill: none;
-  stroke: var(--cyan);
-  stroke-width: 2;
-  filter: drop-shadow(0 0 9px rgba(80, 212, 242, 0.55));
-}
-
-.map-route-muted {
-  stroke: rgba(128, 188, 219, 0.12);
-  stroke-width: 10;
-  filter: none;
-}
-
-.map-marker circle:first-child {
-  fill: color-mix(in srgb, currentColor 12%, transparent);
-  stroke: currentColor;
-  stroke-width: 1;
-}
-
-.map-marker circle:last-child {
-  fill: currentColor;
-  filter: drop-shadow(0 0 6px currentColor);
-}
-
-.state-active {
-  color: #66d9a3;
-}
-
-.state-partner {
-  color: #64d5ef;
-}
-
-.state-agreement {
-  color: #9e96ed;
-}
-
-.state-planned {
-  color: #98a9b7;
-}
-
-.map-label {
-  position: absolute;
-  bottom: 1.25rem;
-  left: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  border-radius: 1rem;
-}
-
-.map-label svg {
-  position: static;
-  width: 1.2rem;
-  height: 1.2rem;
-  color: var(--cyan);
-}
-
-.map-label span {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  font-size: 0.78rem;
-  font-weight: 650;
-}
-
-.map-label small {
-  color: var(--gray-300);
-  font-size: 0.72rem;
-  font-weight: 450;
-}
-
-.presence-legend {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  flex-direction: column;
-  justify-content: center;
-  list-style: none;
-}
-
-.presence-legend li {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--line);
-}
-
-.presence-legend li:last-child {
+.presence-card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--line);
 }
 
-.legend-marker {
-  display: block;
-  width: 0.72rem;
-  height: 0.72rem;
-  margin-top: 0.3rem;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  box-shadow: 0 0 14px color-mix(in srgb, currentColor 45%, transparent);
+.presence-card-company {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
 }
 
-.presence-legend h3 {
-  margin: 0 0 0.35rem;
+.presence-card-header h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: var(--white);
-  font-size: 1rem;
-  font-weight: 580;
+  letter-spacing: -0.02em;
 }
 
-.presence-legend p {
+.presence-card-base {
   margin: 0;
+  font-size: 0.82rem;
   color: var(--gray-300);
-  font-size: 0.78rem;
   line-height: 1.5;
+}
+
+.presence-market-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.presence-market-item {
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: rgba(8, 27, 46, 0.4);
+  border: 1px solid var(--line);
+}
+
+.presence-market-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.presence-market-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--white);
+}
+
+.presence-market-tag,
+.presence-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  line-height: 1.2;
+}
+
+.presence-market-tag {
+  background: rgba(100, 213, 239, 0.12);
+  color: var(--cyan-soft);
+  border: 1px solid rgba(100, 213, 239, 0.25);
+}
+
+.status-active {
+  background: rgba(102, 217, 163, 0.12);
+  color: #66d9a3;
+  border: 1px solid rgba(102, 217, 163, 0.3);
+}
+
+.status-target {
+  background: rgba(152, 169, 183, 0.12);
+  color: #98a9b7;
+  border: 1px solid rgba(152, 169, 183, 0.3);
+}
+
+.status-sourcing {
+  background: rgba(158, 150, 237, 0.12);
+  color: #9e96ed;
+  border: 1px solid rgba(158, 150, 237, 0.3);
+}
+
+.presence-market-detail {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--gray-300);
+  line-height: 1.5;
+}
+
+.presence-market-subsections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.presence-subhead {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-200);
+}
+
+.presence-simple-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.presence-simple-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--gray-300);
+}
+
+/* Group Narrative Panel */
+.group-narrative-panel {
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: var(--radius-lg);
+}
+
+.group-narrative-header {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.group-narrative-eyebrow {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.group-narrative-message {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.03em;
+}
+
+.group-narrative-mission {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--gray-300);
+  line-height: 1.6;
+  max-width: 50rem;
+}
+
+.group-narrative-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.group-narrative-col h4 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.group-narrative-caption {
+  margin: 0 0 1rem;
+  font-size: 0.78rem;
+  color: var(--gray-400);
+  line-height: 1.45;
+}
+
+.group-sector-list,
+.group-interest-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.group-sector-list li,
+.group-interest-list li {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  color: var(--gray-200);
+  background: rgba(12, 38, 64, 0.65);
+  border: 1px solid var(--line);
+}
+
+/* Executive Contacts */
+.heritage-executive-contacts {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+}
+
+.executive-contacts-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+
+.heritage-executive-contacts h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.executive-contacts-role {
+  margin: 0.15rem 0 0.75rem;
+  font-size: 0.8rem;
+  color: var(--gray-400);
+}
+
+.executive-contacts-note {
+  margin: 0 0 1rem;
+  font-size: 0.76rem;
+  color: var(--gray-300);
+  line-height: 1.45;
+}
+
+.executive-contacts-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.executive-contact-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  color: var(--cyan-soft);
+  text-decoration: none;
+}
+
+.executive-contact-phone:hover {
+  text-decoration: underline;
+}
+
+.executive-contacts-provenance {
+  margin: 0.85rem 0 0;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--gray-500);
+}
+
+/* Functional Connect & Audience Routes */
+.connect-general-cta {
+  margin-top: 1.25rem;
+}
+
+.connect-general-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.86rem;
+  color: var(--cyan-soft);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: rgba(100, 213, 239, 0.08);
+  border: 1px solid rgba(100, 213, 239, 0.2);
+  transition: background var(--duration-fast) ease;
+}
+
+.connect-general-link:hover {
+  background: rgba(100, 213, 239, 0.16);
+}
+
+.audience-route-link {
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+
+.audience-route-link:hover,
+.audience-route-link:focus-visible {
+  background: rgba(12, 42, 70, 0.95);
+}
+
+/* Footer Contact Extensions */
+.footer-action-heading {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  color: var(--gray-400);
+}
+
+.footer-email-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--cyan-soft);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.footer-email-link:hover {
+  text-decoration: underline;
+}
+
+.footer-address {
+  font-style: normal;
+  font-size: 0.76rem;
+  color: var(--gray-300);
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.footer-address-label {
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .heritage-chapter {
@@ -2143,7 +2354,8 @@ main,
   }
 
   .company-focus-stage,
-  .presence-layout,
+  .presence-ledger-grid,
+  .group-narrative-grid,
   .heritage-layout,
   .activity-grid {
     grid-template-columns: 1fr;
@@ -2161,10 +2373,6 @@ main,
 
   .company-focus-visual-label {
     right: 1rem;
-  }
-
-  .presence-map {
-    min-height: 31rem;
   }
 
   .timeline li {
@@ -2326,16 +2534,6 @@ main,
 
   .proof-rule > svg {
     margin: 2rem 0 1rem;
-  }
-
-  .presence-map {
-    min-height: 20rem;
-  }
-
-  .map-label {
-    right: 0.75rem;
-    bottom: 0.75rem;
-    left: 0.75rem;
   }
 
   .timeline::before {

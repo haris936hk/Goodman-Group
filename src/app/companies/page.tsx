@@ -7,16 +7,21 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { companies } from "@/data/companies";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Our Companies",
   description:
     "Browse Goodman Group companies and capabilities through direct portfolio discovery.",
+  alternates: {
+    canonical: "/companies",
+  },
 };
 
 export default function CompaniesPage() {
   return (
     <div className="site-shell inner-page" id="top">
+      <OrganizationJsonLd />
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
@@ -32,9 +37,10 @@ export default function CompaniesPage() {
             </p>
             <h1>Distinct companies. One clear view.</h1>
             <p>
-              Browse every company in the Goodman Group portfolio. Each company
-              has a bespoke destination with its verified facts, leadership,
-              capabilities, and direct inquiry route.
+              Browse every company in the Goodman Group portfolio. The parent
+              Group presents distinct companies with profile-specific evidence
+              and inquiry routes, without implying they share one operating
+              status.
             </p>
           </div>
         </section>
@@ -90,6 +96,12 @@ export default function CompaniesPage() {
                   {company.locations.length > 0 ? (
                     <p className="directory-panel-locations">
                       <strong>Locations:</strong> {company.locations.join(", ")}
+                    </p>
+                  ) : null}
+                  {company.slug === "goodman-medical-equipment" && company.leadership.length > 0 ? (
+                    <p className="directory-panel-locations">
+                      <strong>Founders &amp; Directors:</strong>{" "}
+                      {company.leadership.map((l) => l.name).join(", ")}
                     </p>
                   ) : null}
                 </div>

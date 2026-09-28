@@ -130,7 +130,7 @@ test.describe('home page', () => {
     await expect(page).toHaveURL(/#presence$/);
     await expect(
       page.getByRole('heading', {
-        name: 'Every point on the map says what it means.',
+        name: 'Geographic presence and market status ledger.',
       }),
     ).toBeInViewport();
   });
@@ -160,7 +160,7 @@ test.describe('home page', () => {
             .gridTemplateColumns.split(' ').length;
         const bounds = Array.from(
           document.querySelectorAll(
-            '.site-header, .hero-system, .company-grid, .proof-layout, .presence-layout, .audience-grid',
+            '.site-header, .hero-system, .company-grid, .proof-layout, .presence-ledger-grid, .audience-grid',
           ),
         ).map((element) => {
           const rect = element.getBoundingClientRect();
@@ -292,25 +292,33 @@ test.describe('home page on mobile', () => {
     page,
   }) => {
     const heading = page.getByRole('heading', {
-      name: 'Every point on the map says what it means.',
+      name: 'Geographic presence and market status ledger.',
     });
     await heading.scrollIntoViewIfNeeded();
 
     await expect(heading).toBeVisible();
-    await expect(page.locator('[data-presence-map] > svg[role="img"]')).toBeVisible();
+    const presenceGrid = page.locator('.presence-ledger-grid');
+    await expect(presenceGrid).toBeVisible();
     await expect(
-      page.getByText('Active, partner, agreement-stage, and planned markets', {
-        exact: true,
-      }),
+      presenceGrid.getByText('Goodman Laboratories').first(),
+    ).toBeVisible();
+    await expect(
+      presenceGrid.getByText('Goodman Medical Equipment Trading').first(),
+    ).toBeVisible();
+    await expect(
+      presenceGrid.getByText('Wal Green Chemicals').first(),
+    ).toBeVisible();
+    await expect(
+      presenceGrid.getByText('Goodman Billing & Geron Pharma').first(),
     ).toBeVisible();
 
     for (const label of [
-      'Active operation',
-      'Partner market',
-      'Agreement stage',
-      'Planned market',
+      'Active',
+      'Target market',
+      'Sourcing import',
+      'Partner distribution',
     ]) {
-      await expect(page.getByRole('heading', { name: label })).toBeVisible();
+      await expect(page.getByText(label).first()).toBeVisible();
     }
   });
 
@@ -389,11 +397,43 @@ test('publishes crawl and sitemap endpoints', async ({ request }) => {
   const sitemap = await request.get('/sitemap.xml');
 
   expect(robots.status()).toBe(200);
-  expect(await robots.text()).toContain('Sitemap:');
+  expect(await robots.text()).toContain('Sitemap: https://goodmangoc.com/sitemap.xml');
   expect(sitemap.status()).toBe(200);
   const sitemapText = await sitemap.text();
-  const origin = new URL(sitemap.url()).origin;
-  expect(sitemapText).toContain(`<loc>${origin}/</loc>`);
-  expect(sitemapText).toContain(`<loc>${origin}/companies</loc>`);
-  expect(sitemapText).toContain('/companies/goodman-laboratories');
+  expect(sitemapText).toContain('<loc>https://goodmangoc.com/</loc>');
+  expect(sitemapText).toContain('<loc>https://goodmangoc.com/companies</loc>');
+  expect(sitemapText).toContain('<loc>https://goodmangoc.com/companies/goodman-laboratories</loc>');
+});
+
+test('exposes valid Organization JSON-LD and canonical metadata on home', async ({ page }) => {
+  await page.goto('/');
+  const canonical = page.locator('link[rel="canonical"]');
+  await expect(canonical).toHaveAttribute('href', /^https:\/\/goodmangoc\.com\/?$/);
+
+  const jsonLdScript = page.locator('script[type="application/ld+json"]');
+  await expect(jsonLdScript).toHaveCount(1);
+  const content = await jsonLdScript.textContent();
+  expect(content).toBeTruthy();
+  const parsed = JSON.parse(content!);
+  expect(parsed['@type']).toBe('Organization');
+  expect(parsed.name).toBe('Goodman Group');
+  expect(parsed.url).toBe('https://goodmangoc.com/');
+  expect(parsed).not.toHaveProperty('parentOrganization');
+  expect(parsed).not.toHaveProperty('subOrganization');
+});
+
+test('provides functional audience routes and executive contact links', async ({ page }) => {
+  await page.goto('/');
+  const procurement = page.getByRole('link', { name: /Procurement/i });
+  await expect(procurement).toHaveAttribute('href', '/companies');
+
+  const partnerships = page.getByRole('link', { name: /Partnerships/i });
+  const partnershipsHref = await partnerships.getAttribute('href');
+  expect(partnershipsHref).toContain('mailto:goodman@goodmangoc.com');
+
+  const generalInquiry = page.getByRole('link', { name: /General inquiry:/i });
+  await expect(generalInquiry).toHaveAttribute('href', /mailto:goodman@goodmangoc.com/);
+
+  const execPhone = page.getByRole('link', { name: '+92 336 777 0770' });
+  await expect(execPhone).toHaveAttribute('href', 'tel:+923367770770');
 });

@@ -1,4 +1,5 @@
 import { companies } from "@/data/companies";
+import { SITE_ORIGIN } from "@/data/goodman-group";
 
 function escapeXml(value: string) {
   return value.replace(
@@ -14,8 +15,9 @@ function escapeXml(value: string) {
   );
 }
 
-export function GET(request: Request) {
-  const origin = new URL(request.url).origin;
+export function GET(_request?: Request) {
+  void _request;
+  const origin = SITE_ORIGIN;
   const routes = [
     "/",
     "/companies",

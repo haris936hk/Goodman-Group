@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { companies } from '@/data/companies';
@@ -56,7 +56,7 @@ describe('Home', () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
-        name: `${companies.length} operating companies. No false sameness.`,
+        name: `${companies.length} portfolio companies under the parent Group. No false sameness.`,
       }),
     ).toBeInTheDocument();
 
@@ -71,6 +71,49 @@ describe('Home', () => {
       expect(links.length).toBeGreaterThanOrEqual(1);
       expect(links[0]).toHaveAttribute('href', `/companies/${company.slug}`);
     }
+  });
+  it('renders Group message, mission, sectors, and business interests without sector grouping', () => {
+    render(<Home />);
+
+    expect(screen.getAllByText('Empowering Health, Wellness, Progress').length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText(
+        'To improve lives through innovative products, services, and solutions while fostering growth, excellence, and social responsibility.',
+      ),
+    ).toBeInTheDocument();
+
+    const sectorList = screen.getByRole('list', { name: 'Goodman Group operating sectors' });
+    expect(within(sectorList).getAllByRole('listitem')).toHaveLength(7);
+
+    const interestList = screen.getByRole('list', { name: 'Goodman Group business interests' });
+    expect(within(interestList).getAllByRole('listitem')).toHaveLength(8);
+  });
+
+  it('renders functional audience inquiry links and general inquiry', () => {
+    render(<Home />);
+
+    const procurementLink = screen.getByRole('link', { name: /Procurement/i });
+    expect(procurementLink).toHaveAttribute('href', '/companies');
+
+    const partnershipsLink = screen.getByRole('link', { name: /Partnerships/i });
+    expect(partnershipsLink.getAttribute('href')).toContain('mailto:goodman@goodmangoc.com');
+    expect(partnershipsLink.getAttribute('href')).toContain(encodeURIComponent('Goodman Group Partnerships Inquiry'));
+
+    const generalLink = screen.getByRole('link', { name: /General inquiry:/i });
+    expect(generalLink.getAttribute('href')).toContain('mailto:goodman@goodmangoc.com');
+  });
+
+  it('renders executive contact details near Group leadership', () => {
+    render(<Home />);
+
+    expect(screen.getByRole('link', { name: '+92 336 777 0770' })).toHaveAttribute(
+      'href',
+      'tel:+923367770770',
+    );
+    expect(screen.getByRole('link', { name: '+92 311 154 8859' })).toHaveAttribute(
+      'href',
+      'tel:+923111548859',
+    );
   });
 
   it('opens and closes the accessible mobile navigation', async () => {

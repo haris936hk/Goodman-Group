@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { goodmanGroup } from "@/data/goodman-group";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,12 +16,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://goodmangoc.com/"),
   title: {
-    default: "Goodman Group | Companies and capabilities",
+    default: goodmanGroup.websiteTitle,
     template: "%s | Goodman Group",
   },
   description:
     "Goodman Group brings together companies and capabilities across healthcare, medical equipment, chemicals, and other business areas.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export const viewport: Viewport = {

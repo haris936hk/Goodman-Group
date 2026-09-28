@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
 import { goodmanMedicalEquipmentProfile as profile } from "@/data/goodman-medical-equipment";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 import "./medical.css";
 
 const company = getCompanyBySlug("goodman-medical-equipment")!;
@@ -13,11 +14,15 @@ const company = getCompanyBySlug("goodman-medical-equipment")!;
 export const metadata: Metadata = {
   title: company.displayName,
   description: company.summary,
+  alternates: {
+    canonical: "/companies/goodman-medical-equipment",
+  },
 };
 
 export default function GoodmanMedicalEquipmentPage() {
   return (
     <CompanyGroupFrame company={company} className="medical-equipment-page">
+      <OrganizationJsonLd company={company} />
       <header className="med-hero">
         <div className="med-shell med-hero-grid">
           <div className="med-title-block">
@@ -213,6 +218,19 @@ export default function GoodmanMedicalEquipmentPage() {
                   </div>
                 </article>
               ))}
+            </div>
+
+            <div className="med-propositions">
+              <p className="med-eyebrow">Company-stated value</p>
+              <h3>Service proposition</h3>
+              <p className="med-proposition-note">
+                Company-stated propositions published in profile materials (not externally verified certifications or active international operations):
+              </p>
+              <ul className="med-fact-list med-proposition-list">
+                {profile.servicePropositions.map((prop) => (
+                  <li key={prop}>{prop}</li>
+                ))}
+              </ul>
             </div>
 
             <div className="med-operating-grid">

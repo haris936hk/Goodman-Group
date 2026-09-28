@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
+import { OrganizationJsonLd } from "@/lib/structured-data";
 import "./geron.css";
 
 const company = getCompanyBySlug("geron-pharma")!;
@@ -12,6 +13,9 @@ const company = getCompanyBySlug("geron-pharma")!;
 export const metadata: Metadata = {
   title: company.displayName,
   description: company.summary,
+  alternates: {
+    canonical: "/companies/geron-pharma",
+  },
 };
 
 export default function GeronPharmaPage() {
@@ -19,6 +23,7 @@ export default function GeronPharmaPage() {
 
   return (
     <CompanyGroupFrame company={company} className="geron-page">
+      <OrganizationJsonLd company={company} />
       <header className="geron-hero">
         <div className="geron-hero-inner">
           <div className="geron-badge-row">

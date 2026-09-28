@@ -13,6 +13,7 @@
   color: var(--billing-ink);
   font-family: var(--font-sans), Arial, sans-serif;
   line-height: 1.65;
+  overflow-x: clip;
 }
 
 .billing-page *, .billing-page *::before, .billing-page *::after { box-sizing: border-box; }
@@ -32,8 +33,12 @@
 .billing-page .billing-hero { padding: clamp(4rem, 10vw, 8rem) 0 2rem; }
 .billing-page .billing-kicker { color: #a6d7e7; font-size: .95rem; font-weight: 600; letter-spacing: .055em; text-transform: uppercase; }
 .billing-page h1 { font-size: clamp(3.1rem, 8vw, 6.8rem); margin: 1rem 0 1.5rem; max-width: 13ch; }
+.billing-page .billing-headline { font-size: clamp(1.4rem, 2.5vw, 1.85rem); font-weight: 700; color: #d5ecf4; margin: 0 0 .4rem; }
+.billing-page .billing-positioning { font-size: 1.15rem; font-weight: 600; color: #a6d7e7; margin: 0 0 .3rem; }
+.billing-page .billing-positioning-statement { font-size: 1.05rem; font-style: italic; color: #cad7e2; margin: 0 0 1.25rem; }
 .billing-page .billing-intro { font-size: clamp(1.15rem, 2.2vw, 1.5rem); line-height: 1.5; max-width: 57ch; }
 .billing-page .billing-legal { margin-top: 1.4rem; color: #b9cad8; }
+.billing-page .billing-objective { margin-top: 1rem; color: #e2edf5; max-width: 60ch; font-size: 0.95rem; }
 .billing-page .billing-action { display: inline-block; margin-top: 2.3rem; padding: .85rem 1.25rem; background: #d5ecf4; color: #102b46; font-weight: 700; text-decoration: none; border-radius: .25rem; }
 .billing-page .billing-action:hover { background: #fff; }
 .billing-page .billing-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; margin-top: clamp(3rem, 7vw, 5.5rem); padding-top: 1.2rem; border-top: 1px solid #54718a; }
@@ -73,6 +78,19 @@
 .billing-page .billing-catalogue { max-width: 65ch; border-top: 1px solid var(--billing-line); }
 .billing-page .billing-catalogue summary { padding-block: 1.2rem; width: 100%; }
 .billing-page .billing-catalogue .billing-facts { margin-top: 0; }
+.billing-page .billing-tasks-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3rem; margin-top: 1.5rem; min-width: 0; }
+.billing-page .billing-task-group { min-width: 0; }
+.billing-page .billing-task-group h3 { font-size: 1.15rem; color: var(--billing-navy); margin-bottom: 0.75rem; }
+.billing-page .billing-task-list { list-style: none; padding: 0; margin: 0; }
+.billing-page .billing-task-list li { padding: .75rem 0; border-top: 1px solid var(--billing-line); font-size: 0.95rem; }
+.billing-page .billing-differentiators-list { list-style: none; padding: 0; margin: 1.5rem 0 0; max-width: 65ch; }
+.billing-page .billing-differentiators-list li { padding: .85rem 0; border-top: 1px solid var(--billing-line); font-size: 0.98rem; }
+.billing-page .billing-testimonials-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.75rem; margin: 2rem 0; min-width: 0; }
+.billing-page .billing-testimonial-card { padding: 1.5rem; background: #fff; border: 1px solid var(--billing-line); border-radius: .25rem; display: flex; flex-direction: column; min-width: 0; }
+.billing-page .billing-testimonial-card h3 { margin: 0; font-size: 1.15rem; color: var(--billing-navy); }
+.billing-page .billing-testimonial-context { font-size: .85rem; color: var(--billing-muted); margin: .25rem 0 1rem; }
+.billing-page .billing-testimonial-report { font-size: .95rem; color: var(--billing-ink); line-height: 1.6; margin: 0; }
+.billing-page .billing-source-note { font-size: .85rem; color: var(--billing-muted); font-style: italic; margin-top: 1.5rem; border-left: 3px solid #b5d9e5; padding-left: 1rem; }
 .billing-page .billing-contact { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .billing-page .billing-contact a { color: #b8e5f2; overflow-wrap: anywhere; }
 .billing-page .billing-contact-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3rem; margin: 3rem 0; }
@@ -85,7 +103,7 @@
 .billing-page .group-frame-footer-links a { opacity: 1; }
 @media (max-width: 600px) {
   .billing-page .billing-shell { width: min(100% - 2rem, 72rem); }
-  .billing-page .billing-audience, .billing-page .billing-contact-facts { grid-template-columns: minmax(0, 1fr); }
+  .billing-page .billing-audience, .billing-page .billing-contact-facts, .billing-page .billing-tasks-grid, .billing-page .billing-testimonials-grid { grid-template-columns: minmax(0, 1fr); }
   .billing-page .billing-workflow li { grid-template-columns: minmax(0, 1fr); gap: .25rem; }
   .billing-page .billing-detail-body { padding-left: .8rem; }
 }
