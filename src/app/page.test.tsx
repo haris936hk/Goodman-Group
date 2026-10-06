@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { companies } from '@/data/companies';
+import { goodmanGroup } from '@/data/goodman-group';
 import Home from './page';
 
 describe('Home', () => {
@@ -16,6 +17,27 @@ describe('Home', () => {
 
     expect(container.querySelector('main')).toBeInTheDocument();
   });
+
+  it('omits the Measure chapter and its navigation link', () => {
+    const { container } = render(<Home />);
+
+    expect(container.querySelector('.proof-chapter')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Responsibility' }),
+    ).not.toBeInTheDocument();
+  });
+  it('omits the portfolio intro tile from the Reveal chapter', () => {
+    render(<Home />);
+
+    expect(screen.getByText('01 / Reveal')).toBeInTheDocument();
+    expect(
+      screen.queryByText('A parent brand connecting distinct company identities'),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'View complete company index' }),
+    ).not.toBeInTheDocument();
+  });
+
 
   it('focuses the hero on the centered Goodman Group visual system', () => {
     const { container } = render(<Home />);
@@ -34,73 +56,125 @@ describe('Home', () => {
     expect(hero).not.toHaveTextContent('Scroll to explore');
   });
 
-  it('preserves the complete hero visual system', () => {
+  it('preserves the hero constellation without a redundant Group label', () => {
     const { container } = render(<Home />);
     const hero = container.querySelector('[data-hero]');
+    const groupCore = hero?.querySelector('.group-core');
 
     expect(hero?.querySelector('.hero-glow')).toBeInTheDocument();
     expect(hero?.querySelectorAll('[data-orbit-ring]')).toHaveLength(2);
-    expect(hero?.querySelectorAll('.orbit-node')).toHaveLength(3);
     expect(hero?.querySelectorAll('.orbit-pip')).toHaveLength(3);
-    expect(hero?.querySelector('.group-core')).toBeInTheDocument();
-    expect(hero?.querySelector('.system-caption')).toBeInTheDocument();
-    expect(screen.getByText('One clear structure')).toBeInTheDocument();
-    expect(screen.getByText('Many distinct company identities')).toBeInTheDocument();
+    expect(groupCore).toBeInTheDocument();
+    expect(groupCore).not.toHaveTextContent('Parent Group');
   });
 
-  it('exposes every company through direct discoverability without sector grouping', () => {
-    render(<Home />);
+  it('links every canonical company exactly once from the hero orbit', () => {
+    const { container } = render(<Home />);
+    const hero = container.querySelector('[data-hero]');
 
-    expect(
-      screen.queryByRole('heading', { name: 'Different sectors. No false sameness.' }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', {
-        name: `${companies.length} portfolio companies under the parent Group. No false sameness.`,
-      }),
-    ).toBeInTheDocument();
-
-    for (const company of [
-      { name: 'Goodman Laboratories', slug: 'goodman-laboratories' },
-      { name: 'Geron Pharma', slug: 'geron-pharma' },
-      { name: 'Goodman Medical Equipment Trading', slug: 'goodman-medical-equipment' },
-      { name: 'Wal Green Chemicals', slug: 'wal-green-chemicals' },
-      { name: 'Goodman Billing', slug: 'goodman-billing' },
-    ]) {
-      const links = screen.getAllByRole('link', { name: `View ${company.name}` });
-      expect(links.length).toBeGreaterThanOrEqual(1);
+    expect(hero).toBeInTheDocument();
+    for (const company of companies) {
+      const links = within(hero as HTMLElement).getAllByRole('link', {
+        name: company.displayName,
+      });
+      expect(links).toHaveLength(1);
       expect(links[0]).toHaveAttribute('href', `/companies/${company.slug}`);
     }
   });
-  it('renders Group message, mission, sectors, and business interests without sector grouping', () => {
-    render(<Home />);
 
-    expect(screen.getAllByText('Empowering Health, Wellness, Progress').length).toBeGreaterThanOrEqual(1);
+  it('focuses Reveal on Group mission, title, message, and direct company discovery without sector lists', () => {
+    const { container } = render(<Home />);
+    const portfolio = container.querySelector('#portfolio');
+    expect(portfolio).toBeInTheDocument();
+
+    const scoped = within(portfolio as HTMLElement);
+    expect(scoped.getByText(goodmanGroup.websiteTitle)).toBeInTheDocument();
+    expect(scoped.getByText(goodmanGroup.message)).toBeInTheDocument();
+    expect(scoped.getByText(goodmanGroup.mission)).toBeInTheDocument();
+
     expect(
-      screen.getByText(
-        'To improve lives through innovative products, services, and solutions while fostering growth, excellence, and social responsibility.',
-      ),
-    ).toBeInTheDocument();
+      scoped.queryByRole('list', { name: 'Goodman Group operating sectors' }),
+    ).not.toBeInTheDocument();
+    expect(
+      scoped.queryByRole('list', { name: 'Goodman Group business interests' }),
+    ).not.toBeInTheDocument();
 
-    const sectorList = screen.getByRole('list', { name: 'Goodman Group operating sectors' });
-    expect(within(sectorList).getAllByRole('listitem')).toHaveLength(7);
-
-    const interestList = screen.getByRole('list', { name: 'Goodman Group business interests' });
-    expect(within(interestList).getAllByRole('listitem')).toHaveLength(8);
+    for (const company of companies) {
+      const companyLink = scoped.getByRole('link', { name: `View ${company.displayName}` });
+      expect(companyLink).toHaveAttribute('href', `/companies/${company.slug}`);
+    }
   });
 
-  it('renders functional audience inquiry links and general inquiry', () => {
+  it('renders Goodman Group operating sectors in canonical order without links in Explore', () => {
+    const { container } = render(<Home />);
+    const groupStory = container.querySelector('#group-story');
+    expect(groupStory).toBeInTheDocument();
+
+    const scoped = within(groupStory as HTMLElement);
+    const sectorList = scoped.getByRole('list', { name: 'Goodman Group operating sectors' });
+    const items = within(sectorList).getAllByRole('listitem');
+
+    expect(items).toHaveLength(goodmanGroup.sectors.length);
+    items.forEach((item, index) => {
+      expect(
+        within(item).getByRole('heading', { level: 3, name: goodmanGroup.sectors[index] }),
+      ).toBeInTheDocument();
+    });
+
+    expect(scoped.queryAllByRole('link')).toHaveLength(0);
+  });
+
+  it('omits the supplied copy while preserving its section headings', () => {
     render(<Home />);
 
-    const procurementLink = screen.getByRole('link', { name: /Procurement/i });
-    expect(procurementLink).toHaveAttribute('href', '/companies');
+    expect(
+      screen.queryAllByText(/Core operating sectors across the Group/),
+    ).toHaveLength(0);
+    expect(
+      screen.queryByText(
+        'Serving government hospitals, private hospitals, retailers and national distributors.',
+      ),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        'Active operations, partner distribution, supply agreements, sourcing channels, and planned expansion across operating companies.',
+      ),
+    ).not.toBeInTheDocument();
 
-    const partnershipsLink = screen.getByRole('link', { name: /Partnerships/i });
-    expect(partnershipsLink.getAttribute('href')).toContain('mailto:goodman@goodmangoc.com');
-    expect(partnershipsLink.getAttribute('href')).toContain(encodeURIComponent('Goodman Group Partnerships Inquiry'));
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Operating Sectors' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Our clients' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'Our presence across regional and global markets.',
+      }),
+    ).toBeInTheDocument();
+  });
 
-    const generalLink = screen.getByRole('link', { name: /General inquiry:/i });
-    expect(generalLink.getAttribute('href')).toContain('mailto:goodman@goodmangoc.com');
+  it('labels Ghana as a five-year agreement signed in 2024 in the Expand market ledger', () => {
+    render(<Home />);
+
+    const markets = screen.getByRole('list', {
+      name: 'Goodman Laboratories international markets',
+    });
+    expect(within(markets).getByText('Ghana')).toBeInTheDocument();
+    expect(within(markets).getByText('Five-year agreement signed (2024)')).toBeInTheDocument();
+  });
+
+  it('removes the Advance and Connect sections and their stale links', () => {
+    const { container } = render(<Home />);
+
+    expect(container.querySelector('#news, #connect')).not.toBeInTheDocument();
+    expect(
+      container.querySelector('a[href="/#news"], a[href="/#connect"]'),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: goodmanGroup.contacts.email }).getAttribute('href'),
+    ).toContain(`mailto:${goodmanGroup.contacts.email}`);
   });
 
   it('renders executive contact details near Group leadership', () => {

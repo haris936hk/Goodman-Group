@@ -223,3 +223,45 @@ describe('SiteHeader', () => {
     ).toHaveAttribute('aria-current', 'page');
   });
 });
+
+describe('Group theme control', () => {
+  it('toggles only the Group shell and persists explicit choices', async () => {
+    const user = userEvent.setup();
+    localStorage.clear();
+    render(
+      <>
+        <div className="site-shell"><SiteHeader /></div>
+        <div className="company-group-frame">Company identity</div>
+      </>,
+    );
+    const shell = document.querySelector<HTMLElement>('.site-shell')!;
+    const company = document.querySelector<HTMLElement>('.company-group-frame')!;
+    const light = screen.getByRole('button', { name: 'Switch to light mode' });
+    expect(shell.dataset.theme).toBe('dark');
+    expect(light).toHaveAttribute('aria-pressed', 'false');
+    expect(localStorage.getItem('goodman-group-theme')).toBeNull();
+
+    await user.click(light);
+    expect(shell.dataset.theme).toBe('light');
+    expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('goodman-group-theme')).toBe('light');
+    expect(company).not.toHaveAttribute('data-theme');
+
+    await user.click(screen.getByRole('button', { name: 'Switch to dark mode' }));
+    expect(shell.dataset.theme).toBe('dark');
+    expect(localStorage.getItem('goodman-group-theme')).toBe('dark');
+  });
+
+  it('ignores malformed storage and remains operable when storage throws', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem('goodman-group-theme', 'invalid');
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+    render(<div className="site-shell"><SiteHeader /></div>);
+    const shell = document.querySelector<HTMLElement>('.site-shell')!;
+    expect(shell.dataset.theme).toBe('dark');
+    await user.click(screen.getByRole('button', { name: 'Switch to light mode' }));
+    expect(shell.dataset.theme).toBe('light');
+    expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
+  });
+});

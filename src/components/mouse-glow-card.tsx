@@ -8,6 +8,7 @@ import type {
 
 type MouseGlowCardProps = {
   accent: string;
+  as?: "article" | "li";
   children: ReactNode;
   className: string;
 };
@@ -18,6 +19,7 @@ type GlowCardStyle = CSSProperties & {
 
 export function MouseGlowCard({
   accent,
+  as: Tag = "article",
   children,
   className,
 }: MouseGlowCardProps) {
@@ -39,13 +41,13 @@ export function MouseGlowCard({
   }
 
   return (
-    <article
+    <Tag
       className={className}
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
       style={{ "--company-accent": accent } as GlowCardStyle}
     >
       {children}
-    </article>
+    </Tag>
   );
 }

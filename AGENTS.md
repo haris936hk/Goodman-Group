@@ -1,100 +1,91 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Project Overview
 
-This repository is a Next.js 16 App Router site written in TypeScript. Application routes, layouts, styles, and colocated component tests live under `src/app/`; `src/app/page.tsx` is the home route and `globals.css` contains global styling. Static files belong in `public/`. Despite its name, `public/assets/logos/` currently contains Goodman logos, photographs, and other source imagery. Browser journeys live in `tests/e2e/`, while shared Vitest setup is in `tests/setup.ts`. Consult `DESIGN_DECISION.md` before changing information architecture, visual direction, or animation behavior.
+Goodman Group's corporate portfolio website: a group landing page, company directory, and five bespoke company profiles. Built with Next.js 16 App Router, React 19, and strict TypeScript; content comes from static typed records, not a backend API.
 
-## Product and Information Architecture
+## Architecture & Data Flow
 
-`DESIGN_DECISION.md` is the source of truth. The site presents Goodman Group as a parent holding organization with an endorsed portfolio of distinct operating companies, not as one pharmaceutical company with several product lines.
+- `src/app/layout.tsx` supplies global styles, fonts, metadata, and pre-hydration theme initialization. Routes are server components by default.
+- `src/data/companies.ts` is the canonical company registry and slug lookup. Home, directory, and sitemap consume it; dedicated company pages combine its records with company-specific profile data. `src/data/goodman-group.ts` holds group facts and `SITE_ORIGIN`; `src/lib/structured-data.tsx` emits Organization JSON-LD.
+- Company routes compose bespoke markup inside `CompanyGroupFrame`; they are not instances of a generic profile renderer. `src/app/companies/[slug]/page.tsx` calls `notFound()` for unknown slugs.
+- Client boundaries are `SiteHeader`, `ThemeToggle`, `MouseGlowCard`, and `ScrollExperience`. State is local React state/effects and DOM/CSS properties; there is no application-wide store, dependency-injection container, or fetching layer.
+- Group theme synchronizes local storage, shell attributes, and theme-color metadata; bespoke company pages remain outside that theme. Home scroll choreography lazily loads Lenis/GSAP/ScrollTrigger and respects reduced motion.
 
-“Our Companies” is a primary navigation destination. Every entity must appear exactly once in canonical structured portfolio data, remain present in semantic page content, and be reachable by a normal link at a permanent `/companies/[slug]` route. Company discovery is direct and ungrouped; sector or category archetypes must not group or obscure individual companies. Clearly separate operating companies from partners, associates, joint ventures, and brands.
+## Key Directories
 
-The homepage must explain the Group before promoting a subsidiary. Its intended narrative order is Group proposition, company constellation, direct company discovery, scale, geographic presence, heritage and leadership, current activity, and audience-specific contact routing. Healthcare may be the strongest heritage story but must not be used to characterize the entire Group as a pharmaceutical manufacturer.
+- `src/app/`: routes, route handlers, global CSS, and company-scoped stylesheets.
+- `src/components/`: shared shell, company framing/cards, and client interactions.
+- `src/data/`: readonly group/company domain records and operational credentials.
+- `src/lib/`: structured metadata helpers.
+- `tests/e2e/`: browser journeys; unit/component tests are colocated with source.
+- `Verified Information/`: factual source records. `public/assets/`: site media.
 
-Company pages retain only a minimal shared Goodman Group frame (`CompanyGroupFrame`): an accessible skip link, compact Group return/navigation treatment, relationship disclosure (`A Goodman Group company`), `<main id="main-content" tabIndex={-1}>`, and a compact Group footer/return path. The frame must not supply content sections, grids, colors, typography, motion, or company-page layout. Each operating company has a bespoke implementation owning its information hierarchy, composition, typography, palette, media, interactions, and motion derived from its verified record and brand identity. Business category is descriptive content only and MUST NOT select a component, layout, theme, or module set. Add company modules only when supported by verified content; do not render empty pharmaceutical-oriented sections for unlike businesses.
+## Development Commands
+
+Use Node 24 and npm; install with `npm ci`.
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run start` | Serve an existing production build |
+| `npm run lint` / `npm run lint:fix` | ESLint / autofix |
+| `npm run typecheck` | TypeScript without emitting files |
+| `npm test` / `npm run test:run` | Vitest watch / single run |
+| `npm run test:coverage` | Unit tests with enforced coverage |
+| `npm run test:e2e` | Chromium and Firefox journeys |
+| `npm run test:e2e:all` | All projects, including WebKit |
+| `npm run test:e2e:headed` / `npm run test:e2e:ui` | Interactive browser debugging |
+| `npm run check` | Lint, typecheck, coverage, build; **excludes E2E** |
+
+Install browser dependencies with `npx playwright install --with-deps`. Target a unit spec with `npm run test:run -- src/components/site-header.test.tsx`; target a browser spec with `npm run test:e2e -- tests/e2e/company-routes.spec.ts`.
+
+## Code Conventions & Common Patterns
+
+- Use `@/` imports for `src`, explicit domain types, readonly profile fields, and `as const satisfies` for canonical records. Filenames are kebab-case; components/types PascalCase; variables/hooks camelCase. Match nearby formatting: generally two spaces, semicolons, double quotes, and trailing commas. No dedicated formatter is configured.
+- Keep browser APIs and interactive state inside client boundaries rather than converting route trees to client components. Preserve effect cleanup, animation generation guards, reduced-motion handling, and guarded storage access. Unknown routes use Next's `notFound()`; no general async/error-handling service exists.
+- CSS uses Tailwind v4 plus ordinary global stylesheets, not CSS modules. Preserve shared tokens in `globals.css` and company-prefixed selectors/custom properties beneath page-specific root classes; avoid cross-page leakage.
+- Preserve header focus trapping/restoration, Escape dismissal, scroll locking, and background inertness. Pointer glow updates CSS properties directly and ignores touch. Dense profile content uses native `<details>` disclosures.
+
 ## Content Accuracy and Data Modeling
 
-Treat company records, filenames, logos, and asset folders as source material for the site. Legal names, relationship types, leadership, dates, locations, statistics, certifications, products, market presence, and endorsement wording belong in the structured company data.
+Represent companies as typed structured records rather than embedding facts in one-off JSX. The content source supports unique slugs, legal and display names, relationship type, business description, summary, logo, locations, leadership, capabilities, contacts, and markets. Bespoke company pages render approved company content through route-specific implementations. Keep metadata, canonical URLs, structured data, sitemap entries, and internal links aligned with the same source of truth.
 
-- Scope and date every statistic, for example employee count as of a named month and year.
+- Scope and date business statistics where applicable.
 - Distinguish active operations, distribution or partner markets, signed agreements, and planned markets in both text and visuals.
 - Keep claims such as “nationwide,” “global presence,” “affordable access,” or “life-saving” specific to the company information they describe.
 - Do not create decorative forms. A form needs defined fields, submission handling, validation and error states, spam protection, privacy requirements, and an owner.
 - Use a clear geographic or industry qualifier in SEO metadata where it helps distinguish the Group.
 
-Represent companies as typed structured records rather than embedding facts in one-off JSX. The content source must support unique slugs, legal and display names, relationship type, business description, summary, logo, locations, leadership, capabilities, contacts, optional evidence and markets. Bespoke company pages render verified content through route-specific implementations. Keep metadata, canonical URLs, structured data, sitemap entries, and internal links aligned with the same source of truth.
+### Marketing Copy Policy
 
-## Luminous Momentum Design Direction
+All supplied company content is owner-approved; UI, metadata, JSON-LD, application data, comments, and tests must not explain document origins or verification status.
+- Prohibit PDF filenames/citations, source/provenance/evidence panels, supplied-profile notices, missing-information commentary, audit/independent-verification disclaimers, alternate-source comparisons, and ownership-proof caveats.
+- Keep genuine business facts, named testimonial attribution, actual audit services, certification names, statutory/safety information, dates, market stages, and target labels.
+- Do not invent missing facts or upgrade scope; omit a claim that cannot be stated accurately without editorial caveats.
+- Optional evidence requirements are removed from the public content model; content presents direct operational capabilities and credentials.
+- Distinguish active markets, targets, agreements, sourcing, and historical facts without editorial caveats. The STERIS instrument workflow does not imply Goodman-owned sterilization facilities.
 
-The design direction is **Luminous Momentum**: an immersive, cinematic, digitally native Group experience balanced with institutional clarity and human warmth. Aim for dark atmospheric canvases, Goodman blue (`#174a87`) as the brand source, focused cyan and green (`#5fbf92`) illumination, modern oversized sans typography, layered real-world media, depth, and controlled motion.
+## Important Files
 
-- Treat gradients as environmental light, not indiscriminate rainbow text fills.
-- Use glow to communicate focus, energy, or relationships; do not apply it to everything.
-- Implement glass as named, tokenized materials with reliable contrast, limited foreground use, and opaque fallbacks. Avoid repetitive frosted-card grids.
-- Prefer real facilities, manufacturing, equipment, employees, leadership, offices, and real activity over generic medical stock or synthetic technology imagery.
-- Preserve logo clarity. Obtain vector masters where possible and do not invent arbitrary company icons.
-- Use full-viewport chapters, asymmetric composition, deliberate overlap, and meaningful changes of scale. Dense facts, documents, certifications, and filters may use calmer high-contrast panels.
-- Borrow the production quality of contemporary technology marketing, not its product vocabulary. Avoid dashboards, meaningless gradient blobs, invented software metaphors, and generic SaaS feature cards.
+- `src/app/page.tsx`, `src/app/companies/page.tsx`, `src/app/companies/*/page.tsx`: main route compositions.
+- `src/data/companies.ts`, `src/data/goodman-group.ts`, company-specific `src/data/*.ts`: canonical content and relationships.
+- `src/components/site-header.tsx`, `theme-toggle.tsx`, `scroll-experience.tsx`: navigation, theme, and animation lifecycle.
+- `src/lib/structured-data.tsx`, `src/app/robots.txt/route.ts`, `src/app/sitemap.xml/route.ts`: metadata and discovery endpoints.
+- `package.json`, `tsconfig.json`, `next.config.ts`, `eslint.config.mjs`, `vitest.config.mts`, `playwright.config.ts`, `.github/workflows/ci.yml`: executable tooling contracts.
+- `Verified Information/Goodman_Group_Consolidated_Company_Information.md`: cross-company evidence synthesis. `CODEBASE_MAP.md` provides orientation but contains stale inventories/types; prefer current source/configuration.
 
-The immersive layer must enhance the information architecture rather than substitute for it. Core content and navigation must remain understandable without animation, smooth scrolling, hover, or precision-pointer interaction. Mobile is a recomposed experience with fewer simultaneous layers and shorter or removed pinned sequences, not a scaled-down desktop timeline.
+## Runtime/Tooling Preferences
 
-## Motion Ownership
+- `.nvmrc` pins Node 24; `package.json` requires `>=24 <25` and pins `npm@11.17.0`. Use npm and `package-lock.json`, not Bun or an alternative lockfile.
+- TypeScript is strict with bundler resolution and the `@/*` alias. Next enables React Compiler; ESLint uses Next core-web-vitals and TypeScript presets. Tailwind v4 runs through PostCSS.
+- Playwright defaults to port 3000; `PORT` and `PLAYWRIGHT_BASE_URL` override its target. It starts the dev server locally and the production server in CI; local runs may reuse a running server.
+- Do not edit generated Next types, `.next/`, coverage, or browser reports/results as source.
 
-Every animated component must declare one owner, and two systems must never write the same property on the same element:
+## Testing & QA
 
-- **GSAP + ScrollTrigger:** cinematic narrative, pinned chapters, scrubbed timelines, parallax, masks, SVG or map paths, kinetic type, numeric sequences, and multi-element orchestration.
-- **Lenis:** scroll interpolation and synchronization with ScrollTrigger only. It does not animate content or control React state.
-- **Motion for React:** state-driven entry and exit, layout transitions, shared elements, gestures, menus, dialogs, filters, overlays, and disclosures. Import from `motion/react`.
-- **CSS/Tailwind:** simple hover, focus, color, border, opacity, and short self-contained feedback.
-
-Do not place independently scroll-driven Motion behavior inside a ScrollTrigger scene. If GSAP and Motion appear in one feature, assign them separate DOM nodes and properties. Scope and clean up GSAP on route changes. Synchronize Lenis and ScrollTrigger through the same animation frame, preserve anchors, keyboard and touch scrolling, browser history and restoration, and provide a native fallback. Load animation code by route or component so ordinary company pages do not download homepage storytelling code.
-
-One shared reduced-motion decision must consistently simplify Lenis, GSAP, Motion, CSS, and ambient media. Reduced motion removes scrubbed and parallax behavior while preserving content order, hierarchy, and access.
-
-## Accessibility, Media, and Performance
-
-WCAG 2.2 AA is the minimum target. Maintain semantic headings and landmarks, keyboard-operable navigation, visible focus, meaningful alternative text, sufficient contrast through every translucent state, labelled controls, usable zoom, and content that is not communicated through color or motion alone.
-
-Use `next/image` for suitable responsive raster media, `next/font` for controlled font delivery, crisp SVG for logos and animated diagrams, and optimized WebM or MP4 instead of large GIFs. Ambient video must be muted, non-essential, compressed, responsive where practical to reduced-motion and data-saving preferences, and backed by an effective poster.
-
-Treat performance as part of the visual quality. Reserve media dimensions, route-load expensive code, and explicitly test blur radius, layer count, pinned duration, and simultaneous animation on mid-range mobile hardware and constrained networks. Prefer HTML, CSS, SVG, and GSAP for the initial visual system; add WebGL or custom 3D only when a specific visualization genuinely requires it.
-
-## Build, Test, and Development Commands
-
-Use Node 24 and npm 11 (see `.nvmrc` and `package.json`).
-
-- `npm ci` installs the exact locked dependencies.
-- `npm run dev` starts the local site at `http://localhost:3000`.
-- `npm run lint` checks Next.js Core Web Vitals and TypeScript ESLint rules.
-- `npm run typecheck` runs strict TypeScript validation without emitting files.
-- `npm run test:run` executes Vitest once; `npm test` uses watch mode.
-- `npm run test:coverage` enforces coverage thresholds.
-- `npm run test:e2e` runs Playwright in Chromium and Firefox; `npm run test:e2e:all` also includes WebKit.
-- `npm run build` creates a production build; `npm run check` runs all non-browser CI checks.
-
-Install Playwright browsers once with `npx playwright install`.
-
-## Coding Style & Naming Conventions
-
-Use strict TypeScript, React function components, and two-space indentation. Follow the existing quote style within each file and let `npm run lint:fix` handle safe ESLint fixes. Name components and exported React types in PascalCase, functions and variables in camelCase, and route directories in lowercase. Prefer the `@/` alias for imports from `src/`. Keep Tailwind utility classes readable and group related layout, spacing, and visual utilities consistently. Use GSAP for complex scroll timelines, Motion for component interactions, and Lenis for smooth scrolling; do not make multiple libraries own the same effect.
-
-Use Server Components for page content, metadata, structured company records, and non-interactive layout. Add narrowly scoped Client Components only for animation, state, gestures, or browser APIs. Centralize CSS tokens for color, typography, spacing, radii, glass opacity, blur, borders, glow, depth, easing, and duration; do not repeat arbitrary glass utility combinations.
-
-## Testing Guidelines
-
-Colocate unit/component tests as `*.test.ts` or `*.test.tsx` under `src/`. Put user-facing browser flows in `tests/e2e/*.spec.ts`. Vitest uses Testing Library and jsdom; Playwright includes automated axe accessibility checks. Query by role or label, and test observable behavior rather than component internals or animation timing. Maintain at least 80% branches, functions, lines, and statements coverage.
-
-## Commit & Pull Request Guidelines
-
-History is currently minimal; use concise, imperative commit subjects (for example, `Add company portfolio navigation`) and keep each commit focused. Pull requests should explain the user-visible change, link relevant issues or design decisions, and include screenshots or recordings for visual or motion changes. Note accessibility implications and test coverage. Before requesting review, run `npm run check` and `npm run test:e2e:all`; CI requires both.
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+- Vitest + React Testing Library run `src/**/*.{test,spec}.{ts,tsx}` in jsdom. `tests/setup.ts` supplies jest-dom and cleanup; mocks/globals/env stubs are reset by configuration. Prefer semantic role/name queries and behavioral interactions; existing mocks target Next navigation, motion preferences, storage, and element geometry.
+- V8 coverage requires **80% each for branches, functions, lines, and statements**. Next system files and `scroll-experience.tsx` are excluded; scroll choreography is exercised in browser journeys.
+- Playwright + Axe cover company routes, metadata/JSON-LD, sitemap/robots, disclosures, theme persistence, keyboard/mobile navigation, responsive overflow, reduced motion, no-JavaScript navigation, and 200% text sizing. Automated Axe checks are not full accessibility certification.
+- CI on `main` pushes/PRs runs install, lint, typecheck, unit coverage, production build, browser installation, and all three E2E projects. CI forbids focused tests, retries twice, and uses one worker. For UI changes, exercise the affected real browser surface in addition to relevant unit checks.

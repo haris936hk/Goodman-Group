@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="site-shell inner-page not-found-page" id="top">
+    <div className="site-shell inner-page not-found-page" id="top" suppressHydrationWarning>
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>

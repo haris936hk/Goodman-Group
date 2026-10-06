@@ -12,15 +12,14 @@ const companyRouteExpectations = [
   {
     slug: 'goodman-laboratories',
     displayName: 'Goodman Laboratories',
-    verifiedFact:
-      'GOODMAN.pdf reports 2012; Profile Syed Talib Hussain Hashmi.pdf reports 2016; start year unresolved.',
+    verifiedFact: 'To provide affordable pharmaceutical products across the globe.',
     pageLandmarkHeading: 'Registered and marketed products',
   },
   {
     slug: 'geron-pharma',
     displayName: 'Geron Pharma',
     verifiedFact: 'Chief Executive Officer since 2019.',
-    pageLandmarkHeading: 'Verified company information',
+    pageLandmarkHeading: 'Company information',
   },
   {
     slug: 'goodman-medical-equipment',
@@ -103,7 +102,7 @@ for (const company of companyRouteExpectations) {
 
     // Company heading & logo
     await expect(
-      page.getByRole('heading', { level: 1, name: company.displayName }),
+      page.getByRole('heading', { level: 1, name: company.slug === 'goodman-billing' ? 'Medical Billing. Redefined.' : company.displayName }),
     ).toBeVisible();
     const canonical = companies.find((c) => c.slug === company.slug);
     if (canonical?.logo) {
@@ -112,7 +111,7 @@ for (const company of companyRouteExpectations) {
       ).toBeVisible();
     } else {
       await expect(
-        page.getByRole('heading', { level: 1, name: company.displayName }),
+        page.getByRole('heading', { level: 1, name: company.slug === 'goodman-billing' ? 'Medical Billing. Redefined.' : company.displayName }),
       ).toBeVisible();
     }
 
@@ -146,40 +145,24 @@ for (const company of companyRouteExpectations) {
   });
 }
 
-test('keeps Goodman Billing readable with optional details at desktop and 320px', async ({ page }) => {
+test('keeps Goodman Billing directories searchable at desktop and 320px', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const width of [1440, 320]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/companies/goodman-billing');
-    await expect(page.getByRole('heading', { level: 1, name: 'Goodman Billing' })).toBeVisible();
-    await expect(page.getByText(/medical billing and revenue-cycle management.*United States/i).first()).toBeVisible();
-    await expect(page.getByRole('region', { name: 'Services' }).getByRole('heading', { name: 'Front Desk & Coding' })).toBeVisible();
-    await expect(page.getByRole('region', { name: 'Revenue-Cycle Workflow' }).locator('ol > li')).toHaveCount(6);
+    await expect(page.getByRole('heading', { level: 1, name: 'Medical Billing. Redefined.' })).toBeVisible();
+    const services = page.locator('#services');
+    await services.getByRole('searchbox').fill('CPAPs');
+    await expect(services.getByRole('heading', { name: 'Durable Medical Equipment Credentialing' })).toBeVisible();
+    await expect(services.getByRole('heading', { name: 'Medical Coding' })).toHaveCount(0);
+    await services.getByRole('button', { name: 'Clear search' }).click();
+    await expect(services.getByRole('heading', { name: 'Medical Coding' })).toBeVisible();
+    const specialties = page.locator('#specialties');
+    await specialties.getByRole('searchbox').fill('kidney');
+    await expect(specialties.getByRole('heading', { name: 'Nephrology' })).toBeVisible();
+    await expect(specialties.getByRole('heading', { name: 'Cardiology' })).toHaveCount(0);
+    await specialties.getByRole('button', { name: 'Clear search' }).click();
     await expect(page.getByRole('link', { name: 'Email Goodman Billing' })).toHaveAttribute('href', 'mailto:goodman@goodmangoc.com');
-
-    const services = page.getByRole('region', { name: 'Services' });
-    const firstService = services.locator('details').first();
-    await expect(firstService).not.toHaveAttribute('open');
-    await firstService.locator('summary').click();
-    await expect(firstService.getByRole('heading', { name: 'Medical coding' })).toBeVisible();
-    await expect(services.locator('details').nth(1)).not.toHaveAttribute('open');
-
-    const targets = page.getByRole('region', { name: 'Evidence & source notes' }).locator('details').first();
-    await expect(targets).not.toHaveAttribute('open');
-    await targets.locator('summary').focus();
-    await page.keyboard.press('Enter');
-    await expect(targets.getByText('≥ 98%').first()).toBeVisible();
-    await expect(targets.getByText(/Source-published figure with reporting period not provided/)).toBeVisible();
-
-    const specialties = page.locator('.billing-catalogue').first();
-    await specialties.locator('summary').click();
-    await expect(specialties.getByText('Orthopedics')).toBeVisible();
-    const platforms = page.locator('.billing-catalogue').nth(1);
-    await platforms.locator('summary').click();
-    await expect(platforms.getByText('Epic')).toBeVisible();
-    await expect(platforms.getByText(/does not establish a commercial partnership/)).toBeVisible();
-    await expect(page.getByRole('region', { name: 'Contact Goodman Billing' }).getByRole('link', { name: 'goodman@goodmangoc.com' })).toBeVisible();
-
     const widths = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
     expect(widths.content).toBeLessThanOrEqual(widths.viewport);
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
@@ -279,40 +262,19 @@ test('exposes canonical URL and non-ownership JSON-LD on every company route', a
   }
 });
 
-test('renders Goodman Laboratories historical departmental table with undated caveat', async ({ page }) => {
+test('renders Goodman Laboratories operational departments without headcount table', async ({ page }) => {
   await page.goto('/companies/goodman-laboratories');
 
-  const table = page.getByRole('table', { name: /Website-reported historical departmental table/i });
-  await expect(table).toBeVisible();
+  await expect(page.getByRole('table')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Operational departments' })).toBeVisible();
   await expect(page.getByText('Production').first()).toBeVisible();
-  await expect(page.getByText('90').first()).toBeVisible();
   await expect(page.getByText('Sales and Marketing').first()).toBeVisible();
-  await expect(page.getByText('270').first()).toBeVisible();
   await expect(page.getByText('Operations and Finance').first()).toBeVisible();
-  await expect(page.getByText('25').first()).toBeVisible();
-  await expect(page.getByText('385').first()).toBeVisible();
-  await expect(
-    page.getByText('Source does not provide a reporting date; not a current payroll census.').first(),
-  ).toBeVisible();
+  await expect(page.getByText('Quality Control (testing and record keeping)')).toBeVisible();
 });
 
-test('renders Goodman Medical Equipment service propositions and four founders', async ({ page }) => {
+test('renders Goodman Medical Equipment four founders and distinct operating and target markets', async ({ page }) => {
   await page.goto('/companies/goodman-medical-equipment');
-
-  await expect(page.getByRole('heading', { name: 'Service proposition' })).toBeVisible();
-  for (const prop of [
-    'Premium quality',
-    'International standards',
-    'Competitive prices',
-    'After-sales support',
-    'Quality-assured products',
-    'Reliable partnership',
-    'Innovative solutions',
-    'Nationwide supply in Pakistan',
-    'International supply capability',
-  ]) {
-    await expect(page.getByText(prop).first()).toBeVisible();
-  }
 
   for (const founder of [
     'Malik Munir Awan',
@@ -322,30 +284,34 @@ test('renders Goodman Medical Equipment service propositions and four founders',
   ]) {
     await expect(page.getByText(founder).first()).toBeVisible();
   }
+
+  await expect(page.getByRole('heading', { name: 'Operating presence' })).toBeVisible();
+  await expect(page.getByText('United Arab Emirates, with the company based in Dubai')).toBeVisible();
+  await expect(page.getByText('Pakistan, with nationwide supply from large cities to remote areas')).toBeVisible();
+
+  await expect(page.getByRole('heading', { name: 'Planned market focus' })).toBeVisible();
+  await expect(page.getByText('United States of America')).toBeVisible();
+  await expect(page.getByText('Europe')).toBeVisible();
 });
 
-test('renders Goodman Billing core tasks, differentiators, and attributed testimonials', async ({ page }) => {
-  await page.goto('/companies/goodman-billing');
+test('keeps equipment supply-chain arrows between consecutive stage markers', async ({ page }) => {
+  await page.goto('/companies/goodman-medical-equipment');
 
-  await expect(page.getByRole('heading', { name: 'Core Tasks' })).toBeVisible();
-  const tasksRegion = page.getByRole('region', { name: 'Core Tasks' });
-  await expect(tasksRegion.getByText('Prior authorizations')).toBeVisible();
-  await expect(tasksRegion.getByText('Eligibility and coverage verification')).toBeVisible();
-  await expect(tasksRegion.getByText('Charge entry')).toBeVisible();
-  await expect(tasksRegion.getByText('Payment posting')).toBeVisible();
-  await expect(tasksRegion.getByText('Denial management')).toBeVisible();
+  for (const width of [1440, 800, 390, 320]) {
+    await page.setViewportSize({ width, height: 1000 });
+    const stages = page.locator('.med-workflow li');
 
-  await expect(page.getByRole('heading', { name: 'Differentiators & Value Proposition' })).toBeVisible();
-  await expect(
-    page.getByText('Certified and experienced billing specialists dedicated to practice revenue optimization.'),
-  ).toBeVisible();
+    for (let index = 0; index < 4; index += 1) {
+      const circle = await stages.nth(index).locator('.med-workflow-marker > span').boundingBox();
+      const arrow = await stages.nth(index).locator('.med-workflow-marker svg').boundingBox();
+      const nextCircle = await stages.nth(index + 1).locator('.med-workflow-marker > span').boundingBox();
 
-  await expect(page.getByRole('heading', { name: 'Client Testimonials' })).toBeVisible();
-  await expect(page.getByText('Dr. Sarah Johnson')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Michael Chen' })).toBeVisible();
-  await expect(page.getByText(/60% reduction in denial rate and a 25% increase in collections/)).toBeVisible();
-  await expect(page.getByText('Dr. Emily Rodriguez')).toBeVisible();
-  await expect(
-    page.getByText('Website-published client statements; independently verified outcomes were not supplied.').first(),
-  ).toBeVisible();
+      expect(circle).not.toBeNull();
+      expect(arrow).not.toBeNull();
+      expect(nextCircle).not.toBeNull();
+      expect(arrow!.y).toBeGreaterThan(circle!.y + circle!.height);
+      expect(arrow!.y + arrow!.height).toBeLessThan(nextCircle!.y);
+    }
+    await expect(stages.last().locator('svg')).toHaveCount(0);
+  }
 });

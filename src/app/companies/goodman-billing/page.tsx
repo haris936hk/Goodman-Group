@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { ArrowDown, ArrowUpRight, Check, ShieldCheck } from "lucide-react";
 
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
 import { goodmanBillingProfile } from "@/data/goodman-billing";
 import { OrganizationJsonLd } from "@/lib/structured-data";
+import { BillingDirectory } from "./billing-directory";
 import "./billing.css";
 
 const company = getCompanyBySlug("goodman-billing")!;
@@ -12,9 +15,7 @@ const profile = goodmanBillingProfile;
 export const metadata: Metadata = {
   title: company.displayName,
   description: company.summary,
-  alternates: {
-    canonical: "/companies/goodman-billing",
-  },
+  alternates: { canonical: "/companies/goodman-billing" },
 };
 
 export default function GoodmanBillingPage() {
@@ -24,228 +25,80 @@ export default function GoodmanBillingPage() {
   return (
     <CompanyGroupFrame company={company} className="billing-page">
       <OrganizationJsonLd company={company} />
-      <header className="billing-hero">
-        <div className="billing-shell">
-          <p className="billing-kicker">{company.business}</p>
-          <h1>{company.displayName}</h1>
-          <p className="billing-headline">{profile.identity.headline}</p>
-          <p className="billing-positioning">{profile.identity.positioning}</p>
-          <p className="billing-positioning-statement">{profile.identity.positioningStatement}</p>
-          <p className="billing-intro">{company.summary}</p>
-          <p className="billing-objective"><strong>Objective:</strong> {profile.identity.objective}</p>
-          <p className="billing-legal">{company.legalName}</p>
-          <a className="billing-action" href={`mailto:${contact}`}>Email Goodman Billing</a>
-          <nav className="billing-nav" aria-label="On this page">
-            <a href="#services">Services</a>
-            <a href="#tasks">Core Tasks</a>
-            <a href="#workflow">Workflow</a>
-            <a href="#differentiators">Differentiators</a>
-            <a href="#testimonials">Testimonials</a>
-            <a href="#evidence">Evidence</a>
-            <a href="#contact">Contact</a>
-          </nav>
+      <header className="billing-hero" id="billing-top">
+        <div className="billing-shell billing-hero-grid">
+          <div className="billing-hero-copy">
+            <p className="billing-kicker">Goodman Billing · Healthcare providers in the USA</p>
+            <h1>Medical Billing.<br /><span>Redefined.</span></h1>
+            <p className="billing-hero-intro">{profile.identity.introduction}</p>
+            <div className="billing-actions"><a className="billing-action" href="#contact">Get Started <ArrowUpRight size={18} aria-hidden="true" /></a><a className="billing-text-link" href="#services">Explore our services <ArrowDown size={17} aria-hidden="true" /></a></div>
+            <p className="billing-security"><ShieldCheck size={18} aria-hidden="true" /> {profile.identity.complianceClaim}</p>
+          </div>
+          <aside className="billing-hero-panel" aria-label="Revenue-cycle support">
+            <div className="billing-panel-label"><span className="billing-dot" /> Your practice. Our priority.</div>
+            <h2>More focus on care.<br />Less friction in billing.</h2>
+            <p>Accurate claims, faster reimbursements, and a revenue cycle that works as hard as you do.</p>
+            <ol className="billing-hero-flow"><li><span>01</span> Verify &amp; prepare <Check size={17} aria-hidden="true" /></li><li><span>02</span> Code &amp; submit <Check size={17} aria-hidden="true" /></li><li><span>03</span> Recover &amp; report <Check size={17} aria-hidden="true" /></li></ol>
+            <div className="billing-panel-bottom"><strong>75+</strong><span>specialties supported<br />across the nation</span></div>
+          </aside>
         </div>
       </header>
+      <nav className="billing-nav" aria-label="On this page"><div className="billing-shell"><a href="#services">Services</a><a href="#specialties">Specialties</a><a href="#platforms">Integrations</a><a href="#workflow">Our approach</a><a href="#testimonials">Client stories</a><a href="#contact">Contact <ArrowUpRight size={15} aria-hidden="true" /></a></div></nav>
 
-      <section className="billing-section" aria-labelledby="audience-heading">
-        <div className="billing-shell">
-          <h2 id="audience-heading">Who we support</h2>
-          <ul className="billing-audience">
-            {profile.customersServed.map((customer) => <li key={customer}>{customer}</li>)}
-          </ul>
+      <section className="billing-section" aria-labelledby="benefits-heading"><div className="billing-shell">
+        <div className="billing-section-heading"><p className="billing-kicker">How we do it</p><h2 id="benefits-heading">Billing that works<br />as hard as you do.</h2><p>Explore how Goodman Billing transforms your revenue cycle into a reliable, scalable engine — built for results, not just reports.</p></div>
+        <div className="billing-benefits">{profile.benefits.map((benefit) => <article key={benefit.heading}><span className="billing-benefit-icon" aria-hidden="true"><span style={{ maskImage: `url("${benefit.icon}")` }} /></span><h3>{benefit.heading}</h3><p>{benefit.description}</p></article>)}</div>
+      </div></section>
+
+      <section className="billing-section billing-tinted" id="services" aria-labelledby="services-heading"><div className="billing-shell">
+        <div className="billing-section-heading"><p className="billing-kicker">Our services</p><h2 id="services-heading">Comprehensive medical<br />billing solutions.</h2><p>{profile.identity.servicesIntroduction}</p><p>{profile.identity.servicesDetail}</p></div>
+        <BillingDirectory kind="services" entries={profile.services.map((service) => ({ name: service.heading, icon: service.icon, items: service.items }))} />
+      </div></section>
+
+      <section className="billing-section billing-specialties-section" id="specialties" aria-labelledby="specialties-heading"><div className="billing-shell">
+        <div className="billing-section-heading"><p className="billing-kicker">Specialty-focused</p><h2 id="specialties-heading">Your specialty.<br />Our expertise.</h2><p>{profile.identity.specialtiesIntroduction}</p></div>
+        <ul className="billing-specialty-benefits"><li><Check aria-hidden="true" size={17} />Customized billing for each medical specialty</li><li><Check aria-hidden="true" size={17} />Efficient claims management and error reduction</li><li><Check aria-hidden="true" size={17} />Specialty-specific reporting for revenue optimization</li></ul>
+        <BillingDirectory kind="specialties" entries={profile.specialties.map((specialty) => ({ name: specialty.name, icon: specialty.icon, description: specialty.focus }))} />
+      </div></section>
+
+      <section className="billing-section" id="platforms" aria-labelledby="platforms-heading"><div className="billing-shell">
+        <div className="billing-section-heading"><p className="billing-kicker">Integrations &amp; compatibility</p><h2 id="platforms-heading">Your software.<br />A seamless fit.</h2><p>We support and integrate with the most popular medical billing and EHR software platforms. Your existing systems work seamlessly with our services.</p></div>
+        <div className="billing-platform-grid">{profile.platforms.map((platform) => <article key={platform.name}><div className="billing-platform-logo"><Image src={platform.logo.src} alt="" width={platform.logo.width} height={platform.logo.height} unoptimized /></div><h3>{platform.name}</h3><p>{platform.category}</p></article>)}</div>
+        <div className="billing-integration-note"><p>We also integrate with many other platforms and custom systems. Contact us to discuss your specific integration needs.</p><a className="billing-text-link" href="#contact">Discuss your integration <ArrowUpRight size={18} aria-hidden="true" /></a></div>
+      </div></section>
+
+      <section className="billing-section billing-tinted billing-workflow-section" id="workflow" aria-labelledby="workflow-heading"><div className="billing-shell">
+        <div className="billing-workflow-layout">
+          <div className="billing-section-heading billing-workflow-heading"><p className="billing-kicker">From encounter to reimbursement</p><h2 id="workflow-heading">Revenue-Cycle<br />Workflow</h2><p>One connected approach to the details that keep your practice moving.</p><span className="billing-workflow-caption"><span /> Six steps. One connected cycle.</span></div>
+          <ol className="billing-workflow">{profile.workflowSteps.map((step, index) => <li key={step.step}><div className="billing-workflow-marker"><span className="billing-number">0{step.step}</span>{index < profile.workflowSteps.length - 1 && <ArrowDown size={18} aria-hidden="true" />}</div><div className="billing-workflow-copy"><h3>{step.name}</h3><p>{step.description}</p></div></li>)}</ol>
         </div>
-      </section>
+        <section className="billing-tasks" aria-labelledby="billing-tasks-heading">
+          <div className="billing-tasks-heading"><p className="billing-kicker">Behind every step</p><h3 id="billing-tasks-heading">Explore our core operational tasks</h3></div>
+          <div className="billing-task-columns">{(["front-desk", "billing-rcm"] as const).map((category) => <div className="billing-task-group" key={category}><h4><span className="billing-task-label">{category === "front-desk" ? "01" : "02"}</span>{category === "front-desk" ? "Front-Desk Tasks" : "Billing & RCM Tasks"}</h4><ul>{profile.coreTasks.filter((task) => task.category === category).map((task) => <li key={task.title}><Check size={16} aria-hidden="true" />{task.title}</li>)}</ul></div>)}</div>
+        </section>
+      </div></section>
 
-      <section className="billing-section" id="services" aria-labelledby="services-heading">
-        <div className="billing-shell">
-          <h2 id="services-heading">Services</h2>
-          <p className="billing-lead">Medical billing and revenue-cycle support, organized by stage of care and payment.</p>
-          <div className="billing-stack">
-            {profile.serviceGroups.map((group) => (
-              <article className="billing-row" key={group.groupName}>
-                <h3>{group.groupName}</h3>
-                <p>{group.description}</p>
-                <details className="billing-details">
-                  <summary>View services</summary>
-                  <div className="billing-detail-body">
-                    {group.services.map((service) => (
-                      <div className="billing-service" key={service.heading}>
-                        <h4>{service.heading}</h4>
-                        <ul>{service.items.map((item) => <li key={item}>{item}</li>)}</ul>
-                      </div>
-                    ))}
-                  </div>
-                </details>
-              </article>
-            ))}
+      <section className="billing-section" aria-labelledby="difference-heading"><div className="billing-shell billing-difference-grid">
+        <div className="billing-commitment"><p className="billing-kicker">Why choose us</p><h2 id="difference-heading">What sets<br />us apart.</h2><p>{profile.identity.commitment}</p><a className="billing-action" href="#contact">Talk about your practice <ArrowUpRight size={18} aria-hidden="true" /></a></div>
+        <div className="billing-differentiators">{profile.differentiators.map((item, index) => <article key={item.heading}><span className="billing-number">0{index + 1}</span><div><h3>{item.heading}</h3><p>{item.description}</p></div></article>)}</div>
+      </div></section>
+
+      <section className="billing-section billing-tinted" id="testimonials" aria-labelledby="testimonials-heading"><div className="billing-shell">
+        <div className="billing-section-heading"><p className="billing-kicker">Client stories</p><h2 id="testimonials-heading">What our clients say.</h2><p>Healthcare providers share their experience with Goodman Billing.</p></div>
+        <div className="billing-testimonials">{profile.testimonials.map((testimonial) => <figure key={testimonial.name}><span className="billing-stars" aria-label="5 out of 5 stars">★★★★★</span><blockquote>{testimonial.report}</blockquote><figcaption><strong>{testimonial.name}</strong><span>{testimonial.context}</span></figcaption></figure>)}</div>
+      </div></section>
+
+      <section className="billing-contact" id="contact" aria-labelledby="contact-heading"><div className="billing-shell billing-contact-grid">
+        <div><p className="billing-kicker">Let’s work together</p><h2 id="contact-heading">Ready to optimize<br />your medical billing?</h2><p>Contact us today to learn how we can help you improve your revenue cycle management.</p><a className="billing-action" href={`mailto:${contact}`}>Email Goodman Billing <ArrowUpRight size={18} aria-hidden="true" /></a><a className="billing-contact-email" href={`mailto:${contact}`}>{contact}</a></div>
+        <div className="billing-contact-facts"><div><h3>{company.displayName}</h3><p>{company.legalName}</p><p>{profile.identity.complianceClaim}</p></div>
+          <div>
+            <h3>{profile.identity.contactAddressLabel}</h3>
+            <address>{company.locations[0]}</address>
+            <a className="billing-text-link" href="https://maps.app.goo.gl/hnyVHMW6GQLpt8d16" target="_blank" rel="noopener noreferrer" aria-label="View Billing US contact address on Google Maps (opens in a new tab)">View on Google Maps <span aria-hidden="true">↗</span></a>
           </div>
+          <div><h3>Leadership</h3><p>{leader.name} — {leader.role}</p><p>{leader.detail}</p></div><a className="billing-text-link" href="#billing-top">Back to top ↑</a>
         </div>
-      </section>
-      <section className="billing-section" id="tasks" aria-labelledby="tasks-heading">
-        <div className="billing-shell">
-          <h2 id="tasks-heading">Core Tasks</h2>
-          <p className="billing-lead">Essential revenue-cycle operational tasks across front-desk and billing stages.</p>
-          <div className="billing-tasks-grid">
-            <div className="billing-task-group">
-              <h3>Front-Desk Tasks</h3>
-              <ul className="billing-task-list">
-                {profile.coreTasks
-                  .filter((t) => t.category === "front-desk")
-                  .map((task) => (
-                    <li key={task.title}>{task.title}</li>
-                  ))}
-              </ul>
-            </div>
-            <div className="billing-task-group">
-              <h3>Billing &amp; RCM Tasks</h3>
-              <ul className="billing-task-list">
-                {profile.coreTasks
-                  .filter((t) => t.category === "billing-rcm")
-                  .map((task) => (
-                    <li key={task.title}>{task.title}</li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <section className="billing-section" id="workflow" aria-labelledby="workflow-heading">
-        <div className="billing-shell">
-          <h2 id="workflow-heading">Revenue-Cycle Workflow</h2>
-          <ol className="billing-workflow">
-            {profile.workflowSteps.map((step) => (
-              <li key={step.step}>
-                <span className="billing-step">Step {step.step}</span>
-                <div><h3>{step.name}</h3><p>{step.description}</p></div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-      <section className="billing-section" id="differentiators" aria-labelledby="diff-heading">
-        <div className="billing-shell">
-          <h2 id="diff-heading">Differentiators &amp; Value Proposition</h2>
-          <p className="billing-lead">Key operational differentiators stated by Goodman Billing.</p>
-          <ul className="billing-differentiators-list">
-            {profile.differentiators.map((diff) => (
-              <li key={diff}>{diff}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className="billing-section" id="testimonials" aria-labelledby="testimonials-heading">
-        <div className="billing-shell">
-          <h2 id="testimonials-heading">Client Testimonials</h2>
-          <p className="billing-lead">Website-published client statements; independently verified outcomes were not supplied.</p>
-          <div className="billing-testimonials-grid">
-            {profile.testimonials.map((t) => (
-              <article key={t.name} className="billing-testimonial-card">
-                <h3>{t.name}</h3>
-                <p className="billing-testimonial-context">{t.context}</p>
-                <p className="billing-testimonial-report">{t.report}</p>
-              </article>
-            ))}
-          </div>
-          <p className="billing-source-note">
-            Website-published client statements; independently verified outcomes were not supplied. Metrics reflect Michael Chen&apos;s reported individual practice outcome rather than a certified universal benchmark.
-          </p>
-        </div>
-      </section>
-
-
-      <section className="billing-section" id="evidence" aria-labelledby="evidence-heading">
-        <div className="billing-shell">
-          <h2 id="evidence-heading">Evidence &amp; source notes</h2>
-          <p className="billing-lead">Published targets, historical brochure figures, and website listings are distinct records, not independently audited outcomes.</p>
-          <div className="billing-stack">
-            <details className="billing-details billing-evidence">
-              <summary>{profile.performanceIndicators.evidenceBlock.title}</summary>
-              <div className="billing-detail-body">
-                <p className="billing-source">{profile.performanceIndicators.evidenceBlock.sourceLabel}</p>
-                <p className="billing-note">{profile.performanceIndicators.evidenceBlock.disclaimer}</p>
-                <dl className="billing-facts">
-                  {profile.performanceIndicators.indicators.map((item) => (
-                    <div key={item.indicator}><dt>{item.indicator}</dt><dd><strong>{item.value}</strong> — {item.context}</dd></div>
-                  ))}
-                </dl>
-              </div>
-            </details>
-            <details className="billing-details billing-evidence">
-              <summary>{profile.brochureHistory.evidenceBlock.title}</summary>
-              <div className="billing-detail-body">
-                <p className="billing-source">{profile.brochureHistory.evidenceBlock.sourceLabel}</p>
-                <p className="billing-note">{profile.brochureHistory.evidenceBlock.disclaimer}</p>
-                <dl className="billing-facts">
-                  {profile.brochureHistory.metrics.map((item) => (
-                    <div key={item.metric}><dt>{item.metric}</dt><dd><strong>{item.value}</strong> — {item.detail}</dd></div>
-                  ))}
-                </dl>
-              </div>
-            </details>
-            <details className="billing-details billing-evidence">
-              <summary>{profile.specialtyProvenance.evidenceBlock.title}</summary>
-              <div className="billing-detail-body">
-                <p className="billing-source">{profile.specialtyProvenance.evidenceBlock.sourceLabel}</p>
-                <p className="billing-note">{profile.specialtyProvenance.evidenceBlock.disclaimer}</p>
-                <dl className="billing-facts">
-                  <div><dt>Website coverage claim</dt><dd>{profile.specialtyProvenance.websiteClaim}</dd></div>
-                  <div><dt>Listed specialty profiles</dt><dd>{profile.specialtyProvenance.listedCount}</dd></div>
-                  <div><dt>Contact form options</dt><dd>{profile.specialtyProvenance.contactFormCount}</dd></div>
-                  <div><dt>Historical brochure record</dt><dd>{profile.brochureHistory.metrics.find((metric) => metric.metric === "Specialties Managed")?.value}</dd></div>
-                </dl>
-                <p>{profile.specialtyProvenance.explanation}</p>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section className="billing-section" aria-labelledby="specialties-heading">
-        <div className="billing-shell">
-          <h2 id="specialties-heading">Medical Billing Specialties</h2>
-          <p className="billing-lead">The company website lists these specialty-specific billing focuses.</p>
-          <details className="billing-details billing-catalogue">
-            <summary>View {profile.specialties.length} listed specialties</summary>
-            <dl className="billing-facts billing-detail-body">
-              {profile.specialties.map((item) => <div key={item.name}><dt>{item.name}</dt><dd>{item.focus}</dd></div>)}
-            </dl>
-          </details>
-        </div>
-      </section>
-
-      <section className="billing-section" aria-labelledby="platforms-heading">
-        <div className="billing-shell">
-          <h2 id="platforms-heading">Software platforms</h2>
-          <p className="billing-lead">Software the company describes in its operational experience.</p>
-          <details className="billing-details billing-catalogue">
-            <summary>View {profile.platforms.length} platforms</summary>
-            <div className="billing-detail-body">
-              <p className="billing-note">{profile.platformDisclaimer}</p>
-              <dl className="billing-facts">
-                {profile.platforms.map((item) => <div key={item.name}><dt>{item.name}</dt><dd>{item.category}</dd></div>)}
-              </dl>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <section className="billing-contact" id="contact" aria-labelledby="contact-heading">
-        <div className="billing-shell">
-          <h2 id="contact-heading">Contact Goodman Billing</h2>
-          <p>For provider billing inquiries, email <a href={`mailto:${contact}`}>{contact}</a>.</p>
-          <div className="billing-contact-facts">
-            <div><h3>Leadership</h3><p>{leader.name} — {leader.role}</p><p>{leader.detail}</p></div>
-            <div><h3>{profile.identity.contactAddressLabel}</h3>
-              <address>{company.locations[0]}</address>
-              <p className="billing-note">Address is the contact location listed on the company’s official web presence. Not established as an inspected clinical or operational processing facility.</p>
-            </div>
-          </div>
-          <p className="billing-note">{profile.identity.complianceClaim}</p>
-        </div>
-      </section>
+      </div></section>
     </CompanyGroupFrame>
   );
 }

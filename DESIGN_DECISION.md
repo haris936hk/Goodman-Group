@@ -9,9 +9,41 @@
 
 The redesigned website will present Goodman Group as a parent holding organization, not as a single pharmaceutical company with several product lines. Its primary purpose is to establish the Group's identity, history, leadership, scale, values, and direction, then route visitors clearly to the relevant operating company.
 
-Every subsidiary will retain its own name, logo, legal identity, leadership, locations, capabilities, and evidence. At the same time, all company profiles will live within a consistent Goodman Group experience. The resulting brand architecture is an **endorsed portfolio system**: Goodman Group supplies the common structure and authority, while each operating company remains recognizable.
+Every subsidiary will retain its own name, logo, legal identity, leadership, locations, capabilities, and operational credentials. At the same time, all company profiles will live within a consistent Goodman Group experience. The resulting brand architecture is an **endorsed portfolio system**: Goodman Group supplies the common structure and authority, while each operating company remains recognizable.
 
-The visual expression will follow **Luminous Momentum**: a cinematic, digitally native presentation built from deep atmospheric color, translucent glass surfaces, controlled glow, oversized modern typography, layered media, and scroll-driven narrative transitions. It should feel closer to an award-caliber technology marketing experience than a traditional corporate or pharmaceutical website. Institutional trust will come from precise content, real evidence, and disciplined execution—not from conservative styling.
+The visual expression will follow **Luminous Momentum**: a cinematic, digitally native presentation built from deep atmospheric color, translucent glass surfaces, controlled glow, oversized modern typography, layered media, and scroll-driven narrative transitions. It should feel closer to an award-caliber technology marketing experience than a traditional corporate or pharmaceutical website. Institutional trust will come from precise marketing content, operational credentials, and disciplined execution—not from conservative styling.
+
+### Group footer
+
+The group footer uses separate brand, navigation, and contact columns with small uppercase section labels. The contact area stacks the inquiry description, prominent email link, US contact address, Pakistan office address, and Pakistan factory address rather than placing them in a single row. Pakistan addresses reuse the canonical Goodman Laboratories contact record. On smaller screens the contact area moves below the other columns; mobile stacks the main sections and retains a compact two-column navigation layout. Light and dark themes share the same hierarchy, with visible keyboard focus outlines.
+Each address includes its designated Google Maps place link. Links open in a new tab, announce that behavior to assistive technology, and do not load an embedded map or require an API key.
+The Laboratories contact section uses the same office and factory map links, and the Billing contact section uses the same US contact map link, styled within each company's existing contact layout.
+Footer navigation links directly to every company page using the canonical company registry, rather than routing visitors through an “Our Companies” directory link.
+
+
+### Homepage enquiries
+
+The enquiry section sits after “04 / Remember” and before the footer. A split desktop layout pairs introductory copy and “We’ll respond within 24 hours” with a compact form; mobile stacks the content. The response promise covers elapsed hours, including weekends and holidays, and requires an accountable receiving team.
+
+The form collects full name, email, optional organisation, company of interest, enquiry type, message, and optional phone. Company and enquiry selectors use accessible custom controls. The phone field includes a searchable country and dialling-code picker, with no inferred country default. Existing company records supply company options, including a Group / Not sure option.
+Form popovers opt out of Lenis interception with `data-lenis-prevent` and use `overscroll-behavior: contain`. Wheel and touch scrolling remain native inside each dropdown, including at list boundaries, without scrolling the underlying page or dismissing the picker.
+
+The interface has no dedicated privacy or security panels, marketing opt-in, attachments, or visible CAPTCHA. Required-field feedback, sending status, and delivery errors remain visible. Failed submissions preserve entered values; confirmation appears only after the email provider accepts delivery. Hidden spam protection and server-side validation remain mandatory. Any legally required disclosure must be settled before public launch.
+
+Submission uses `POST /api/enquiries`, Resend email delivery, and an atomic Upstash Redis limit of five valid submission attempts per network per ten minutes. The endpoint checks origin, bounds request bodies to 16 KiB, validates company/enquiry choices against the shared options, and normalizes optional phone numbers to E.164. Redis keys hash the client IP; the application does not persist enquiry content. Email-provider and receiving-inbox retention must be set by the operator.
+
+Configure these server-only deployment variables:
+
+| Variable | Purpose |
+| --- | --- |
+| `RESEND_API_KEY` | Resend credential with email-send permission. |
+| `ENQUIRY_FROM_EMAIL` | Sender address on a Resend-verified domain. |
+| `ENQUIRY_TO_EMAIL` | Owned inbox whose team honours the 24-hour response promise. |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis HTTPS REST endpoint. |
+| `UPSTASH_REDIS_REST_TOKEN` | Redis credential permitting the limiter's EVAL/INCR/EXPIRE/TTL commands. |
+| `ENQUIRY_TRUST_PROXY` | Set to `true` only on non-Vercel deployments behind a trusted proxy that overwrites `x-forwarded-for` and prevents direct access to the application. Vercel supplies `VERCEL=1` automatically. |
+
+The proxy must preserve the public request origin so it matches the browser's Origin header. Missing delivery/limiter configuration or a missing trusted client IP returns a user-friendly unavailable response, never a success. Before launch, configure a verified sender and recipient, send an actual enquiry through the deployed form, confirm inbox receipt and Reply-To, and assign weekend/holiday coverage. Provider acceptance confirms handoff, not final inbox delivery.
 
 ## Context and Problem
 
@@ -29,7 +61,7 @@ The redesign must correct this information gap rather than simply reskinning the
 
 ## Decision Drivers
 
-The design and architecture must serve several audiences with different evidence needs:
+The design and architecture must serve several audiences with different information needs:
 
 - Government and private hospital procurement teams
 - National distributors and commercial partners
@@ -43,7 +75,7 @@ These users need a combination of group-level confidence and company-level speci
 2. Which companies belong to it?
 3. What does each company do?
 4. Where does each company operate?
-5. What evidence supports its claims?
+5. What credentials and capabilities support its business operations?
 6. Who should be contacted for a specific need?
 
 ## Core Architecture Decision
@@ -74,7 +106,6 @@ Home
 About the Group
 Our Companies
 Our Presence
-Responsibility
 News
 Careers
 Contact
@@ -91,6 +122,9 @@ Contact
 ```
 
 Every company remains visible in semantic page content, reachable through a normal link, and addressable through a permanent URL. No sector tabs, sector pages, or archetype-based grouping are used.
+
+The homepage includes an unnumbered “Who we serve” client interlude between “02 / Explore” and “03 / Expand”. Four non-interactive, icon-led glass tiles present government hospitals, private hospitals, retailers, and national distributors from `goodmanGroup.customerTypes`. The grid uses four columns at 1100px and above, two at 600–1099px, and one below 600px, with shared dark/light theme tokens and the existing reduced-motion-aware reveal system. Chapter numbering, primary navigation, and the Procurement destination remain unchanged.
+
 ## Portfolio Hub
 
 The portfolio hub will provide a direct, complete view of the Group's companies. It should include:
@@ -112,9 +146,9 @@ Operating companies retain only a minimal shared Goodman Group frame (`CompanyGr
 
 Each page is designed around verified source records and authentic brand identity:
 
-1. **Goodman Laboratories:** A light editorial laboratory composition derived from `GoodmanLabLogo.png`—white and charcoal field, focused red accents, high-contrast editorial headings, strict horizontal rules, and an upward trajectory motif. Leads with legal identity and current pharmaceutical-manufacturing capability.
+1. **Goodman Laboratories:** A warm ivory, graphite, and muted-crimson pharmaceutical identity derived from `GoodmanLabLogo.png`. Its bespoke composition follows Goodman Billing’s restrained design language: compact editorial headings, generous whitespace, thin rules, soft surfaces, selective dark panels, and useful native disclosures. Leads with purpose and manufacturing capability, followed by products, management systems, leadership, community responsibility, and direct contact.
 2. **Geron Pharma:** A purple, circular healthcare-network composition derived from `geronlogo.png`—deep violet field, round stages, bold condensed display treatment, and decorative orbit/radial geometry that simplifies under reduced motion.
-3. **Goodman Medical Equipment Trading:** A bright blue-and-white technical/engineering composition derived from `GG3.png`—precision grid, circular/gear geometry, strong geometric sans typography, blueprint rules, and a split UAE/Pakistan presence section.
+3. **Goodman Medical Equipment Trading:** A pearl, slate, and muted-blue healthcare-supply identity derived from `GG3.png`. Follows Billing and Laboratories’ calm operational design language: spacious compact headings, soft surfaces, thin rules, selective dark panels, numbered supply detail, native disclosures, and restrained CSS micro-interactions. UAE/Pakistan operations remain distinct from future target markets.
 4. **Wal Green Chemicals:** An ivory, charcoal, and restrained green composition derived from `walgreenLogo.png`—generous whitespace, soft outlined regions, flowing line work echoing the logo swoosh, and a clean sans system centered on the script wordmark. Green is brand visual identity, not a sustainability claim.
 
 ### Common Standards Across Bespoke Pages
@@ -241,10 +275,9 @@ Custom WebGL or 3D is not required for the initial system. It should be added on
 
 ## Content and Proof Strategy
 
-The site should use short parent-level narrative copy and deeper company-level proof. Claims such as “affordable access,” “life-saving products,” “nationwide,” or “global presence” should remain specific to the business information they describe.
+The site should use short parent-level narrative copy and deeper company-level marketing detail and operational credentials. Claims such as “affordable access,” “life-saving products,” “nationwide,” or “global presence” should remain specific to the business information they describe.
 
-Evidence should include licences, certifications, product or service categories, facilities, dated milestones, named locations, and appropriate downloads. Statistics must never be displayed without scope. Planned activity must not be styled as an accomplished result.
-
+Operational credentials should include statutory licences, certifications, product or service categories, facilities, dated milestones, named locations, and verified business contacts. Statistics must never be displayed without scope. Planned activity must not be styled as an accomplished result. Marketing copy presents owner-approved business facts directly without public document attribution, source citations, or audit caveats.
 The CEO's story is a valuable differentiator, but it should support institutional trust rather than dominate every route. The homepage receives a concise leadership passage; the full origin story belongs in a dedicated history or leadership experience.
 
 ## SEO and Findability
@@ -498,3 +531,43 @@ Tata Group remains a useful **structural** reference because it presents a paren
 - [Lenis documentation](https://github.com/darkroomengineering/lenis)
 - [Motion for React](https://motion.dev/docs/react)
 - [Motion layout animations](https://motion.dev/docs/react-layout-animations)
+
+## Goodman Billing Page
+
+- Goodman Billing uses a bespoke sage-and-deep-green card system inside the shared Goodman Group frame.
+- The page presents 18 services with their complete benefits, 40 specialty descriptions, 12 software integrations, and three attributed testimonials.
+- Service and specialty directories search names and descriptive content independently, announce result counts, and provide clear/reset actions for empty results.
+- Full directory content renders before client hydration; search is a small client boundary, while the route remains a server component.
+- Revenue-cycle workflow uses a numbered vertical rail with downward arrows, a desktop split layout, and a stacked mobile layout. All six stages and their descriptions remain visible without interaction.
+- Supporting operational tasks remain permanently visible in separate Front-Desk and Billing & RCM groups; task columns stack on narrow screens. The section adds no client-side state or animation.
+- Contact actions use the company email and retain the US address and leadership details. No unconnected inquiry form or empty social links are rendered.
+- Layouts collapse to one-column directory cards on narrow screens; reduced motion disables card movement.
+- Service and specialty cards use the existing Goodman Billing site's artwork, copied unchanged into `public/assets/billing/services/` and `public/assets/billing/specialties/`. Explicit record mappings preserve the existing site's asset reuse: 14 service SVGs cover 18 cards, and 40 specialty PNGs cover 40 cards.
+- Service icons display at 52px in deep-green tiles using the existing site's white CSS filter. Specialty icons display at 60px in white circles using its red CSS filter. `object-fit: contain` preserves aspect ratios; unoptimized delivery preserves the original image files without raster tracing or lossy recompression.
+- Card illustrations are decorative alongside the visible titles, reserve their dimensions, and replace the redundant category labels and noninteractive arrows.
+- Benefit cards use the original site's Bootstrap Icons 1.13.1 shapes (`clipboard-check`, `speedometer2`, and `shield-lock`) as unchanged local SVGs in `public/assets/billing/benefits/`, with the upstream MIT license retained. Decorative 32px CSS masks inherit deep green within 64px sage tiles, replacing benefit numbering without loading an icon font.
+- Software cards use all 12 original integration logos, copied unchanged into `public/assets/billing/platforms/`. Typed records retain each logo's source dimensions; white cards preserve brand colors, and centered 88px logo areas contain artwork within 180px by 64px without enlarging small raster originals. Visible platform names and descriptions remain; images have empty alternative text to avoid repeating those names and use unoptimized local delivery.
+- Billing micro-interactions remain CSS-only: action lift/press feedback and arrow movement, animated navigation underlines, search-focus icon emphasis, subtle directory/benefit/platform/workflow/testimonial hover accents, and a short fade/translation for newly mounted directory cards and empty results. Hover motion is restricted to fine pointers; reduced motion removes entry animations, transitions, and decorative transforms without changing search behavior.
+- Billing search focus uses a green outline around the complete rounded field, including the icon. The inner input outline is replaced by this container-level focus indicator for both service and specialty searches.
+
+## Goodman Laboratories — October 2026 redesign
+
+- Rebuilt the page around calm operational competence rather than a uniform corporate-profile card grid. Billing supplies the design philosophy, not its green palette, service copy, or revenue-cycle content.
+- Warm ivory and clay backgrounds support graphite text and a muted-crimson accent. The split hero combines company purpose and direct actions with the authentic logo, production capabilities, and 2008 founding. The shared Group frame adopts the company palette.
+- Manufacturing uses a numbered production-section list and a sticky desktop introduction; numbering identifies production sections, not a sequential manufacturing process. Departments use a bordered matrix. National distribution and international activity remain distinct, preserving each market’s specific agreement or supply status.
+- Product categories remain native, independently expandable disclosures with full formulations, strengths, packs, and registration details. Governance, organizational roles, and shared certification registration details also use native disclosures; individual ISO certificates remain immediately visible.
+- Leadership, growth, values, mission, vision, facilities, therapeutic areas, customer segments, and community initiatives retain their typed content. Contact provides working email and telephone links plus office and factory addresses; the company website link is omitted from the closing section.
+- Removed pointer-glow wrappers and animated conic borders. The route remains a server component with CSS-only interaction feedback, visible keyboard focus, reduced-motion support, and stacked small-screen layouts.
+- Therapeutic areas has a dedicated clay-tinted editorial panel: a prominent heading, introductory copy, a data-derived portfolio count, and a two-column numbered directory with fine horizontal rules. The introduction stacks above the directory on tablets; the directory becomes one column on small phones. All 21 typed therapeutic areas retain their original names and remain non-interactive.
+- Laboratories micro-interactions use CSS-only transform and opacity motion: primary actions lift and advance their arrows, navigation underlines grow on hover or keyboard focus, disclosure indicators collapse from plus to minus, and expanded content enters with a short fade/translation. Certification cards and selected numbered details receive small hover accents. Fine-pointer hover effects do not run on touch devices; reduced motion disables animations, transitions, and decorative movement while preserving disclosure state and keyboard focus.
+
+## Goodman Medical Equipment Trading — October 2026 redesign
+
+- Rebuilt the company route and stylesheet, replacing blueprint backgrounds and large circular logo-stage geometry with a restrained pearl/slate/muted-blue composition. The authentic logo remains inside the dark hero summary panel; direct actions lead to solutions and supplier contact.
+- Product categories, service strengths, customer commitments, mission, vision, values, founders, board membership, governance functions, organizational roles, and contact channels retain their company-specific typed records. Company messaging is integrated into the narrative rather than presented as a separate messaging rail.
+- A five-stage numbered supply-chain list provides immediately visible operational detail. The seven-stage instrument workflow remains an independent native disclosure explicitly naming STERIS Offsite Reprocessing Center (ORC); it does not represent Goodman-owned facilities.
+- Dubai and Islamabad have separate presence panels. Current operating-market descriptions remain intact, while future targets use dashed surfaces and explicit target-market labels.
+- CSS-only micro-interactions include action lift/press feedback, arrow movement, navigation underlines, product and numbered-detail hover accents, and disclosure indicator/content animation. Hover movement is restricted to fine pointers; reduced motion removes decorative transforms, transitions, and animations.
+- The page remains a server component. Responsive stacks preserve all content at 320px, and keyboard focus remains visible. Muted text was darkened after the accessibility check identified insufficient contrast on tinted surfaces.
+- Supply-chain connectors reserve a minimum 44px gap after each numbered circle. Arrows are centered in the available gap using the responsive marker-size token, rather than positioned at a fixed bottom offset; circles cannot flex-shrink. The final stage reserves no connector gap.
+- The closing equipment contact section omits the Website label and company-website link; office, telephone, email, Group routing, and back-to-top links remain.

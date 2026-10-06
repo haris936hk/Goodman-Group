@@ -201,11 +201,8 @@ export default function WalGreenChemicalsPage() {
           </div>
 
           <div className="wg-section-body">
-            <p className="wg-portfolio-disclaimer">
-              Verified product and material categories supplied across
-              Pakistan’s manufacturing sector. These categories represent
-              indenting and trading supply scopes rather than specific stocked
-              lines or manufactured products.
+            <p className="wg-portfolio-description">
+              Product categories supplied through indenting and trading.
             </p>
 
             <ul

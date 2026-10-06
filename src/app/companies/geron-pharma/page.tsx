@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { MouseGlowCard } from "@/components/mouse-glow-card";
 
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
@@ -9,6 +10,7 @@ import { OrganizationJsonLd } from "@/lib/structured-data";
 import "./geron.css";
 
 const company = getCompanyBySlug("geron-pharma")!;
+const geronAccent = "var(--geron-purple)";
 
 export const metadata: Metadata = {
   title: company.displayName,
@@ -70,48 +72,43 @@ export default function GeronPharmaPage() {
 
       <section className="geron-network-section" aria-labelledby="geron-structure-heading">
         <div className="geron-section-intro">
-          <h2 id="geron-structure-heading">Verified company information</h2>
+          <h2 id="geron-structure-heading">Company information</h2>
           <p>
-            The supplied company profile verifies Geron Pharma’s legal identity,
-            pharmaceutical sector context, and chief executive.
+            Key corporate facts and leadership for Geron Pharma (Pvt.) Ltd.
           </p>
         </div>
 
-        <div className="geron-circular-nodes-grid">
-          <article className="geron-node-card">
-            <span className="geron-node-badge">Corporate Entity</span>
-            <h3>Legal Identity</h3>
-            <p>
-              The company’s legal name is {company.legalName ?? company.displayName}
-            </p>
-          </article>
+        <div className="geron-facts-grid">
+          <MouseGlowCard
+            accent={geronAccent}
+            className="company-card glass-panel geron-fact-card"
+          >
+            <span className="geron-fact-label">Legal identity</span>
+            <h3 className="geron-fact-heading">
+              {company.legalName ?? company.displayName}
+            </h3>
+          </MouseGlowCard>
 
-          <article className="geron-node-card">
-            <span className="geron-node-badge">Operational Scope</span>
-            <h3>Sector Context</h3>
-            <p>
-              The supplied profile identifies Geron Pharma as a pharmaceutical business.
-            </p>
-          </article>
+          <MouseGlowCard
+            accent={geronAccent}
+            className="company-card glass-panel geron-fact-card"
+          >
+            <span className="geron-fact-label">Business</span>
+            <h3 className="geron-fact-heading">{company.business}</h3>
+          </MouseGlowCard>
 
           {leader ? (
-            <article className="geron-node-card">
-              <span className="geron-node-badge">Leadership</span>
-              <h3>{leader.name}</h3>
-              <p className="geron-node-role">{leader.role}</p>
-              <p>{leader.detail}</p>
-            </article>
+            <MouseGlowCard
+              accent={geronAccent}
+              className="company-card glass-panel geron-fact-card"
+            >
+              <span className="geron-fact-label">Leadership</span>
+              <div>
+                <h3 className="geron-fact-heading">{leader.name}</h3>
+                <p className="geron-fact-detail">{leader.detail}</p>
+              </div>
+            </MouseGlowCard>
           ) : null}
-
-          <article className="geron-node-card">
-            <span className="geron-node-badge">Profile Boundary</span>
-            <h3>Profile Scope</h3>
-            <p>
-              The supplied profile does not provide a separate company overview,
-              address, product portfolio, services, markets, customers, or
-              contact details.
-            </p>
-          </article>
         </div>
 
         <div style={{ marginTop: "3.5rem", textAlign: "center" }}>

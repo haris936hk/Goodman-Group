@@ -27,17 +27,21 @@ describe("GeronPharmaPage", () => {
     ).toBeGreaterThanOrEqual(1);
 
     expect(
-      screen.getByText("The supplied profile identifies Geron Pharma as a pharmaceutical business."),
+      screen.getByRole("heading", {
+        level: 3,
+        name: "Geron Pharma (Pvt.) Ltd.",
+      }),
     ).toBeInTheDocument();
-
-    expect(screen.getByText("Syed Talib Hussain Hashmi")).toBeInTheDocument();
-    expect(screen.getByText("Chief Executive Officer")).toBeInTheDocument();
-    expect(screen.getByText("Chief Executive Officer since 2019.")).toBeInTheDocument();
-
     expect(
-      screen.getByText(
-        "The supplied profile does not provide a separate company overview, address, product portfolio, services, markets, customers, or contact details.",
-      ),
+      screen.getByRole("heading", {
+        level: 3,
+        name: "Pharmaceutical business",
+      }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Syed Talib Hussain Hashmi")).toBeInTheDocument();
+    expect(
+      screen.getByText("Chief Executive Officer since 2019."),
+    ).toBeInTheDocument();
+
   });
 });

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Check, ShieldCheck } from "lucide-react";
 
 import { CompanyGroupFrame } from "@/components/company-group-frame";
 import { getCompanyBySlug } from "@/data/companies";
@@ -15,9 +14,7 @@ const profile = goodmanLaboratoriesProfile;
 export const metadata: Metadata = {
   title: company.displayName,
   description: `${profile.identity.legalName} — ${company.summary}`,
-  alternates: {
-    canonical: "/companies/goodman-laboratories",
-  },
+  alternates: { canonical: "/companies/goodman-laboratories" },
 };
 
 export default function GoodmanLaboratoriesPage() {
@@ -28,341 +25,91 @@ export default function GoodmanLaboratoriesPage() {
   return (
     <CompanyGroupFrame company={company} className="laboratories-page">
       <OrganizationJsonLd company={company} />
-      <header className="lab-hero">
+      <header className="lab-hero" id="lab-top">
         <div className="lab-shell lab-hero-grid">
           <div className="lab-hero-copy">
-            <p className="lab-eyebrow">{profile.identity.legalName}</p>
-            <p className="lab-tagline">Company tagline: &ldquo;{profile.identity.tagline}&rdquo;</p>
-            <p className="lab-descriptor">{company.business}</p>
-            <h1>{company.displayName}</h1>
-            <p className="lab-purpose">{profile.identity.purpose}</p>
-            <p className="lab-summary">{company.summary}</p>
+            <p className="lab-kicker">Pharmaceutical manufacturing · Pakistan</p>
+            <h1>Goodman<br /><span>Laboratories</span></h1>
+            <p className="lab-hero-purpose">{profile.identity.purpose}</p>
+            <p className="lab-prose">{company.summary}</p>
+            <div className="lab-actions"><a className="lab-action" href="#contact">Discuss your requirements <ArrowUpRight size={18} aria-hidden="true" /></a><a className="lab-text-link" href="#products">Explore our products <ArrowDown size={17} aria-hidden="true" /></a></div>
+            <p className="lab-security"><ShieldCheck size={18} aria-hidden="true" /> Manufacturing, quality, and dependable supply</p>
           </div>
-          <div className="lab-logo-stage">
-            {company.logo ? (
-              <Image
-                src={company.logo.src}
-                alt={`${company.displayName} logo`}
-                width={company.logo.width}
-                height={company.logo.height}
-                priority
-                sizes="(max-width: 640px) 240px, 320px"
-              />
-            ) : null}
-          </div>
+          <aside className="lab-hero-panel" aria-label="Goodman Laboratories at a glance">
+            <div className="lab-panel-brand">{company.logo ? <Image src={company.logo.src} alt={`${company.displayName} logo`} width={company.logo.width} height={company.logo.height} priority sizes="240px" /> : null}</div>
+            <p className="lab-panel-label"><span /> {profile.identity.tagline}</p>
+            <h2>Purpose in every product.<br />Care beyond production.</h2>
+            <ul className="lab-panel-capabilities">{profile.identity.capabilities.slice(0, 3).map((capability, index) => <li key={capability}><span>0{index + 1}</span>{capability}<Check size={17} aria-hidden="true" /></li>)}</ul>
+            <div className="lab-panel-foundation"><strong>{profile.identity.founded}</strong><span>Established in Pakistan<br />{profile.identity.legalName}</span></div>
+          </aside>
         </div>
       </header>
 
-      <nav className="lab-profile-nav" aria-label="Goodman Laboratories profile navigation">
-        <ul className="lab-shell lab-nav-list">
-          <li><a href="#company">Company</a></li>
-          <li><a href="#leadership">Leadership</a></li>
-          <li><a href="#operations-reach">Operations &amp; reach</a></li>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#certifications">Certifications</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
+      <nav className="lab-profile-nav" aria-label="Goodman Laboratories profile navigation"><div className="lab-shell"><a href="#company">Company</a><a href="#operations-reach">Manufacturing &amp; reach</a><a href="#products">Products</a><a href="#certifications">Certifications</a><a href="#leadership">Leadership</a><a href="#contact">Contact <ArrowUpRight size={15} aria-hidden="true" /></a></div></nav>
 
-      <div className="lab-shell lab-main-sections">
-        <section id="company" className="lab-section" aria-labelledby="company-heading">
-          <header className="lab-section-heading">
-            <p className="lab-kicker">Company</p>
-            <h2 id="company-heading">Purpose, activity, and principles</h2>
-          </header>
-          <div className="lab-lead-split">
-            <div>
-              <h3>Mission</h3>
-              <p className="lab-lead">{profile.mission}</p>
-            </div>
-            <div>
-              <h3>Vision</h3>
-              <p className="lab-lead">{profile.vision}</p>
-            </div>
+      <section id="company" className="lab-section" aria-labelledby="company-heading"><div className="lab-shell">
+        <div className="lab-section-heading"><p className="lab-kicker">Our foundation</p><h2 id="company-heading">Healthcare access.<br />A lasting purpose.</h2><p>Founded {profile.identity.founded} by Syed Talib Hussain Hashmi</p></div>
+        <div className="lab-principles"><article><span className="lab-number">01 / Mission</span><h3>Affordability at the heart.</h3><p>{profile.mission}</p></article><article><span className="lab-number">02 / Vision</span><h3>A wider horizon for care.</h3><p>{profile.vision}</p></article></div>
+        <div className="lab-foundation-grid"><div><h3>Values</h3><ul className="lab-check-list">{profile.values.map((value) => <li key={value}><Check size={16} aria-hidden="true" />{value}</li>)}</ul></div><dl className="lab-fact-rows"><div><dt>Industry and activities</dt><dd>{profile.identity.industry}</dd></div><div><dt>Stakeholder relationships</dt><dd>{profile.identity.stakeholderRelationships}</dd></div></dl></div>
+      </div></section>
+
+      <section id="operations-reach" className="lab-section lab-tinted" aria-labelledby="operations-heading"><div className="lab-shell">
+        <div className="lab-manufacturing-layout"><div className="lab-section-heading lab-sticky-heading"><p className="lab-kicker">Manufacturing &amp; operations</p><h2 id="operations-heading">Built to produce.<br />Prepared to supply.</h2><p>Pharmaceutical production, marketing, and supply for hospitals, retailers, and distribution partners.</p><h3 className="lab-subheading">Core capabilities</h3><ul className="lab-check-list">{profile.identity.capabilities.map((capability) => <li key={capability}><Check size={16} aria-hidden="true" />{capability}</li>)}</ul></div>
+          <div className="lab-production"><h3>Approved production sections</h3><ol>{profile.productionSections.map((section, index) => <li key={section.name}><span className="lab-production-number">0{index + 1}</span><div><h4>{section.name}</h4><p>{section.description}</p></div></li>)}</ol></div>
+        </div>
+        <div className="lab-operations-detail"><div><h3>Facilities and manufacturing standards</h3><ul className="lab-check-list">{profile.facilitiesAndOperations.map((statement) => <li key={statement}><Check size={16} aria-hidden="true" />{statement}</li>)}</ul></div><div className="lab-customer-panel"><p className="lab-kicker">Who we serve</p><h3>Customer segments</h3><ul className="lab-ruled-list">{profile.customers.map((customer) => <li key={customer}>{customer}</li>)}</ul></div></div>
+        <div className="lab-organization"><h3>Operational departments</h3><ul className="lab-departments">{profile.websiteFunctions.map((department, index) => <li key={department}><span className="lab-number">0{index + 1}</span>{department}</li>)}</ul><div className="lab-disclosures lab-organization-disclosures"><details className="lab-disclosure"><summary><span>Governance structure</span></summary><ul className="lab-check-list">{profile.governance.map((role) => <li key={role}><Check size={16} aria-hidden="true" />{role}</li>)}</ul></details><details className="lab-disclosure"><summary><span>Organizational roles</span></summary><ul className="lab-check-list">{profile.organizationalFunctions.map((role) => <li key={role}><Check size={16} aria-hidden="true" />{role}</li>)}</ul></details></div></div>
+        <div className="lab-reach"><div className="lab-national"><p className="lab-kicker">Distribution in Pakistan</p><h3>National coverage</h3><p>Distribution network coverage across Pakistan&apos;s administrative regions.</p><ul className="lab-region-list">{profile.geographicPresence.nationalCoverage.map((area) => <li key={area}>{area}</li>)}</ul></div><div><h3>International activity &amp; reach</h3><p className="lab-prose">International market distribution and supply agreements.</p><dl className="lab-market-list">{profile.internationalActivity.map((activity) => <div key={activity.market}><dt>{activity.market}</dt><dd>{activity.status}</dd></div>)}</dl></div></div>
+      </div></section>
+
+      <section id="products" className="lab-section" aria-labelledby="products-heading"><div className="lab-shell">
+        <div className="lab-section-heading"><p className="lab-kicker">Product portfolio</p><h2 id="products-heading">Registered and marketed products</h2><p>Explore the portfolio by therapeutic category, with formulations, strengths, pack sizes, and registration numbers.</p></div>
+        <div className="lab-disclosures lab-product-categories">{profile.productCategories.map((category, index) => <details key={category.name} className="lab-disclosure"><summary><span className="lab-category-title"><span className="lab-number">{String(index + 1).padStart(2, "0")}</span>{category.name}</span><small>{category.products.length} {category.products.length === 1 ? "product" : "products"}</small></summary><div className="lab-product-list">{category.products.map((product) => <article key={product.name}><h3>{product.name}</h3><p>{product.details}</p></article>)}</div></details>)}</div>
+        <section className="lab-therapeutic" aria-labelledby="therapeutic-heading">
+          <div className="lab-therapeutic-intro">
+            <p className="lab-kicker">Portfolio breadth</p>
+            <h3 id="therapeutic-heading">Therapeutic<br />areas</h3>
+            <p>Explore the therapeutic areas represented across our pharmaceutical portfolio.</p>
+            <div className="lab-therapeutic-count"><strong>{profile.therapeuticAreas.length}</strong><span>areas across<br />the portfolio</span></div>
           </div>
-          <dl className="lab-fact-rows">
-            <div><dt>Founded</dt><dd>{profile.identity.founded} by Syed Talib Hussain Hashmi</dd></div>
-            <div><dt>Industry and activities</dt><dd>{profile.identity.industry}</dd></div>
-            <div><dt>Stakeholder relationships</dt><dd>{profile.identity.stakeholderRelationships}</dd></div>
-          </dl>
-          <div className="lab-two-column">
-            <div>
-              <h3>Values</h3>
-              <ul className="lab-ruled-list">
-                {profile.values.map((value) => <li key={value}>{value}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h3>Sustainability and growth</h3>
-              <ul className="lab-ruled-list">
-                <li>{profile.sustainabilityAndGrowth.foundationSummary}</li>
-                <li>{profile.sustainabilityAndGrowth.leadershipFoundationClaim}</li>
-                <li>{profile.sustainabilityAndGrowth.expansionObjective}</li>
-              </ul>
-            </div>
-          </div>
-          <div className="lab-subsection">
-            <h3>Corporate social responsibility</h3>
-            <ul className="lab-ruled-list">
-              {profile.socialResponsibility.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          </div>
+          <ul className="lab-therapeutic-list">
+            {profile.therapeuticAreas.map((area, index) => <li key={area}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{area}</li>)}
+          </ul>
         </section>
+      </div></section>
 
-        <section id="leadership" className="lab-section" aria-labelledby="leadership-heading">
-          <header className="lab-section-heading">
-            <p className="lab-kicker">Leadership</p>
-            <h2 id="leadership-heading">Executive leadership</h2>
-          </header>
-          <div className="lab-leader-heading">
-            <div><h3>{leader.name}</h3><p>{leader.role}</p></div>
-            <p className="lab-leader-tenure">{leader.tenureNote}</p>
-          </div>
-          <p className="lab-prose">{leader.biography}</p>
-          <dl className="lab-metrics">
-            <div><dt>Industry and entrepreneurship</dt><dd>{leader.totalExperience}</dd></div>
-            <div><dt>Manufacturing experience</dt><dd>{leader.manufacturingExperience}</dd></div>
-            <div><dt>Family enterprise responsibility</dt><dd>From age {leader.familyBusinessStartAge}</dd></div>
-            <div><dt>Team scale</dt><dd>{leader.teamSizeClaim}</dd></div>
-          </dl>
-          <div className="lab-subsection">
-            <h3>Executive expertise</h3>
-            <ul className="lab-chip-list">
-              {leader.expertise.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          </div>
-        </section>
+      <section id="certifications" className="lab-section lab-tinted" aria-labelledby="certifications-heading"><div className="lab-shell">
+        <div className="lab-section-heading"><p className="lab-kicker">Standards &amp; systems</p><h2 id="certifications-heading">Management-system certifications</h2><p>Quality, environmental management, and occupational health and safety.</p></div>
+        <div className="lab-certificates">{certifications.certificates.map((certificate) => <article key={certificate.certificateNumber}><ShieldCheck size={28} aria-hidden="true" /><strong>{certificate.standard}</strong><h3>{certificate.managementSystem}</h3><p>Certificate {certificate.certificateNumber}</p></article>)}</div>
+        <details className="lab-disclosure lab-certification-details"><summary><span>Certification scope &amp; registration details</span></summary><dl className="lab-fact-rows"><div><dt>Issuer</dt><dd>{certifications.issuer}</dd></div><div><dt>Certified company</dt><dd>{certifications.companyName}</dd></div><div><dt>Registration number</dt><dd>{certifications.registrationNumber}</dd></div><div><dt>Certified scope</dt><dd>{certifications.commonScope}</dd></div><div><dt>Certified address</dt><dd>{certifications.certifiedAddress}</dd></div><div><dt>Registration date</dt><dd>{certifications.commonDates.registrationDate}</dd></div><div><dt>Issue date</dt><dd>{certifications.commonDates.issueDate}</dd></div><div><dt>Certificate expiry</dt><dd>{certifications.commonDates.expiryDate}</dd></div><div><dt>Recertification due</dt><dd>{certifications.commonDates.recertificationDueDate}</dd></div></dl></details>
+      </div></section>
 
-        <section id="operations-reach" className="lab-section" aria-labelledby="operations-heading">
-          <header className="lab-section-heading">
-            <p className="lab-kicker">Operations &amp; reach</p>
-            <h2 id="operations-heading">Manufacturing, customers, and markets</h2>
-          </header>
-          <div className="lab-two-column">
-            <div>
-              <h3>Core capabilities</h3>
-              <ul className="lab-chip-list">
-                {profile.identity.capabilities.map((capability) => <li key={capability}>{capability}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h3>Customer segments</h3>
-              <ul className="lab-ruled-list">
-                {profile.customers.map((customer) => <li key={customer}>{customer}</li>)}
-              </ul>
-            </div>
-          </div>
-          <div className="lab-subsection">
-            <h3>Facilities and manufacturing standards</h3>
-            <ul className="lab-ruled-list">
-              {profile.facilitiesAndOperations.map((statement) => <li key={statement}>{statement}</li>)}
-            </ul>
-          </div>
-          <div className="lab-subsection">
-            <h3>Approved production sections</h3>
-            <dl className="lab-fact-rows">
-              {profile.productionSections.map((section) => (
-                <div key={section.name}>
-                  <dt>{section.name}</dt>
-                  <dd>{section.description}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className="lab-two-column lab-subsection">
-            <div>
-              <h3>Website-reported departments</h3>
-              <ul className="lab-chip-list">
-                {profile.websiteFunctions.map((dept) => <li key={dept}>{dept}</li>)}
-              </ul>
-              <div className="lab-table-wrapper" tabIndex={0} role="region" aria-label="Website-reported historical departmental table">
-                <table>
-                  <caption>
-                    Website-reported historical departmental table. Source does not provide a reporting date; not a current payroll census.
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Department</th>
-                      <th scope="col">Reported employees</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {profile.websiteDepartmentHeadcounts.rows.map((row) => (
-                      <tr key={row.department}>
-                        <td>{row.department}</td>
-                        <td>{row.employees}</td>
-                      </tr>
-                    ))}
-                    <tr>
-                      <th scope="row">Total</th>
-                      <td><strong>{profile.websiteDepartmentHeadcounts.total}</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="lab-note">
-                Quality Control is identified as an active testing and record-keeping department in source records without a reported headcount. Source does not provide a reporting date; not a current payroll census.
-              </p>
-            </div>
-            <div>
-              <h3>Governance structure</h3>
-              <ul className="lab-chip-list">
-                {profile.governance.map((role) => <li key={role}>{role}</li>)}
-              </ul>
-            </div>
-          </div>
-          <div className="lab-subsection">
-            <h3>Organizational roles</h3>
-            <ul className="lab-chip-list">
-              {profile.organizationalFunctions.map((role) => <li key={role}>{role}</li>)}
-            </ul>
-          </div>
-          <div className="lab-two-column lab-market-groups">
-            <div>
-              <h3>National coverage</h3>
-              <p>Distribution network coverage across Pakistan&apos;s administrative regions.</p>
-              <ul className="lab-chip-list">
-                {profile.geographicPresence.nationalCoverage.map((area) => <li key={area}>{area}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h3>International activity &amp; reach</h3>
-              <p>Website-reported international activity; market statuses differ.</p>
-              <ul className="lab-ruled-list">
-                {profile.internationalActivity.map((activity) => (
-                  <li key={activity.market}>
-                    <strong>{activity.market}:</strong> {activity.status}
-                  </li>
-                ))}
-              </ul>
-              <p className="lab-note">Website-reported international activity reflects differing stages of distribution, inquiries, agreements, and conditional supply; it does not represent confirmed shipments to all markets or foreign manufacturing facilities.</p>
-            </div>
-          </div>
-          <div className="lab-subsection">
-            <h3>Therapeutic areas</h3>
-            <ul className="lab-chip-list">
-              {profile.therapeuticAreas.map((area) => <li key={area}>{area}</li>)}
-            </ul>
-          </div>
-        </section>
+      <section id="leadership" className="lab-section" aria-labelledby="leadership-heading"><div className="lab-shell lab-leadership-grid">
+        <div className="lab-leader-panel"><p className="lab-kicker">Executive leadership</p><h2 id="leadership-heading">Experience behind<br />the enterprise.</h2><h3>{leader.name}</h3><p className="lab-leader-role">{leader.role}</p><p>{leader.biography}</p><dl className="lab-experience"><div><dt>Industry and entrepreneurship</dt><dd>{leader.totalExperience}</dd></div><div><dt>Manufacturing experience</dt><dd>{leader.manufacturingExperience}</dd></div><div><dt>Family enterprise responsibility</dt><dd>From age {leader.familyBusinessStartAge}</dd></div></dl></div>
+        <div><p className="lab-kicker">Leadership in practice</p><h3 className="lab-expertise-heading">Executive expertise</h3><ol className="lab-expertise">{leader.expertise.map((item, index) => <li key={item}><span className="lab-number">0{index + 1}</span>{item}</li>)}</ol><div className="lab-growth"><h3>Sustainability and growth</h3><p>{profile.sustainabilityAndGrowth.foundationSummary}</p><p>{profile.sustainabilityAndGrowth.expansionObjective}</p></div></div>
+      </div></section>
 
-        <section id="products" className="lab-section" aria-labelledby="products-heading">
-          <header className="lab-section-heading">
-            <p className="lab-kicker">Products</p>
-            <h2 id="products-heading">Registered and marketed products</h2>
-          </header>
-          <p className="lab-prose">Pack variants are grouped under their product name. Registration numbers are included where supplied.</p>
-          <div className="lab-disclosures">
-            {profile.productCategories.map((category) => (
-              <details key={category.name} className="lab-disclosure">
-                <summary>
-                  <span>{category.name}</span>
-                  <small>{category.products.length} {category.products.length === 1 ? "product" : "products"}</small>
-                </summary>
-                <div className="lab-product-list">
-                  {category.products.map((product) => (
-                    <article key={product.name}>
-                      <h3>{product.name}</h3>
-                      <p>{product.details}</p>
-                    </article>
-                  ))}
-                </div>
-              </details>
-            ))}
-          </div>
+      <section className="lab-section lab-community-section" aria-labelledby="community-heading"><div className="lab-shell lab-community-grid"><div className="lab-section-heading"><p className="lab-kicker">Beyond the factory</p><h2 id="community-heading">A responsibility<br />to the community.</h2><p>Medicines, emergency support, and rural healthcare initiatives.</p></div><div><h3>Corporate social responsibility</h3><ul className="lab-check-list">{profile.socialResponsibility.map((item) => <li key={item}><Check size={17} aria-hidden="true" />{item}</li>)}</ul></div></div></section>
 
-          <div className="lab-subsection lab-literature">
-            <h2>Product literature and stated clinical positioning</h2>
-            <div className="lab-warning" role="note" aria-label="Manufacturer literature disclosure">
-              <strong>Manufacturer literature disclosure</strong>
-              <p>{profile.productLiteratureQualifier}</p>
-            </div>
-            <div className="lab-disclosures">
-              {profile.productLiterature.map((literature) => (
-                <details key={literature.title} className="lab-disclosure">
-                  <summary>
-                    <span>{literature.title}</span>
-                    <small>{literature.genericOrSubtitle ?? "Product literature"}</small>
-                  </summary>
-                  <div className="lab-literature-body">
-                    {literature.slogan ? (
-                      <p className="lab-literature-slogan">
-                        <strong>Literature slogan:</strong> &ldquo;{literature.slogan}&rdquo;
-                      </p>
-                    ) : null}
-                    <ul className="lab-ruled-list">
-                      {literature.points.map((point) => <li key={point}>{point}</li>)}
-                    </ul>
-                    {literature.dosageTable ? (
-                      <div className="lab-table-wrapper" tabIndex={0} role="region" aria-label={`${literature.title} dosage and regimen table`}>
-                        <table>
-                          <caption className="sr-only">{literature.title} dosage and regimen table</caption>
-                          <thead><tr><th scope="col">Patient group</th><th scope="col">Stated regimen</th></tr></thead>
-                          <tbody>{literature.dosageTable.map((row) => <tr key={row.patientGroup}><td>{row.patientGroup}</td><td>{row.regimen}</td></tr>)}</tbody>
-                        </table>
-                      </div>
-                    ) : null}
-                    {literature.references?.length ? (
-                      <div className="lab-references"><h3>Printed literature references</h3><ol>{literature.references.map((reference) => <li key={reference}>{reference}</li>)}</ol></div>
-                    ) : null}
-                  </div>
-                </details>
-              ))}
-            </div>
+      <section id="contact" className="lab-contact" aria-labelledby="contact-heading"><div className="lab-shell">
+        <div className="lab-contact-grid"><div><p className="lab-kicker">Work with Goodman Laboratories</p><h2 id="contact-heading">Let’s discuss your<br />pharmaceutical requirements.</h2><p>Contact our team for product, manufacturing, and distribution enquiries.</p><a className="lab-action" href={`mailto:${contact.email}`}>Email our team <ArrowUpRight size={18} aria-hidden="true" /></a><a className="lab-contact-email" href={`mailto:${contact.email}`}>{contact.email}</a></div><div className="lab-contact-locations">
+          <div>
+            <h3>Head office</h3>
+            <address>{contact.headOffice}</address>
+            <a href="https://maps.app.goo.gl/ziGKsNTZPDgn5NL27" target="_blank" rel="noopener noreferrer" aria-label="View Laboratories office on Google Maps (opens in a new tab)">View on Google Maps <span aria-hidden="true">↗</span></a>
           </div>
-          <div className="lab-subsection">
-            <h3>Packaging and dispensing statements shown on product artwork</h3>
-            <ul className="lab-ruled-list">
-              {profile.packagingAndDispensing.map((statement) => <li key={statement}>{statement}</li>)}
-            </ul>
+          <div>
+            <h3>Factory</h3>
+            <address>{contact.factory}</address>
+            <a href="https://maps.app.goo.gl/JGmf7zXhDnuS7L3Y7" target="_blank" rel="noopener noreferrer" aria-label="View Laboratories factory on Google Maps (opens in a new tab)">View on Google Maps <span aria-hidden="true">↗</span></a>
+            <p>Manufacturing licence no.: <strong>{contact.manufacturingLicenceNumber}</strong></p>
+            <a href={`tel:${contact.factoryPhonePrimary}`}>{contact.factoryPhoneRange}</a>
+            <a href={`tel:${contact.factoryPhoneAlternate}`}>{contact.factoryPhoneAlternateDisplay}</a>
           </div>
-        </section>
-
-        <section id="certifications" className="lab-section" aria-labelledby="certifications-heading">
-          <header className="lab-section-heading">
-            <p className="lab-kicker">Certifications</p>
-            <h2 id="certifications-heading">Management-system certifications</h2>
-          </header>
-          <dl className="lab-fact-rows">
-            <div><dt>Issuer</dt><dd>{certifications.issuer}</dd></div>
-            <div><dt>Certified company</dt><dd>{certifications.companyName}</dd></div>
-            <div><dt>Registration number</dt><dd>{certifications.registrationNumber}</dd></div>
-            <div><dt>Certified scope</dt><dd>{certifications.commonScope}</dd></div>
-            <div><dt>Certified address</dt><dd>{certifications.certifiedAddress}</dd></div>
-            <div><dt>Registration date</dt><dd>{certifications.commonDates.registrationDate}</dd></div>
-            <div><dt>Issue date</dt><dd>{certifications.commonDates.issueDate}</dd></div>
-            <div><dt>Certificate expiry</dt><dd>{certifications.commonDates.expiryDate}</dd></div>
-            <div><dt>Recertification due</dt><dd>{certifications.commonDates.recertificationDueDate}</dd></div>
-          </dl>
-          <div className="lab-certificates">
-            {certifications.certificates.map((certificate) => (
-              <article key={certificate.certificateNumber}>
-                <strong>{certificate.standard}</strong>
-                <h3>{certificate.managementSystem}</h3>
-                <p>Certificate {certificate.certificateNumber}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="contact" className="lab-section" aria-labelledby="contact-heading">
-          <header className="lab-section-heading">
-            <p className="lab-kicker">Contact</p>
-            <h2 id="contact-heading">Contact and locations</h2>
-          </header>
-          <div className="lab-two-column">
-            <div><h3>Head office</h3><address>{contact.headOffice}</address></div>
-            <div><h3>Factory</h3><address>{contact.factory}</address><p>Manufacturing licence no. shown on product artwork: <strong>{contact.manufacturingLicenceNumber}</strong></p></div>
-          </div>
-          <dl className="lab-fact-rows lab-contact-rows">
-            <div><dt>Email</dt><dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd></div>
-            <div><dt>Official website</dt><dd><a href={contact.websiteUrl} target="_blank" rel="noopener noreferrer">{contact.website}<ArrowUpRight aria-hidden="true" /></a></dd></div>
-            <div><dt>Factory telephone range</dt><dd><a href={`tel:${contact.factoryPhonePrimary}`}>{contact.factoryPhoneRange}</a></dd></div>
-            <div><dt>Alternate factory telephone</dt><dd><a href={`tel:${contact.factoryPhoneAlternate}`}>{contact.factoryPhoneAlternateDisplay}</a></dd></div>
-          </dl>
-          <Link href="/companies" className="lab-all-companies-link">View all Goodman Group companies<ArrowUpRight aria-hidden="true" /></Link>
-        </section>
-      </div>
+          <a className="lab-text-link" href="#lab-top">Back to top ↑</a>
+        </div></div>
+        <p className="lab-contact-legal">{profile.identity.legalName}</p>
+      </div></section>
     </CompanyGroupFrame>
   );
 }

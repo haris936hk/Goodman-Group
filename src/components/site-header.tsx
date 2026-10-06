@@ -9,14 +9,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { goodmanGroup } from "@/data/goodman-group";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigation = [
   { label: "About the Group", href: "/#about" },
   { label: "Our Companies", href: "/companies" },
   { label: "Our Presence", href: "/#presence" },
-  { label: "Responsibility", href: "/#responsibility" },
-  { label: "News", href: "/#news" },
-  { label: "Careers", href: "/#connect" },
 ] as const;
 
 export function SiteHeader() {
@@ -89,6 +87,10 @@ export function SiteHeader() {
       }
     };
 
+    if (menuDialogRef.current) {
+      menuDialogRef.current.dataset.theme =
+        headerRef.current?.closest<HTMLElement>(".site-shell")?.dataset.theme === "light" ? "light" : "dark";
+    }
     document.body.style.overflow = "hidden";
     backgroundElements.forEach((element) => {
       previousInert.set(element, element.inert);
@@ -145,6 +147,7 @@ export function SiteHeader() {
       </nav>
 
       <span className="header-status">{goodmanGroup.message}</span>
+      <ThemeToggle />
 
       <button
         ref={menuButtonRef}

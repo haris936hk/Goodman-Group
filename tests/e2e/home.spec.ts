@@ -48,73 +48,6 @@ test.describe('home page', () => {
     await expect(page).toHaveTitle(/.+/);
   });
 
-  test('centers the group visual and removes only the left-side hero content', async ({
-    page,
-  }) => {
-    const hero = page.locator('[data-hero]');
-
-    await expect(hero.locator('.hero-copy')).toHaveCount(0);
-    await expect(hero.locator('.hero-scroll-cue')).toHaveCount(0);
-    await expect(hero.getByText('Health · Wellness · Progress')).toHaveCount(0);
-    await expect(hero.getByText('Distinct strengths.')).toHaveCount(0);
-    await expect(hero.getByText('Shared momentum.')).toHaveCount(0);
-    await expect(hero.getByText('Scroll to explore')).toHaveCount(0);
-    await expect(hero.locator('.hero-system')).toBeVisible();
-    await expect(hero.locator('[data-orbit-ring]')).toHaveCount(2);
-    await expect(hero.locator('.orbit-node')).toHaveCount(3);
-    await expect(hero.locator('.orbit-pip')).toHaveCount(3);
-    await expect(hero.locator('.group-core')).toBeVisible();
-    await expect(hero.locator('.system-caption')).toBeVisible();
-  });
-
-  test('keeps the Goodman core concentric with both orbit rings', async ({
-    page,
-  }) => {
-    for (const viewport of [
-      { width: 1280, height: 720 },
-      { width: 390, height: 844 },
-    ]) {
-      await page.setViewportSize(viewport);
-      await page.goto('/');
-
-      await expect
-        .poll(
-          () =>
-            page.locator('.group-core').evaluate((element) =>
-              getComputedStyle(element).opacity,
-            ),
-          { timeout: 5000 },
-        )
-        .toBe('1');
-
-      const centers = await page.evaluate(() => {
-        const centerOf = (selector: string) => {
-          const rect = document
-            .querySelector(selector)
-            ?.getBoundingClientRect();
-
-          return rect
-            ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
-            : null;
-        };
-
-        return {
-          outer: centerOf('.orbit-outer'),
-          inner: centerOf('.orbit-inner'),
-          core: centerOf('.group-core'),
-        };
-      });
-
-      expect(centers.outer).not.toBeNull();
-      expect(centers.inner).not.toBeNull();
-      expect(centers.core).not.toBeNull();
-
-      for (const center of [centers.inner, centers.core]) {
-        expect(Math.abs(center!.x - centers.outer!.x)).toBeLessThanOrEqual(1);
-        expect(Math.abs(center!.y - centers.outer!.y)).toBeLessThanOrEqual(1);
-      }
-    }
-  });
 
   test('has no automatically detectable accessibility violations', async ({
     page,
@@ -130,24 +63,24 @@ test.describe('home page', () => {
     await expect(page).toHaveURL(/#presence$/);
     await expect(
       page.getByRole('heading', {
-        name: 'Geographic presence and market status ledger.',
+        name: 'Our presence across regional and global markets.',
       }),
     ).toBeInViewport();
   });
 
-  test('matches the audited responsive grid states and stays within the viewport', async ({
+  test('matches the audited responsive company grid and stays within the viewport', async ({
     page,
   }) => {
     const states = [
-      { width: 320, companyColumns: 1, proofColumns: 1, proofLayoutColumns: 1 },
-      { width: 390, companyColumns: 1, proofColumns: 1, proofLayoutColumns: 1 },
-      { width: 641, companyColumns: 1, proofColumns: 1, proofLayoutColumns: 1 },
-      { width: 768, companyColumns: 2, proofColumns: 3, proofLayoutColumns: 1 },
-      { width: 1080, companyColumns: 2, proofColumns: 3, proofLayoutColumns: 1 },
-      { width: 1081, companyColumns: 2, proofColumns: 3, proofLayoutColumns: 1 },
-      { width: 1180, companyColumns: 2, proofColumns: 3, proofLayoutColumns: 1 },
-      { width: 1280, companyColumns: 3, proofColumns: 3, proofLayoutColumns: 2 },
-      { width: 1440, companyColumns: 3, proofColumns: 3, proofLayoutColumns: 2 },
+      { width: 320, companyColumns: 1 },
+      { width: 390, companyColumns: 1 },
+      { width: 641, companyColumns: 1 },
+      { width: 768, companyColumns: 2 },
+      { width: 1080, companyColumns: 2 },
+      { width: 1081, companyColumns: 2 },
+      { width: 1180, companyColumns: 2 },
+      { width: 1280, companyColumns: 3 },
+      { width: 1440, companyColumns: 3 },
     ];
 
     for (const state of states) {
@@ -155,12 +88,9 @@ test.describe('home page', () => {
       await page.goto('/');
 
       const layout = await page.evaluate(() => {
-        const gridColumns = (selector: string) =>
-          getComputedStyle(document.querySelector(selector) as Element)
-            .gridTemplateColumns.split(' ').length;
         const bounds = Array.from(
           document.querySelectorAll(
-            '.site-header, .hero-system, .company-grid, .proof-layout, .presence-ledger-grid, .audience-grid',
+            '.site-header, .hero-system, .company-grid, .presence-ledger-grid',
           ),
         ).map((element) => {
           const rect = element.getBoundingClientRect();
@@ -170,9 +100,9 @@ test.describe('home page', () => {
         const system = document.querySelector('.hero-system')?.getBoundingClientRect();
 
         return {
-          companyColumns: gridColumns('.company-grid'),
-          proofColumns: gridColumns('.proof-rules'),
-          proofLayoutColumns: gridColumns('.proof-layout'),
+          companyColumns: getComputedStyle(
+            document.querySelector('.company-grid') as Element,
+          ).gridTemplateColumns.split(' ').length,
           bounds,
           heroCenter: hero ? hero.left + hero.width / 2 : null,
           systemCenter: system ? system.left + system.width / 2 : null,
@@ -181,8 +111,6 @@ test.describe('home page', () => {
       });
 
       expect(layout.companyColumns).toBe(state.companyColumns);
-      expect(layout.proofColumns).toBe(state.proofColumns);
-      expect(layout.proofLayoutColumns).toBe(state.proofLayoutColumns);
       expect(
         layout.bounds.every(
           (bound) => bound.left >= -1 && bound.right <= layout.viewport + 1,
@@ -195,6 +123,65 @@ test.describe('home page', () => {
   });
 });
 
+test('Group theme persists across routes without changing bespoke company pages', async ({ page }) => {
+  const scriptWarnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.text().includes('Encountered a script tag while rendering React component')) {
+      scriptWarnings.push(message.text());
+    }
+  });
+  await page.goto('/');
+  const shell = page.locator('.site-shell');
+  await expect(shell).toHaveAttribute('data-theme', 'dark');
+  const toggle = page.getByRole('button', { name: 'Switch to light mode' });
+  await toggle.click();
+  await expect(shell).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#ffffff');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+  await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
+  expect(await shell.evaluate((element) => getComputedStyle(element).colorScheme)).toBe('light');
+  const lightColors = await shell.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, foreground: style.color };
+  });
+  expect(lightColors.background).not.toBe(lightColors.foreground);
+  await page.reload();
+  await expect(shell).toHaveAttribute('data-theme', 'light');
+  await page.getByRole('link', { name: 'Our Companies' }).first().click();
+  await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
+  await expect(page).toHaveTitle(/Our Companies/);
+  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#ffffff'))).toBe(true);
+  await expect(page.locator('.directory-panel-business').first()).toHaveCSS('color', 'rgb(23, 74, 135)');
+  await page.getByRole('link', { name: 'View Goodman Laboratories' }).last().click();
+  await expect(page.locator('.company-group-frame')).toBeVisible();
+  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#06111f'))).toBe(true);
+  await page.goBack();
+  await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
+  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#ffffff'))).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.goto('/not-a-page');
+  await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
+  for (const slug of ['goodman-laboratories', 'geron-pharma']) {
+    await page.goto(`/companies/${slug}`);
+    await expect(page.locator('.company-group-frame')).not.toHaveAttribute('data-theme');
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#06111f');
+    await expect(page.locator('.site-shell')).toHaveCount(0);
+  }
+  await page.goto('/');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: 'Switch to dark mode' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'dark');
+  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#06111f'))).toBe(true);
+  await page.getByRole('button', { name: 'Open navigation' }).click();
+  await expect(page.getByRole('dialog', { name: 'Site navigation' })).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('.mobile-nav')).toHaveCSS('overscroll-behavior', 'contain');
+  await page.keyboard.press('Escape');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect(scriptWarnings).toEqual([]);
+});
+
 test.describe('home page with reduced motion', () => {
   test('keeps its content available', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -204,7 +191,6 @@ test.describe('home page with reduced motion', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Goodman Group' })).toHaveCount(1);
     await expect(page.locator('[data-hero] .hero-system')).toBeVisible();
     await expect(page.locator('[data-hero] [data-orbit-ring]')).toHaveCount(2);
-    await expect(page.locator('[data-hero] .system-caption')).toBeVisible();
   });
 
   test('stops smooth scrolling when the preference changes at runtime', async ({
@@ -292,7 +278,7 @@ test.describe('home page on mobile', () => {
     page,
   }) => {
     const heading = page.getByRole('heading', {
-      name: 'Geographic presence and market status ledger.',
+      name: 'Our presence across regional and global markets.',
     });
     await heading.scrollIntoViewIfNeeded();
 
@@ -309,7 +295,7 @@ test.describe('home page on mobile', () => {
       presenceGrid.getByText('Wal Green Chemicals').first(),
     ).toBeVisible();
     await expect(
-      presenceGrid.getByText('Goodman Billing & Geron Pharma').first(),
+      presenceGrid.getByText('Goodman Billing').first(),
     ).toBeVisible();
 
     for (const label of [
@@ -349,19 +335,17 @@ test.describe('home page on mobile', () => {
     await expect(dialog).not.toBeVisible();
   });
 
-  test('keeps the dialog scrollable on short mobile viewports', async ({ page }) => {
+  test('shows the remaining destinations in short mobile navigation', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 360 });
     await page.reload();
     await page.locator('.menu-toggle').click();
 
     const navigation = page.getByRole('navigation', { name: 'Mobile navigation' });
-    const dimensions = await navigation.evaluate((element) => ({
-      clientHeight: element.clientHeight,
-      scrollHeight: element.scrollHeight,
-    }));
-    expect(dimensions.scrollHeight).toBeGreaterThan(dimensions.clientHeight);
-    await navigation.getByRole('link', { name: /Careers/ }).scrollIntoViewIfNeeded();
-    await expect(navigation.getByRole('link', { name: /Careers/ })).toBeVisible();
+    const links = navigation.getByRole('link');
+    await expect(links).toHaveCount(3);
+    await expect(links.nth(0)).toHaveAttribute('href', '/#about');
+    await expect(links.nth(1)).toHaveAttribute('href', '/companies');
+    await expect(links.nth(2)).toHaveAttribute('href', '/#presence');
   });
 });
 
@@ -377,7 +361,7 @@ test('keeps normal-link navigation available without JavaScript', async ({
 
   await expect(page.locator('.noscript-nav')).toBeVisible();
   await expect(page.locator('.menu-toggle')).toBeHidden();
-  await expect(page.locator('.noscript-nav a')).toHaveCount(6);
+  await expect(page.locator('.noscript-nav a')).toHaveCount(5);
   await context.close();
 });
 
@@ -436,4 +420,38 @@ test('provides functional audience routes and executive contact links', async ({
 
   const execPhone = page.getByRole('link', { name: '+92 336 777 0770' });
   await expect(execPhone).toHaveAttribute('href', 'tel:+923367770770');
+});
+
+test('country picker scrolls independently and contains wheel scrolling at its boundaries', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/lenis/);
+  await page.getByRole('combobox', { name: 'Country calling code' }).scrollIntoViewIfNeeded();
+  await page.getByRole('button', { name: 'Open country code selection', exact: true }).click();
+
+  const picker = page.locator('.enquiry-popover-country');
+  await expect(picker).toBeVisible();
+  const box = await picker.boundingBox();
+  if (!box) throw new Error('Country picker has no visible bounds');
+  // hover() scrolls its target into view, which would itself dismiss this overlay.
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  const pageScroll = await page.evaluate(() => window.scrollY);
+
+  await page.mouse.wheel(0, 400);
+  await expect.poll(() => picker.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+  await expect(picker).toBeVisible();
+  expect(await page.evaluate(() => window.scrollY)).toBe(pageScroll);
+
+  for (const edge of ['bottom', 'top'] as const) {
+    await picker.evaluate((element, boundary) => {
+      element.scrollTop = boundary === 'bottom' ? element.scrollHeight : 0;
+    }, edge);
+    await page.mouse.wheel(0, edge === 'bottom' ? 600 : -600);
+    await page.evaluate(() => new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    }));
+    await expect(picker).toBeVisible();
+    expect(await page.evaluate(() => window.scrollY)).toBe(pageScroll);
+  }
 });

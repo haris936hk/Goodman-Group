@@ -8,25 +8,6 @@ export type ProductCategory = {
   readonly products: readonly ProductEntry[];
 };
 
-export type LiteratureRecord = {
-  readonly title: string;
-  readonly slogan?: string;
-  readonly genericOrSubtitle?: string;
-  readonly points: readonly string[];
-  readonly dosageTable?: readonly {
-    readonly patientGroup: string;
-    readonly regimen: string;
-  }[];
-  readonly comparisonChart?: readonly {
-    readonly label: string;
-    readonly values: readonly string[];
-  }[];
-  readonly references?: readonly string[];
-};
-
-export type PackagingDispensingStatement = {
-  readonly points: readonly string[];
-};
 
 export type Certificate = {
   readonly standard: string;
@@ -61,24 +42,14 @@ export type GoodmanLaboratoriesProfile = {
     readonly name: string;
     readonly role: string;
     readonly biography: string;
-    readonly tenureNote: string;
     readonly expertise: readonly string[];
-    readonly teamSizeClaim: string;
+
     readonly manufacturingExperience: string;
     readonly totalExperience: string;
     readonly familyBusinessStartAge: number;
   };
   readonly productionSections: readonly ProductionSection[];
   readonly websiteFunctions: readonly string[];
-  readonly websiteDepartmentHeadcounts: {
-    readonly sourceLabel: string;
-    readonly sourceDate: null;
-    readonly rows: readonly {
-      readonly department: string;
-      readonly employees: number;
-    }[];
-    readonly total: number;
-  };
   readonly governance: readonly string[];
   readonly organizationalFunctions: readonly string[];
   readonly socialResponsibility: readonly string[];
@@ -91,14 +62,11 @@ export type GoodmanLaboratoriesProfile = {
   readonly internationalActivity: readonly InternationalActivityReport[];
   readonly sustainabilityAndGrowth: {
     readonly foundationSummary: string;
-    readonly leadershipFoundationClaim: string;
+
     readonly expansionObjective: string;
   };
   readonly therapeuticAreas: readonly string[];
   readonly productCategories: readonly ProductCategory[];
-  readonly productLiteratureQualifier: string;
-  readonly productLiterature: readonly LiteratureRecord[];
-  readonly packagingAndDispensing: readonly string[];
   readonly certifications: {
     readonly issuer: string;
     readonly companyName: string;
@@ -160,9 +128,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     name: "Syed Talib Hussain Hashmi",
     role: "Chief Executive Officer",
     biography:
-      "The consolidated leadership record describes him as a pharmaceutical entrepreneur and industry executive with more than 30 years of experience, including approximately 34 years in pharmaceutical manufacturing. He took responsibility for his family business at age 16. GOODMAN.pdf states that he managed more than 150 office and field team members.",
-    tenureNote:
-      "GOODMAN.pdf reports 2012; Profile Syed Talib Hussain Hashmi.pdf reports 2016; start year unresolved.",
+      "Syed Talib Hussain Hashmi is a pharmaceutical entrepreneur and industry executive with more than 30 years of industry experience, including approximately 34 years in pharmaceutical manufacturing. He took responsibility for his family business at age 16.",
     expertise: [
       "Pharmaceutical manufacturing and operations",
       "Administration, marketing, and sales",
@@ -172,7 +138,6 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
       "Distribution-network expansion",
       "Leadership and corporate management",
     ],
-    teamSizeClaim: "More than 150 office and field team members managed (GOODMAN.pdf)",
     manufacturingExperience: "Approximately 34 years in pharmaceutical manufacturing",
     totalExperience: "More than 30 years of industry and entrepreneurial experience",
     familyBusinessStartAge: 16,
@@ -205,16 +170,6 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     "Operations and Finance",
     "Quality Control (testing and record keeping)",
   ],
-  websiteDepartmentHeadcounts: {
-    sourceLabel: "Website-reported historical departmental table",
-    sourceDate: null,
-    rows: [
-      { department: "Production", employees: 90 },
-      { department: "Sales and Marketing", employees: 270 },
-      { department: "Operations and Finance", employees: 25 },
-    ],
-    total: 385,
-  },
   governance: [
     "Board of Directors",
     "Chief Executive Officer and primary shareholder",
@@ -293,7 +248,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
     {
       market: "Ghana",
       status:
-        "An exclusive distributorship agreement was signed for pharmaceutical products with a five-year term from signing; the first consignment was expected to reach Ghana in September 2024.",
+        "An exclusive distributorship agreement for pharmaceutical products was signed in Ghana in 2024 for a five-year term.",
     },
     {
       market: "Tajikistan",
@@ -309,8 +264,6 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
   sustainabilityAndGrowth: {
     foundationSummary:
       "The company presents its long operating history, experienced leadership, national reach, and international business expansion as the foundation of its sustainability.",
-    leadershipFoundationClaim:
-      "Its sustainability page describes the leadership foundation as approximately 35 years old.",
     expansionObjective:
       "Continued geographic expansion reflects its stated intention to grow into a larger global pharmaceutical business.",
   },
@@ -354,7 +307,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Gehlin",
           details:
-            "pregabalin. The registered list contains 75 mg and 100 mg capsules in 14-capsule packs under registrations 108143 and 108144. The separate visual catalogue additionally markets 150 mg capsules in a 14-capsule pack but supplies no registration number for that strength.",
+            "pregabalin; 75 mg and 100 mg capsules; 14-capsule packs; registrations 108143 and 108144.",
         },
         {
           name: "Modafa",
@@ -394,12 +347,12 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Sulpir",
           details:
-            "levosulpiride; 25 mg and 50 mg tablets; 20-tablet packs; registrations 66551 and 66552 in the registered-product list.",
+            "levosulpiride; 25 mg and 50 mg tablets; 20-tablet packs; registrations 66551 and 66552.",
         },
         {
           name: "Eprobe",
           details:
-            "levosulpiride; 25 mg and 50 mg tablets; 20-tablet packs in the visual catalogue. Eprobe packaging displays registration 66552 for the 50 mg presentation. Because the source does not establish that Eprobe is merely a renamed Sulpir product, the brands are retained separately.",
+            "levosulpiride; 25 mg and 50 mg tablets; 20-tablet packs; registration 66552.",
         },
         {
           name: "Tiaquin",
@@ -493,7 +446,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Sifrop",
           details:
-            "ciprofloxacin tablets; 250 mg and 500 mg; 10-tablet packs. Presented in the visual catalogue as an additional ciprofloxacin brand.",
+            "ciprofloxacin tablets; 250 mg and 500 mg; 10-tablet packs.",
         },
         {
           name: "Levogood",
@@ -503,7 +456,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Gemirex",
           details:
-            "gemifloxacin 320 mg tablets; registration 68572. The registered-product list states a 7-tablet pack, while the separate visual catalogue states a 10-tablet pack; the supplied PDFs do not resolve which pack is current.",
+            "gemifloxacin 320 mg tablets; 7-tablet pack; registration 68572.",
         },
         {
           name: "Klargo",
@@ -528,7 +481,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Goodcef",
           details:
-            "cephradine; 125 mg and 250 mg dry suspensions in 60 ml bottles under registrations 46121 and 46122. For capsules, the registered-product list records 250 mg/6 capsules and 500 mg/12 capsules under registrations 46106 and 46107; the separate visual catalogue shows both capsule strengths as 10-capsule packs. The supplied PDFs do not establish which capsule pack sizes are current.",
+            "cephradine; 250 mg/6 capsules and 500 mg/12 capsules; 125 mg and 250 mg dry suspensions in 60 ml bottles; registrations 46106, 46107, 46121, and 46122.",
         },
         {
           name: "Rafix",
@@ -598,7 +551,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Hamzome",
           details:
-            "omeprazole; 20 mg and 40 mg capsules; 14-capsule packs in the visual catalogue. No Hamzome registration number is supplied.",
+            "omeprazole; 20 mg and 40 mg capsules; 14-capsule packs.",
         },
         {
           name: "Omigood",
@@ -633,7 +586,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Itopri",
           details:
-            "itopride hydrochloride; registration 65268. The registered-product list states 50 mg tablets in a 10-tablet pack, while the visual catalogue states 150 mg tablets in a 10-tablet pack. The supplied PDFs do not resolve the strength conflict.",
+            "itopride hydrochloride 50 mg tablets; 10-tablet pack; registration 65268.",
         },
         {
           name: "Domset",
@@ -653,7 +606,7 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         {
           name: "Goodgesic Plus",
           details:
-            "paracetamol 325 mg with tramadol HCl 37.5 mg tablets; registration 107101. The registered-product list states a 10-tablet pack; the visual catalogue states a 20-tablet pack. The supplied PDFs do not establish which pack is current.",
+            "paracetamol 325 mg with tramadol HCl 37.5 mg tablets; 10-tablet pack; registration 107101.",
         },
         {
           name: "Sang SR",
@@ -765,14 +718,9 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
             "mecobalamin 0.5 mg tablets; 20-tablet pack; registration 56813.",
         },
         {
-          name: "Malgro tablets",
+          name: "Malgro",
           details:
             "iron hydroxide polymaltose complex with folic acid; 30-tablet pack; registration 59409.",
-        },
-        {
-          name: "Malgro catalogue anomaly",
-          details:
-            "one visual catalogue page labels a 200 mg, 3 x 10 presentation as “Suspension.” This conflicts with the registered-product list and dedicated Malgro literature, which identify Malgro as chewable tablets. The suspension label is retained only as a documented source error and is not treated as a verified product.",
         },
         {
           name: "Osak",
@@ -824,155 +772,6 @@ export const goodmanLaboratoriesProfile: GoodmanLaboratoriesProfile = {
         },
       ],
     },
-  ],
-  productLiteratureQualifier:
-    "The following points reproduce the substantive claims and usage information shown in the company’s product literature. They are manufacturer-supplied promotional statements and do not replace approved prescribing information.",
-  productLiterature: [
-    {
-      title: "Alfagood",
-      genericOrSubtitle: "alfacalcidol",
-      points: [
-        "Presented for orthopaedic use in different forms of osteoporosis, alone or in combination therapy.",
-        "Presented for nephrology use to help preserve bone mass during pre-dialysis chronic renal failure and to support oral feedback regulation of parathyroid hormone in hyperparathyroidism.",
-        "Presented for gynaecological use after short-term hormone-replacement therapy to help maintain gains in bone mass.",
-        "The literature also cites studied applications in neurology and follicular small-cleaved-cell lymphoma.",
-        "Patient categories listed: hypoparathyroidism, secondary hyperparathyroidism, renal bone disease, pseudo-deficiency rickets, hypophosphataemic vitamin-D-resistant rickets and osteomalacia, and nutritional and malabsorptive rickets and osteomalacia.",
-        "Product benefits claimed: reduced osteoporosis-related back pain, increased calcium absorption, increased bone formation, suppressed bone resorption, suitability for long-term use, once-daily dosage convenience, cost effectiveness, and protective aluminium-aluminium packaging.",
-      ],
-      references: [
-        "Nephrology Dialysis Transplantation (2004; 19:470–476)",
-        "Clinical Nephrology (2006 Jun; 65(6):415–418)",
-        "Maturitas (2003 Jun 30; 45(2):119–127)",
-        "Journal of Neuro-Oncology (2001 Jan; 51(1):57–66)",
-        "British Journal of Cancer (1991 Mar; 63(3):463–465)",
-      ],
-    },
-    {
-      title: "Comibal",
-      genericOrSubtitle: "mecobalamin",
-      points: [
-        "Promoted for nerve regeneration and improvement in lumbago, sciatica, lower-back pain, neck pain, shoulder pain, lumbar intervertebral herniation, lumbar spinal-canal stenosis, spondylosis, and spondylolisthesis.",
-        "Presented for use in neuropathy affecting diabetic and non-diabetic patients with chronic renal failure.",
-        "The literature reports overall clinical improvement of 85.5% across the listed lumbar-spondylitis conditions.",
-        "A symptom chart compares values for numbness (75% and 45%), pain (73% and 36%), hypoaesthesia (55% and 25%), oral dryness (53% and 19%), and dysuria (63% and 20%). The artwork does not clearly identify the two compared groups, so the percentages are reproduced without adding an interpretation.",
-        "The literature cites a 1,500 mcg daily regimen studied for 4–24 weeks and reports improvements in sperm concentration of 38%, total sperm count of 54%, and sperm motility of 50%.",
-      ],
-    },
-    {
-      title: "Desgood",
-      slogan: "Vision for Better Care",
-      genericOrSubtitle: "desloratadine",
-      points: [
-        "Promoted for seasonal allergic rhinitis and associated asthma symptoms.",
-        "The literature states reductions in total asthma-symptom scores and inhaled beta-2 agonist use among seasonal-allergic-rhinitis patients with asthma.",
-        "Indications listed: allergic rhinitis, idiopathic urticaria, nasal congestion, and other allergic conditions.",
-        "Positioned as a low-sedation allergy treatment.",
-        "The comparison chart reports sedation incidence of 3% for desloratadine, 14% for cetirizine, and 18% for levocetirizine.",
-        "Stated dosage: Adults and children over 12 years, one Desgood tablet once daily.",
-      ],
-      references: [
-        "Journal of Allergy and Clinical Immunology (2001; 107(4):751–762)",
-      ],
-    },
-    {
-      title: "Malgro",
-      genericOrSubtitle: "iron hydroxide polymaltose complex with folic acid",
-      points: [
-        "The literature describes iron-deficiency anaemia as a global problem and states that approximately 600 million people in Southeast Asia are affected, predominantly adolescent girls, women of reproductive age, and young children.",
-        "Presented for management of iron-deficiency anaemia and prevention of folic-acid deficiency during pregnancy.",
-        "Product claims: logical iron-polymaltose/folic-acid combination; improved haemoglobin and iron stores; absence of free radicals; no food interaction; chocolate flavour; gastrointestinal tolerability; efficacy, safety, economy, and dosage convenience.",
-      ],
-      dosageTable: [
-        {
-          patientGroup: "Pregnant women",
-          regimen:
-            "One to three tablets daily for manifested iron deficiency, one tablet daily for latent iron deficiency, and one-half to one tablet daily for prophylaxis.",
-        },
-        {
-          patientGroup: "Adult and nursing women",
-          regimen:
-            "One to three tablets daily for manifested deficiency, one tablet daily for latent deficiency, and one-half to one tablet daily for prophylaxis.",
-        },
-        {
-          patientGroup: "Women of childbearing age",
-          regimen: "One tablet daily as listed in the table.",
-        },
-      ],
-    },
-    {
-      title: "Omigood",
-      slogan: "Provides Good Care & Longer Acid Suppression",
-      genericOrSubtitle: "omeprazole",
-      points: [
-        "Positioned as maintenance therapy for severe gastro-oesophageal reflux disease.",
-        "Indications listed: duodenal ulcer, gastric ulcer, reflux oesophagitis, oesophageal ulcer, resistant ulcer, and prevention of acid-aspiration syndrome.",
-        "Product claims: faster peptic-ulcer healing, quicker symptom relief, once-daily dosing, improved compliance, cost effectiveness, and aluminium-aluminium packaging.",
-      ],
-    },
-    {
-      title: "Consal",
-      genericOrSubtitle: "fluconazole",
-      points: [
-        "Promoted for acute and recurrent vaginal candidiasis and for skin fungal infections.",
-        "The literature describes a recurrent-vulvovaginal-candidiasis regimen of 150 mg every other day for three doses, followed by 150–200 mg weekly for six months.",
-        "Claims include clinical improvement, microbiological cure, oral-dose convenience, broad-spectrum antifungal activity, tolerability, liver safety, and low overall antifungal toxicity.",
-        "The literature’s comparison graphic reports 81% clinical improvement and 87% microbiological cure.",
-        "The stated single-dose regimen for vaginal candidiasis is 150 mg orally.",
-      ],
-    },
-    {
-      title: "Esogood",
-      genericOrSubtitle: "esomeprazole",
-      points: [
-        "Positioned as a potent acid-inhibitory proton-pump inhibitor.",
-        "Claims include improved healing, delayed relapse, once-daily dosing, pregnancy category B positioning, safety, and a simple dosage schedule.",
-        "The Helicobacter pylori triple-therapy regimen shown is Esogood 40 mg once daily, amoxicillin 1,000 mg twice daily, and clarithromycin 500 mg twice daily for ten days.",
-      ],
-      dosageTable: [
-        {
-          patientGroup: "Symptomatic gastro-oesophageal reflux disease",
-          regimen: "40 mg once daily for four weeks.",
-        },
-        {
-          patientGroup:
-            "Gastro-oesophageal reflux disease and healing of erosive oesophagitis",
-          regimen: "40 mg once daily for four to eight weeks.",
-        },
-        {
-          patientGroup: "Gastric ulcer",
-          regimen: "40 mg once daily for four weeks.",
-        },
-        {
-          patientGroup: "Peptic ulcer",
-          regimen: "40 mg once daily for four to eight weeks.",
-        },
-        {
-          patientGroup: "Reduction of NSAID-associated gastric-ulcer risk",
-          regimen: "40 mg once daily for four weeks.",
-        },
-      ],
-    },
-    {
-      title: "Tizigood",
-      genericOrSubtitle: "tizanidine",
-      points: [
-        "Promoted for muscle spasm associated with lower-back pain, neck pain, leg cramps, sprains, strains, and muscle stiffness.",
-        "Neurological uses listed: multiple sclerosis, stroke, cerebrovascular accident, cerebral palsy, spinal-cord injury, brain injury, and chronic myelopathy.",
-        "Presented as a recommended treatment for lower-back pain and neurological spasticity.",
-      ],
-      references: [
-        "Gelber et al., Stroke (2001 Aug; 32(8):1841–1846)",
-        "Zhurnal Nevrologii i Psikhiatrii imeni S.S. Korsakova (1999; 99(10):30–33)",
-        "Meythaler et al., Archives of Physical Medicine and Rehabilitation (2001 Sep; 82(9):1155–1163)",
-      ],
-    },
-  ],
-  packagingAndDispensing: [
-    "Rafix oral suspensions are shown as powder for oral suspension with strawberry flavour.",
-    "Product packs consistently instruct storage away from excessive heat, light, and moisture and out of children’s reach where readable.",
-    "Prescription-only products are marked for sale on the prescription of a registered medical practitioner.",
-    "Goodman Laboratories manufacturing licence number shown on multiple packs: 000613.",
-    "Reborn Pharmaceuticals branding appears on selected Rafix, Isolit, and Eprobe artwork alongside Goodman Laboratories manufacturing attribution.",
   ],
   certifications: {
     issuer: "American International Standards LLC",

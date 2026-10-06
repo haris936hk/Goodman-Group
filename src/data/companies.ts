@@ -33,13 +33,13 @@ export const companies = [
     relationship: null,
     business: "Pharmaceutical manufacturing",
     summary:
-      "A Pakistan-based pharmaceutical manufacturer and national distributor serving government hospitals, private hospitals, retailers, and national distributors, with source-cited international activity across Afghanistan, Cambodia, Ghana, Tajikistan, and Yemen at different stages.",
+      "A Pakistan-based pharmaceutical manufacturer and national distributor serving government hospitals, private hospitals, retailers, and national distributors.",
     logo: {
       src: "/assets/logos/GoodmanLabLogo.png",
       width: 575,
       height: 279,
     },
-    accent: "#46b7e8",
+    accent: "#b4232c",
     founded: "2008",
     locations: [
       "Head office: Flat No. 4, Block No. 26, Street No. 100, FGEHF Apartments, Sector G-11, Islamabad, Pakistan",
@@ -49,8 +49,7 @@ export const companies = [
       {
         name: "Syed Talib Hussain Hashmi",
         role: "Chief Executive Officer",
-        detail:
-          "GOODMAN.pdf reports 2012; Profile Syed Talib Hussain Hashmi.pdf reports 2016; start year unresolved.",
+        detail: "Founder of Goodman Laboratories.",
       },
     ],
     capabilities: [
@@ -81,7 +80,7 @@ export const companies = [
       width: 684,
       height: 357,
     },
-    accent: "#58c6f0",
+    accent: "#8b5cf6",
     founded: null,
     locations: [],
     leadership: [
@@ -107,7 +106,7 @@ export const companies = [
       width: 2450,
       height: 1961,
     },
-    accent: "#4dc0e8",
+    accent: "#174a87",
     founded: "July 2024",
     locations: ["Dubai, United Arab Emirates", "Islamabad, Pakistan"],
     leadership: [
@@ -120,7 +119,7 @@ export const companies = [
         name: "Syed Talib Hussain Hashmi",
         role: "Founder and Director",
         detail:
-          "Founder and board director effective July 2024; alternate personal-profile CEO designation unconfirmed.",
+          "Founder and board director effective July 2024.",
       },
       {
         name: "Taj Muhammad",
@@ -131,7 +130,7 @@ export const companies = [
         name: "Syed Ahmed Ali",
         role: "Founder and Director",
         detail:
-          "Founder and board director effective July 2024 (source board listing variation: Ahmed Ali).",
+          "Founder and board director effective July 2024.",
       },
     ],
     capabilities: [
@@ -159,7 +158,7 @@ export const companies = [
       width: 528,
       height: 259,
     },
-    accent: "#5fbf92",
+    accent: "#236c4b",
     founded: null,
     locations: ["Pakistan"],
     leadership: [
@@ -187,7 +186,7 @@ export const companies = [
     summary:
       "A medical billing and revenue-cycle management company serving healthcare providers, physicians, clinics, and multi-provider practices across the United States.",
     logo: null,
-    accent: "#22d3ee",
+    accent: "#174a87",
     founded: null,
     locations: [
       "15650 Grosvenor Lane, Macomb, Michigan 48044, United States",

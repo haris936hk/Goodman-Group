@@ -17,9 +17,12 @@ describe("CompaniesPage", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Distinct companies. One clear view.",
+        name: "Our Companies",
       }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Browse every company in the Goodman Group portfolio/),
+    ).not.toBeInTheDocument();
 
     for (const company of companies) {
       expect(
@@ -31,6 +34,25 @@ describe("CompaniesPage", () => {
       });
       expect(links).toHaveLength(1);
       expect(links[0]).toHaveAttribute("href", `/companies/${company.slug}`);
+    }
+    const equipmentCard = screen
+      .getByRole("heading", {
+        level: 3,
+        name: "Goodman Medical Equipment Trading",
+      })
+      .closest("li");
+
+    expect(equipmentCard).toHaveTextContent(
+      "Locations: Dubai, United Arab Emirates, Islamabad, Pakistan",
+    );
+    expect(equipmentCard).not.toHaveTextContent("Founders & Directors");
+    for (const founder of [
+      "Malik Munir Awan",
+      "Syed Talib Hussain Hashmi",
+      "Taj Muhammad",
+      "Syed Ahmed Ali",
+    ]) {
+      expect(equipmentCard).not.toHaveTextContent(founder);
     }
   });
 

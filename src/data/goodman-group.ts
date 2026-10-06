@@ -4,15 +4,12 @@ export interface GroupLeadership {
   readonly familyBusinessEntry: string;
   readonly moreThan30Years: string;
   readonly manufacturingExperience: string;
-  readonly moreThan360Managed: string;
 }
 
 export interface ExecutiveContacts {
   readonly leaderName: string;
   readonly phones: readonly string[];
   readonly email: string;
-  readonly note: string;
-  readonly provenance: string;
 }
 
 export interface GoodmanGroupFacts {
@@ -85,15 +82,10 @@ export const goodmanGroup: GoodmanGroupFacts = {
       "More than 30 years of administrative, marketing, and pharmaceutical-sector experience",
     manufacturingExperience:
       "34 years of pharmaceutical-manufacturing experience",
-    moreThan360Managed:
-      "The legacy Group website states that he managed more than 360 office and field team members (historical claim; date not supplied, not a current census)",
   },
   executiveContacts: {
     leaderName: "Syed Talib Hussain Hashmi",
     phones: ["+92 336 777 0770", "+92 311 154 8859"],
     email: "director.goodman786@gmail.com",
-    note: "Executive direct contacts from consolidated leadership profile; not a Group switchboard number.",
-    provenance:
-      "Verified Information/Goodman_Group_Consolidated_Company_Information.md:1083-1088",
   },
 } as const;

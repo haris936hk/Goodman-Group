@@ -213,56 +213,107 @@
   margin: 0;
 }
 
-.geron-circular-nodes-grid {
+.geron-facts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.geron-node-card {
-  background: var(--geron-surface);
-  border: 1px solid var(--geron-rule);
+.geron-page .geron-fact-card {
+  min-height: 18rem;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  border-color: var(--geron-rule);
   border-radius: 1.5rem;
-  padding: 2.25rem 2rem;
+  background: linear-gradient(
+    150deg,
+    rgba(38, 25, 66, 0.92),
+    rgba(17, 12, 31, 0.94)
+  );
+}
+
+.geron-page .geron-fact-card > * {
   position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  z-index: 1;
 }
 
-.geron-node-card:hover {
-  border-color: var(--geron-purple);
-  transform: translateY(-2px);
-}
-
-.geron-node-badge {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
+.geron-fact-label {
+  color: var(--geron-purple-light);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--geron-purple-light);
-  margin-bottom: 0.75rem;
 }
 
-.geron-node-card h3 {
-  font-size: 1.35rem;
-  font-weight: 700;
+.geron-fact-heading {
+  max-width: 22ch;
+  margin: 0;
   color: var(--geron-heading);
-  margin: 0 0 0.5rem;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
-.geron-node-role {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--geron-purple-light);
-  margin-bottom: 0.85rem;
-}
-
-.geron-node-card p {
+.geron-fact-detail {
+  margin: 0.65rem 0 0;
   color: var(--geron-body);
   font-size: 0.95rem;
   line-height: 1.6;
-  margin: 0;
+}
+
+
+@media (max-width: 960px) {
+  .geron-hero-main {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .geron-circular-stage {
+    max-width: 18rem;
+  }
+
+  .geron-facts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .geron-hero {
+    padding: 2.5rem 1rem 3rem;
+  }
+  .geron-network-section {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+
+  .geron-facts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .geron-page .geron-fact-card {
+    min-height: 12rem;
+    padding: 1.25rem;
+  }
+  .geron-badge-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geron-orbit-ring {
+    animation: none !important;
+  }
+
+  .geron-page .geron-fact-card,
+  .geron-page .geron-fact-card::after {
+    transition: none;
+  }
 }
 
 /* Accessible focus & reduced motion */
@@ -281,45 +332,3 @@
   }
 }
 
-@media (max-width: 960px) {
-  .geron-hero-main {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  .geron-circular-stage {
-    max-width: 18rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .geron-hero {
-    padding: 2.5rem 1rem 3rem;
-  }
-  .geron-network-section {
-    padding: 2.5rem 1rem 3.5rem;
-  }
-
-  .geron-circular-nodes-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .geron-node-card {
-    padding: 1.75rem 1rem;
-  }
-  .geron-badge-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .geron-orbit-ring {
-    animation: none !important;
-  }
-
-  .geron-node-card:hover {
-    transform: none !important;
-  }
-}

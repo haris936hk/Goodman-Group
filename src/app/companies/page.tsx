@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
 import { ArrowLeft, ArrowUpRight, Network } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { MouseGlowCard } from "@/components/mouse-glow-card";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { companies } from "@/data/companies";
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function CompaniesPage() {
   return (
-    <div className="site-shell inner-page" id="top">
+    <div className="site-shell inner-page" id="top" suppressHydrationWarning>
       <OrganizationJsonLd />
       <a className="skip-link" href="#main-content">
         Skip to main content
@@ -35,13 +35,7 @@ export default function CompaniesPage() {
             <p className="eyebrow">
               <Network aria-hidden="true" /> Goodman Group portfolio
             </p>
-            <h1>Distinct companies. One clear view.</h1>
-            <p>
-              Browse every company in the Goodman Group portfolio. The parent
-              Group presents distinct companies with profile-specific evidence
-              and inquiry routes, without implying they share one operating
-              status.
-            </p>
+            <h1>Our Companies</h1>
           </div>
         </section>
 
@@ -55,10 +49,11 @@ export default function CompaniesPage() {
 
           <ul className="company-directory-list">
             {companies.map((company, index) => (
-              <li
+              <MouseGlowCard
+                as="li"
                 key={company.slug}
+                accent={company.accent}
                 className="directory-company-panel glass-panel"
-                style={{ "--company-accent": company.accent } as CSSProperties}
               >
                 <div className="directory-panel-brand">
                   <span className="directory-panel-index">0{index + 1}</span>
@@ -98,12 +93,6 @@ export default function CompaniesPage() {
                       <strong>Locations:</strong> {company.locations.join(", ")}
                     </p>
                   ) : null}
-                  {company.slug === "goodman-medical-equipment" && company.leadership.length > 0 ? (
-                    <p className="directory-panel-locations">
-                      <strong>Founders &amp; Directors:</strong>{" "}
-                      {company.leadership.map((l) => l.name).join(", ")}
-                    </p>
-                  ) : null}
                 </div>
 
                 <div className="directory-panel-action">
@@ -116,7 +105,7 @@ export default function CompaniesPage() {
                     <ArrowUpRight aria-hidden="true" />
                   </Link>
                 </div>
-              </li>
+              </MouseGlowCard>
             ))}
           </ul>
         </section>

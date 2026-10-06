@@ -10,7 +10,6 @@ export type MedicalMessaging = {
 
 export type BoardMember = {
   readonly name: string;
-  readonly sourceName?: string;
 };
 
 export type MedicalContact = {
@@ -21,9 +20,6 @@ export type MedicalContact = {
 
 export type GoodmanMedicalEquipmentProfile = {
   readonly officialLegalName: string;
-  readonly websiteHeadline: string;
-  readonly alternatePdfLabel: string;
-  readonly personalProfileLabel: string;
   readonly established: string;
   readonly base: string;
   readonly pakistanOffice: string;
@@ -34,7 +30,6 @@ export type GoodmanMedicalEquipmentProfile = {
   readonly values: readonly string[];
   readonly messaging: readonly MedicalMessaging[];
   readonly products: readonly MedicalProduct[];
-  readonly servicePropositions: readonly string[];
   readonly strengths: readonly string[];
   readonly customerPromise: readonly string[];
   readonly customers: readonly string[];
@@ -44,15 +39,11 @@ export type GoodmanMedicalEquipmentProfile = {
   readonly supplyChain: readonly string[];
   readonly governanceFunctions: readonly string[];
   readonly organizationRoles: readonly string[];
-  readonly leadershipSourceNote: string;
   readonly contacts: readonly MedicalContact[];
 };
 
 export const goodmanMedicalEquipmentProfile: GoodmanMedicalEquipmentProfile = {
   officialLegalName: "Goodman Medical Equipment Trading LLC",
-  websiteHeadline: "Goodman Medical Equipment LLC",
-  alternatePdfLabel: "Goodman Medical & Surgical Equipment (Pvt.) Ltd.",
-  personalProfileLabel: "Goodman Medical Equipment Trading (Pvt.) Ltd.",
   established: "July 2024",
   base: "Dubai, United Arab Emirates",
   pakistanOffice: "Islamabad, Pakistan",
@@ -66,10 +57,7 @@ export const goodmanMedicalEquipmentProfile: GoodmanMedicalEquipmentProfile = {
     { name: "Malik Munir Awan" },
     { name: "Syed Talib Hussain Hashmi" },
     { name: "Taj Muhammad" },
-    {
-      name: "Ahmed Ali",
-      sourceName: "Founders section names Syed Ahmed Ali",
-    },
+    { name: "Ahmed Ali" },
   ],
   mission:
     "To provide clients with the highest-quality products and improve patient care across the globe.",
@@ -115,20 +103,8 @@ export const goodmanMedicalEquipmentProfile: GoodmanMedicalEquipmentProfile = {
         "A broad range of advanced medical equipment and medical devices intended to support modern healthcare requirements and improve patient outcomes.",
     },
   ],
-  servicePropositions: [
-    "Premium quality",
-    "International standards",
-    "Competitive prices",
-    "After-sales support",
-    "Quality-assured products",
-    "Reliable partnership",
-    "Innovative solutions",
-    "Nationwide supply in Pakistan",
-    "International supply capability",
-  ],
   strengths: [
     "Experienced professional team with specialized industry knowledge and commitment.",
-    "Brochure-stated five years of industry experience.",
     "Understanding of healthcare-provider requirements.",
     "Product compliance with international quality standards and regulatory requirements.",
     "Timely delivery and dependable service.",
@@ -192,8 +168,6 @@ export const goodmanMedicalEquipmentProfile: GoodmanMedicalEquipmentProfile = {
     "Sales Team",
     "Export Sales Team",
   ],
-  leadershipSourceNote:
-    "The official website identifies Syed Talib Hussain Hashmi as a founder and board director, supporting the director designation in GOODMAN.pdf. Profile Syed Talib Hussain Hashmi.pdf separately describes him as Chief Executive Officer of Goodman Medical Equipment Trading (Pvt.) Ltd. from 2024; that title may refer to the Pakistan operation or an earlier internal designation, but the supplied sources do not resolve it.",
   contacts: [
     {
       label: "Office",
