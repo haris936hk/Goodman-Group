@@ -1,9 +1,18 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import GoodmanLaboratoriesPage from "./page";
 
 describe("GoodmanLaboratoriesPage", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.stubGlobal("matchMedia", vi.fn(() => ({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })));
+  });
+
 
   it("keeps dense product content collapsed until its named summary is activated", () => {
     render(<GoodmanLaboratoriesPage />);

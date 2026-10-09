@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -20,11 +20,22 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf8f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#111b16" },
+  ],
+};
+
 export default function WalGreenChemicalsPage() {
   const leader = profile.leadership;
 
   return (
-    <CompanyGroupFrame company={company} className="wal-green-page">
+    <CompanyGroupFrame
+      company={company}
+      className="wal-green-page"
+    >
       <OrganizationJsonLd company={company} />
       <header className="wg-hero">
         <div className="wg-hero-inner">

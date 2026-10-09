@@ -1,9 +1,16 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import WalGreenChemicalsPage, { metadata } from "./page";
 
 describe("WalGreenChemicalsPage", () => {
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", vi.fn(() => ({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })));
+  });
   it("exports valid canonical metadata", () => {
     expect(metadata.title).toBe("Wal Green Chemicals");
     expect(metadata.description).toContain("Wal Green Chemicals (Pvt.) Ltd.");

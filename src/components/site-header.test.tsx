@@ -4,25 +4,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SiteHeader } from './site-header';
 
-const motionPreference = vi.hoisted(() => ({ reduced: false }));
 const navigationState = vi.hoisted(() => ({ pathname: '/' }));
 
 vi.mock('next/navigation', () => ({
   usePathname: () => navigationState.pathname,
 }));
 
-vi.mock('motion/react', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('motion/react')>();
-
-  return {
-    ...actual,
-    useReducedMotion: () => motionPreference.reduced,
-  };
-});
 
 afterEach(() => {
   document.body.style.overflow = '';
-  motionPreference.reduced = false;
+  delete document.documentElement.dataset.theme;
+  delete document.documentElement.dataset.themeExplicit;
+  Reflect.deleteProperty(window, 'matchMedia');
   navigationState.pathname = '/';
   vi.restoreAllMocks();
 });
@@ -115,9 +108,8 @@ describe('SiteHeader', () => {
     });
   });
 
-  it('opens without staged movement when reduced motion is requested', async () => {
+  it('opens and displays the mobile navigation dialog', async () => {
     const user = userEvent.setup();
-    motionPreference.reduced = true;
 
     render(<SiteHeader />);
     await user.click(screen.getByRole('button', { name: 'Open navigation' }));
@@ -127,6 +119,19 @@ describe('SiteHeader', () => {
     ).toBeVisible();
   });
 
+  it('toggles closed when clicking the menu toggle while open', async () => {
+    const user = userEvent.setup();
+    render(<SiteHeader />);
+    const toggle = screen.getByRole('button', { name: 'Open navigation' });
+
+    await user.click(toggle);
+    expect(screen.getByRole('dialog', { name: 'Site navigation' })).toBeInTheDocument();
+
+    await user.click(toggle);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
   it('contains focus within the open dialog and makes page content inert', async () => {
     const user = userEvent.setup();
     render(
@@ -225,43 +230,81 @@ describe('SiteHeader', () => {
 });
 
 describe('Group theme control', () => {
-  it('toggles only the Group shell and persists explicit choices', async () => {
+  it('toggles the Group shell and root theme and persists explicit choices', async () => {
     const user = userEvent.setup();
     localStorage.clear();
+    document.documentElement.dataset.theme = 'dark';
     render(
-      <>
-        <div className="site-shell"><SiteHeader /></div>
-        <div className="company-group-frame">Company identity</div>
-      </>,
+      <div className="site-shell"><SiteHeader /></div>,
     );
     const shell = document.querySelector<HTMLElement>('.site-shell')!;
-    const company = document.querySelector<HTMLElement>('.company-group-frame')!;
     const light = screen.getByRole('button', { name: 'Switch to light mode' });
     expect(shell.dataset.theme).toBe('dark');
+    expect(document.documentElement.dataset.theme).toBe('dark');
     expect(light).toHaveAttribute('aria-pressed', 'false');
     expect(localStorage.getItem('goodman-group-theme')).toBeNull();
 
     await user.click(light);
     expect(shell.dataset.theme).toBe('light');
+    expect(document.documentElement.dataset.theme).toBe('light');
     expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
     expect(localStorage.getItem('goodman-group-theme')).toBe('light');
-    expect(company).not.toHaveAttribute('data-theme');
 
-    await user.click(screen.getByRole('button', { name: 'Switch to dark mode' }));
+    const dark = screen.getByRole('button', { name: 'Switch to dark mode' });
+    dark.focus();
+    await user.keyboard('{Enter}');
     expect(shell.dataset.theme).toBe('dark');
+    expect(document.documentElement.dataset.theme).toBe('dark');
     expect(localStorage.getItem('goodman-group-theme')).toBe('dark');
+  });
+
+  it('defaults to light device preference when storage is absent and updates on root theme change', async () => {
+    localStorage.clear();
+    delete document.documentElement.dataset.theme;
+    delete document.documentElement.dataset.themeExplicit;
+
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      configurable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    render(<div className="site-shell"><SiteHeader /></div>);
+    const shell = document.querySelector<HTMLElement>('.site-shell')!;
+    expect(shell.dataset.theme).toBe('light');
+    expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('goodman-group-theme')).toBeNull();
+
+    document.documentElement.dataset.theme = 'dark';
+    await waitFor(() => {
+      expect(shell.dataset.theme).toBe('dark');
+      expect(screen.getByRole('button', { name: 'Switch to light mode' })).toHaveAttribute('aria-pressed', 'false');
+    });
   });
 
   it('ignores malformed storage and remains operable when storage throws', async () => {
     const user = userEvent.setup();
     localStorage.setItem('goodman-group-theme', 'invalid');
+    document.documentElement.dataset.theme = 'dark';
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
     render(<div className="site-shell"><SiteHeader /></div>);
     const shell = document.querySelector<HTMLElement>('.site-shell')!;
     expect(shell.dataset.theme).toBe('dark');
+    expect(document.documentElement.dataset.theme).toBe('dark');
     await user.click(screen.getByRole('button', { name: 'Switch to light mode' }));
     expect(shell.dataset.theme).toBe('light');
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(document.documentElement.dataset.themeExplicit).toBe('true');
     expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
   });
 });

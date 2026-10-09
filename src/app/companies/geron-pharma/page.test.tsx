@@ -1,9 +1,16 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import GeronPharmaPage, { metadata } from "./page";
 
 describe("GeronPharmaPage", () => {
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", vi.fn(() => ({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })));
+  });
   it("exports valid canonical metadata", () => {
     expect(metadata.title).toBe("Geron Pharma");
     expect(metadata.description).toBe(

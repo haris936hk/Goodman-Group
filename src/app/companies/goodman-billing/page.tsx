@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Check, ShieldCheck } from "lucide-react";
 
@@ -18,12 +18,23 @@ export const metadata: Metadata = {
   alternates: { canonical: "/companies/goodman-billing" },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafbf8" },
+    { media: "(prefers-color-scheme: dark)", color: "#101c19" },
+  ],
+};
+
 export default function GoodmanBillingPage() {
   const contact = company.contacts[0];
   const leader = company.leadership[0];
 
   return (
-    <CompanyGroupFrame company={company} className="billing-page">
+    <CompanyGroupFrame
+      company={company}
+      className="billing-page"
+    >
       <OrganizationJsonLd company={company} />
       <header className="billing-hero" id="billing-top">
         <div className="billing-shell billing-hero-grid">
@@ -63,7 +74,7 @@ export default function GoodmanBillingPage() {
 
       <section className="billing-section" id="platforms" aria-labelledby="platforms-heading"><div className="billing-shell">
         <div className="billing-section-heading"><p className="billing-kicker">Integrations &amp; compatibility</p><h2 id="platforms-heading">Your software.<br />A seamless fit.</h2><p>We support and integrate with the most popular medical billing and EHR software platforms. Your existing systems work seamlessly with our services.</p></div>
-        <div className="billing-platform-grid">{profile.platforms.map((platform) => <article key={platform.name}><div className="billing-platform-logo"><Image src={platform.logo.src} alt="" width={platform.logo.width} height={platform.logo.height} unoptimized /></div><h3>{platform.name}</h3><p>{platform.category}</p></article>)}</div>
+        <div className="billing-platform-grid">{profile.platforms.map((platform) => <article key={platform.name}><div className="billing-platform-logo"><Image src={platform.logo.src} alt="" width={platform.logo.width} height={platform.logo.height} sizes="(max-width: 640px) 140px, 180px" /></div><h3>{platform.name}</h3><p>{platform.category}</p></article>)}</div>
         <div className="billing-integration-note"><p>We also integrate with many other platforms and custom systems. Contact us to discuss your specific integration needs.</p><a className="billing-text-link" href="#contact">Discuss your integration <ArrowUpRight size={18} aria-hidden="true" /></a></div>
       </div></section>
 

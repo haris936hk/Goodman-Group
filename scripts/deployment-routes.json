@@ -1,0 +1,36 @@
+[
+  {
+    "path": "/",
+    "heading": "Goodman Group",
+    "title": "Goodman Group — Seeking for Best"
+  },
+  {
+    "path": "/companies",
+    "heading": "Our Companies"
+  },
+  {
+    "path": "/companies/goodman-laboratories",
+    "slug": "goodman-laboratories",
+    "heading": "Goodman Laboratories"
+  },
+  {
+    "path": "/companies/geron-pharma",
+    "slug": "geron-pharma",
+    "heading": "Geron Pharma"
+  },
+  {
+    "path": "/companies/goodman-medical-equipment",
+    "slug": "goodman-medical-equipment",
+    "heading": "Goodman Medical Equipment Trading"
+  },
+  {
+    "path": "/companies/wal-green-chemicals",
+    "slug": "wal-green-chemicals",
+    "heading": "Wal Green Chemicals"
+  },
+  {
+    "path": "/companies/goodman-billing",
+    "slug": "goodman-billing",
+    "heading": "Medical Billing. Redefined."
+  }
+]

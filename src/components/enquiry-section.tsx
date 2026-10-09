@@ -3,7 +3,7 @@
 import {
   getCountries,
   getCountryCallingCode,
-} from "libphonenumber-js";
+} from "libphonenumber-js/min";
 import {
   AlertCircle,
   Check,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import React, {
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -45,27 +46,42 @@ interface CountryOption {
   readonly label: string;
 }
 
-const displayNames =
-  typeof Intl !== "undefined" && Intl.DisplayNames
-    ? new Intl.DisplayNames(["en"], { type: "region" })
-    : null;
+let cachedCountryOptions: readonly CountryOption[] | null = null;
+let cachedCountryByLabel: Record<string, CountryOption> | null = null;
 
-const countryOptions: readonly CountryOption[] = getCountries().map((code) => {
-  const name = displayNames?.of(code) || code;
-  const callingCode = `+${getCountryCallingCode(code)}`;
-  return { id: code, name, callingCode, label: `${name} (${callingCode})` };
-}).sort((a, b) => a.name.localeCompare(b.name, "en"));
+function getCountryOptions(): readonly CountryOption[] {
+  if (!cachedCountryOptions) {
+    const displayNames =
+      typeof Intl !== "undefined" && Intl.DisplayNames
+        ? new Intl.DisplayNames(["en"], { type: "region" })
+        : null;
 
-const countryByLabel: Record<string, CountryOption> = Object.fromEntries(
-  countryOptions.map((item) => [item.label, item]),
-);
+    cachedCountryOptions = getCountries().map((code) => {
+      const name = displayNames?.of(code) || code;
+      const callingCode = `+${getCountryCallingCode(code)}`;
+      return { id: code, name, callingCode, label: `${name} (${callingCode})` };
+    }).sort((a, b) => a.name.localeCompare(b.name, "en"));
+
+    cachedCountryByLabel = Object.fromEntries(
+      cachedCountryOptions.map((item) => [item.label, item]),
+    );
+  }
+  return cachedCountryOptions;
+}
+
+function getCountryByLabel(): Record<string, CountryOption> {
+  if (!cachedCountryByLabel) {
+    getCountryOptions();
+  }
+  return cachedCountryByLabel!;
+}
 
 const countryFilter = (textValue: string, inputValue: string): boolean => {
   const query = inputValue.trim().toLowerCase();
   if (!query) return true;
   if (textValue.toLowerCase().includes(query)) return true;
 
-  const item = countryByLabel[textValue];
+  const item = getCountryByLabel()[textValue];
   if (item) {
     if (item.callingCode.toLowerCase().includes(query)) return true;
     if (item.callingCode.replace("+", "").includes(query)) return true;
@@ -94,6 +110,7 @@ export function EnquirySection() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
+  const countryOptions = useMemo(() => getCountryOptions(), []);
 
   // Form field refs for focusing first invalid control
   const nameInputRef = useRef<HTMLInputElement>(null);

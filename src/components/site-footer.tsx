@@ -17,8 +17,8 @@ export function SiteFooter() {
           <Image
             src="/assets/logos/GG-white.png"
             alt="Goodman Group"
-            width={5555}
-            height={2368}
+            width={280}
+            height={119}
             sizes="(max-width: 640px) 170px, 200px"
           />
           <p>

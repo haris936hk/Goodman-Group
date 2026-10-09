@@ -21,7 +21,7 @@ export default defineConfig({
   },
   webServer: {
     command: process.env.CI
-      ? `npm run start -- --port ${port}`
+      ? 'npm run start'
       : `npm run dev -- --port ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,

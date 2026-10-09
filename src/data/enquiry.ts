@@ -3,7 +3,7 @@ import {
   isSupportedCountry,
   parsePhoneNumberFromString,
   type CountryCode,
-} from "libphonenumber-js";
+} from "libphonenumber-js/min";
 
 export const companyOptions = [
   { id: "group", label: "Goodman Group / Not sure" },

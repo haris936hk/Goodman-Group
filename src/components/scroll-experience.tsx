@@ -3,11 +3,13 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 type ScrollExperienceProps = {
-  children: ReactNode;
+  children?: ReactNode;
 };
 
-export function ScrollExperience({ children }: ScrollExperienceProps) {
+export function ScrollExperience({ children }: ScrollExperienceProps = {}) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<{ resize: () => void; scrollTo: (target: number, options?: Record<string, unknown>) => void } | null>(null);
+  const scrollTriggerRef = useRef<{ update: () => void } | null>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -20,7 +22,20 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           ? document.getElementById(currentHash)
           : null;
 
-        target?.scrollIntoView({ block: "start" });
+        if (target) {
+          const lenis = lenisRef.current;
+          if (lenis) {
+            lenis.resize();
+            target.scrollIntoView({ block: "start" });
+            lenis.scrollTo(window.scrollY, {
+              immediate: true,
+              force: true,
+            });
+            scrollTriggerRef.current?.update();
+          } else {
+            target.scrollIntoView({ block: "start" });
+          }
+        }
       });
     };
 
@@ -34,10 +49,14 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
   }, []);
 
   useEffect(() => {
-    if (!rootRef.current || typeof window.matchMedia !== "function") {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
       return;
     }
 
+    const root = rootRef.current || document.getElementById("top") || document.body;
+    if (!root) {
+      return;
+    }
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
@@ -57,7 +76,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       if (
         currentGeneration !== generation ||
         reducedMotion.matches ||
-        !rootRef.current
+        !root
       ) {
         return;
       }
@@ -101,26 +120,13 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           scaleX: 1,
           ease: "none",
           scrollTrigger: {
-            trigger: rootRef.current,
+            trigger: root,
             start: "top top",
             end: "bottom bottom",
             scrub: 0.2,
           },
         });
 
-        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
-          gsap.from(element, {
-            opacity: 0,
-            y: 44,
-            duration: 0.85,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: element,
-              start: "top 88%",
-              once: true,
-            },
-          });
-        });
 
         const desktopEffects = gsap.matchMedia();
 
@@ -154,42 +160,58 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           desktopEffects.revert();
           previousCleanup();
         };
-      }, rootRef);
+      }, root);
 
+      let revealObserver: IntersectionObserver | null = null;
+      if (typeof window.IntersectionObserver === "function") {
+        revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const element = entry.target as HTMLElement;
+                gsap.to(element, {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.85,
+                  ease: "power3.out",
+                  overwrite: "auto",
+                });
+                revealObserver?.unobserve(element);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px" },
+        );
+
+        root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+          gsap.set(element, { opacity: 0, y: 44 });
+          revealObserver?.observe(element);
+        });
+      }
+
+      lenisRef.current = lenis;
+      scrollTriggerRef.current = ScrollTrigger;
       ScrollTrigger.refresh();
 
-      let hashFrame = 0;
-      const syncLenisToHash = () => {
-        window.cancelAnimationFrame(hashFrame);
-        hashFrame = window.requestAnimationFrame(() => {
-          const currentHash = window.location.hash.slice(1);
-          const target = currentHash
-            ? document.getElementById(currentHash)
-            : null;
-
-          if (target) {
-            lenis.resize();
-            target.scrollIntoView({ block: "start" });
-            lenis.scrollTo(window.scrollY, {
-              immediate: true,
-              force: true,
-            });
-            ScrollTrigger.update();
-          }
-        });
-      };
-
-      window.addEventListener("hashchange", syncLenisToHash);
-      syncLenisToHash();
+      if (window.location.hash) {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (target) {
+          lenis.resize();
+          target.scrollIntoView({ block: "start" });
+          lenis.scrollTo(window.scrollY, { immediate: true, force: true });
+          ScrollTrigger.update();
+        }
+      }
 
       const cleanupHashAndLenis = () => {
-        window.cancelAnimationFrame(hashFrame);
-        window.removeEventListener("hashchange", syncLenisToHash);
+        revealObserver?.disconnect();
+        lenisRef.current = null;
+        scrollTriggerRef.current = null;
         lenis.off("scroll", updateScroll);
         gsap.ticker.remove(updateLenis);
+        ScrollTrigger.getAll().forEach((t) => t.kill());
         lenis.destroy();
       };
-
       const previousCleanup = cleanupExperience;
       cleanupExperience = () => {
         previousCleanup();
@@ -198,8 +220,14 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       };
     }
 
+    let frameId: number | null = null;
+
     const stopExperience = () => {
       generation += 1;
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+        frameId = null;
+      }
       cleanupExperience();
       cleanupExperience = () => {};
     };
@@ -208,18 +236,20 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       stopExperience();
 
       if (!reducedMotion.matches) {
-        void createExperience();
+        frameId = window.requestAnimationFrame(() => {
+          frameId = null;
+          void createExperience();
+        });
       }
     };
 
     reducedMotion.addEventListener("change", syncMotionPreference);
     syncMotionPreference();
-
     return () => {
       reducedMotion.removeEventListener("change", syncMotionPreference);
       stopExperience();
     };
   }, []);
 
-  return <div ref={rootRef}>{children}</div>;
+  return children ? <div ref={rootRef}>{children}</div> : null;
 }

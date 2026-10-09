@@ -20,6 +20,15 @@ Each address includes its designated Google Maps place link. Links open in a new
 The Laboratories contact section uses the same office and factory map links, and the Billing contact section uses the same US contact map link, styled within each company's existing contact layout.
 Footer navigation links directly to every company page using the canonical company registry, rather than routing visitors through an “Our Companies” directory link.
 
+### Shared site mode
+
+The Goodman Group header is the sole light/dark control. Its `goodman-group-theme` preference governs the Group and all five bespoke company pages; company pages contain no theme buttons and ignore historical company preferences. Missing, malformed, or unreadable preferences default to the device preference (dark fallback only if media API fails). The document root retains the current choice through client navigation when storage is unavailable; without JavaScript the site uses dark.
+
+`layout.tsx` applies the shared preference before hydration. The nonvisual `CompanyThemeSync` preserves each company's scoped `light-dark()` palette and browser theme colors on route entry and metadata replacement. Company routes remain server-rendered and retain their distinct visual identities: Wal Green's ivory/green and green-charcoal, Geron's lavender-white and deep violet, Laboratories' warm ivory and graphite/crimson, Billing's paper-green and forest tones, and Medical Equipment's pearl/slate and ink-slate/cool-blue palettes.
+
+Company tokens continue to theme the shared Group frame. Original company logos retain their white brand plates, contact actions retain dedicated contrast tokens, and pointer-glow and reduced-motion behavior are unchanged.
+
+
 
 ### Homepage enquiries
 
@@ -571,3 +580,4 @@ Tata Group remains a useful **structural** reference because it presents a paren
 - The page remains a server component. Responsive stacks preserve all content at 320px, and keyboard focus remains visible. Muted text was darkened after the accessibility check identified insufficient contrast on tinted surfaces.
 - Supply-chain connectors reserve a minimum 44px gap after each numbered circle. Arrows are centered in the available gap using the responsive marker-size token, rather than positioned at a fixed bottom offset; circles cannot flex-shrink. The final stage reserves no connector gap.
 - The closing equipment contact section omits the Website label and company-website link; office, telephone, email, Group routing, and back-to-top links remain.
+- Both modes use scoped `light-dark()` custom properties, including an ink-slate `#101c26` dark canvas with layered blue-gray surfaces and high-contrast visible focus indicators. Mode selection now follows the sole Group preference described under Shared site mode; the company header contains no individual control.

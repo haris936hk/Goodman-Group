@@ -40,8 +40,40 @@ jobs:
       - name: Run unit tests with coverage
         run: npm run test:coverage
 
-      - name: Build production application
+      - name: Build standalone production application
         run: npm run build
+
+      - name: Smoke production routes and assets
+        run: |
+          set -euo pipefail
+          PORT=4173 HOSTNAME=127.0.0.1 node .next/standalone/server.js > /tmp/goodman-next-smoke.log 2>&1 &
+          server_pid=$!
+          cleanup() {
+            kill "$server_pid" 2>/dev/null || true
+            wait "$server_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail http://127.0.0.1:4173/ >/dev/null; then
+              ready=true
+              break
+            fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              cat /tmp/goodman-next-smoke.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+          if [[ "$ready" != true ]]; then
+            cat /tmp/goodman-next-smoke.log
+            echo "Standalone production server did not become ready on port 4173."
+            exit 1
+          fi
+
+          npm run smoke:deployment -- http://127.0.0.1:4173
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps

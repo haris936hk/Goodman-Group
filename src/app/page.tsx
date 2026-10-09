@@ -7,11 +7,15 @@ import {
   Phone,
   Store,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
 import { CompanyCard } from "@/components/company-card";
-import { EnquirySection } from "@/components/enquiry-section";
+
+const EnquirySection = dynamic(
+  () => import("@/components/enquiry-section").then((mod) => mod.EnquirySection)
+);
 import { ScrollExperience } from "@/components/scroll-experience";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -33,9 +37,9 @@ const clientCategories = [
 
 export default function Home() {
   return (
-    <ScrollExperience>
-      <div className="site-shell" id="top" suppressHydrationWarning>
-        <OrganizationJsonLd />
+    <div className="site-shell" id="top" suppressHydrationWarning>
+      <ScrollExperience />
+      <OrganizationJsonLd />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
@@ -73,8 +77,8 @@ export default function Home() {
                   className="group-core-logo-dark"
                   src="/assets/logos/GG-white.png"
                   alt="Goodman Group"
-                  width={5555}
-                  height={2368}
+                  width={280}
+                  height={119}
                   sizes="(max-width: 640px) 120px, 160px"
                   priority
                 />
@@ -82,8 +86,8 @@ export default function Home() {
                   className="group-core-logo-light"
                   src="/assets/logos/GG-1.png"
                   alt="Goodman Group"
-                  width={6157}
-                  height={1659}
+                  width={297}
+                  height={80}
                   sizes="(max-width: 640px) 150px, 200px"
                 />
               </div>
@@ -380,8 +384,7 @@ export default function Home() {
 
         </main>
 
-        <SiteFooter />
-      </div>
-    </ScrollExperience>
+      <SiteFooter />
+    </div>
   );
 }

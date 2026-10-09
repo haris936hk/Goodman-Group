@@ -123,13 +123,14 @@ test.describe('home page', () => {
   });
 });
 
-test('Group theme persists across routes without changing bespoke company pages', async ({ page }) => {
+test('Group theme persists across routes and synchronizes bespoke company pages', async ({ page }) => {
   const scriptWarnings: string[] = [];
   page.on('console', (message) => {
     if (message.text().includes('Encountered a script tag while rendering React component')) {
       scriptWarnings.push(message.text());
     }
   });
+  await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
   const shell = page.locator('.site-shell');
   await expect(shell).toHaveAttribute('data-theme', 'dark');
@@ -152,21 +153,27 @@ test('Group theme persists across routes without changing bespoke company pages'
   await expect(page).toHaveTitle(/Our Companies/);
   await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#ffffff'))).toBe(true);
   await expect(page.locator('.directory-panel-business').first()).toHaveCSS('color', 'rgb(23, 74, 135)');
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.getByRole('link', { name: 'View Goodman Laboratories' }).last().click();
   await expect(page.locator('.company-group-frame')).toBeVisible();
-  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#06111f'))).toBe(true);
+  await expect(page.locator('.laboratories-page')).toHaveAttribute('data-theme', 'light');
+  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#fcfaf7'))).toBe(true);
   await page.goBack();
   await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
   await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#ffffff'))).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.goto('/not-a-page');
   await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
-  for (const slug of ['goodman-laboratories', 'geron-pharma']) {
-    await page.goto(`/companies/${slug}`);
-    await expect(page.locator('.company-group-frame')).not.toHaveAttribute('data-theme');
-    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#06111f');
-    await expect(page.locator('.site-shell')).toHaveCount(0);
-  }
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/companies/goodman-medical-equipment');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator('.medical-equipment-page')).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator('.medical-equipment-page')).toHaveCSS('background-color', 'rgb(250, 251, 252)');
+  await expect.poll(() => page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((meta) => meta.getAttribute('content') === '#fafbfc'))).toBe(true);
+  await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+  await expect(page.locator('.site-shell')).toHaveCount(0);
+  expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('light');
+  expect(await page.evaluate(() => localStorage.getItem('goodman-medical-equipment-theme'))).toBeNull();
   await page.goto('/');
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.setViewportSize({ width: 390, height: 844 });
@@ -180,6 +187,329 @@ test('Group theme persists across routes without changing bespoke company pages'
   await page.keyboard.press('Escape');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(scriptWarnings).toEqual([]);
+});
+
+test('follows device light/dark preference by default and updates live without saved selection', async ({ page }) => {
+  // 1. Light device, empty storage -> defaults to light
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  const shell = page.locator('.site-shell');
+  await expect(shell).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+  await expect.poll(() =>
+    page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((m) => m.getAttribute('content') === '#ffffff'))
+  ).toBe(true);
+  await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
+
+  // 2. Emulate dark while open without manual toggle -> updates Group shell, root, button, meta
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect(shell).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('dark');
+  await expect.poll(() =>
+    page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((m) => m.getAttribute('content') === '#06111f'))
+  ).toBe(true);
+  await expect(page.getByRole('button', { name: 'Switch to light mode' })).toHaveAttribute('aria-pressed', 'false');
+  expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
+
+  // 3. Navigate to company route without override -> company follows dark device
+  await page.goto('/companies/goodman-laboratories');
+  const labPage = page.locator('.laboratories-page');
+  await expect(labPage).toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('dark');
+  await expect.poll(() =>
+    page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((m) => m.getAttribute('content') === '#191416'))
+  ).toBe(true);
+
+  // 4. Emulate light while on company route without override -> company updates live
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(labPage).toHaveAttribute('data-theme', 'light');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+  await expect.poll(() =>
+    page.locator('meta[name="theme-color"]').evaluateAll((metas) => metas.every((m) => m.getAttribute('content') === '#fcfaf7'))
+  ).toBe(true);
+  expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
+
+  // 5. Navigate back to Home, manual toggle to dark -> creates manual override
+  await page.goto('/');
+  await expect(shell).toHaveAttribute('data-theme', 'light');
+  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
+  await expect(shell).toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('dark');
+
+  // 6. Emulate light live -> manual dark override persists and defeats live device change
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(shell).toHaveAttribute('data-theme', 'dark');
+  await page.goto('/companies/geron-pharma');
+  const geronPage = page.locator('.geron-page');
+  await expect(geronPage).toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('dark');
+});
+
+const companyThemeRoutes = [
+  {
+    name: 'Wal Green Chemicals',
+    slug: 'wal-green-chemicals',
+    path: '/companies/wal-green-chemicals',
+    pageSelector: '.wal-green-page',
+    viewLinkName: 'View Wal Green Chemicals',
+    lightBg: 'rgb(250, 248, 245)',
+    darkBg: 'rgb(17, 27, 22)',
+    lightThemeColor: '#faf8f5',
+    darkThemeColor: '#111b16',
+    historicalKey: 'wal-green-chemicals-theme',
+  },
+  {
+    name: 'Geron Pharma',
+    slug: 'geron-pharma',
+    path: '/companies/geron-pharma',
+    pageSelector: '.geron-page',
+    viewLinkName: 'View Geron Pharma',
+    lightBg: 'rgb(248, 245, 255)',
+    darkBg: 'rgb(12, 8, 23)',
+    lightThemeColor: '#f8f5ff',
+    darkThemeColor: '#0c0817',
+    historicalKey: 'geron-pharma-theme',
+  },
+  {
+    name: 'Goodman Laboratories',
+    slug: 'goodman-laboratories',
+    path: '/companies/goodman-laboratories',
+    pageSelector: '.laboratories-page',
+    viewLinkName: 'View Goodman Laboratories',
+    lightBg: 'rgb(252, 250, 247)',
+    darkBg: 'rgb(25, 20, 22)',
+    lightThemeColor: '#fcfaf7',
+    darkThemeColor: '#191416',
+    historicalKey: 'goodman-laboratories-theme',
+  },
+  {
+    name: 'Goodman Billing',
+    slug: 'goodman-billing',
+    path: '/companies/goodman-billing',
+    pageSelector: '.billing-page',
+    viewLinkName: 'View Goodman Billing',
+    lightBg: 'rgb(250, 251, 248)',
+    darkBg: 'rgb(16, 28, 25)',
+    lightThemeColor: '#fafbf8',
+    darkThemeColor: '#101c19',
+    historicalKey: 'goodman-billing-theme',
+  },
+  {
+    name: 'Goodman Medical Equipment Trading',
+    slug: 'goodman-medical-equipment',
+    path: '/companies/goodman-medical-equipment',
+    pageSelector: '.medical-equipment-page',
+    viewLinkName: 'View Goodman Medical Equipment Trading',
+    lightBg: 'rgb(250, 251, 252)',
+    darkBg: 'rgb(16, 28, 38)',
+    lightThemeColor: '#fafbfc',
+    darkThemeColor: '#101c26',
+    historicalKey: 'goodman-medical-equipment-theme',
+  },
+] as const;
+
+test.describe('Group theme shared-ownership across bespoke company routes', () => {
+  for (const company of companyThemeRoutes) {
+    test.describe(company.name, () => {
+      test('synchronizes Group light and dark preference through directory navigation despite opposite OS and conflicting keys', async ({ page }) => {
+        await page.emulateMedia({ colorScheme: 'dark' });
+        await page.addInitScript(() => {
+          localStorage.setItem('wal-green-chemicals-theme', 'dark');
+          localStorage.setItem('geron-pharma-theme', 'dark');
+          localStorage.setItem('goodman-laboratories-theme', 'dark');
+          localStorage.setItem('goodman-billing-theme', 'dark');
+          localStorage.setItem('goodman-medical-equipment-theme', 'dark');
+        });
+
+        await page.goto('/');
+        const shell = page.locator('.site-shell');
+        await expect(shell).toHaveAttribute('data-theme', 'dark');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+        const toggleToLight = page.getByRole('button', { name: 'Switch to light mode' });
+        await toggleToLight.click();
+        await expect(shell).toHaveAttribute('data-theme', 'light');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('light');
+
+        await page.getByRole('link', { name: 'Our Companies' }).first().click();
+        await expect(page).toHaveURL(/\/companies$/);
+        await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
+
+        const companyLink = page.getByRole('link', { name: company.viewLinkName }).first();
+        await companyLink.click();
+        await expect(page).toHaveURL(new RegExp(company.path));
+
+        const companyFrame = page.locator(company.pageSelector);
+        await expect(companyFrame).toBeVisible();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveCSS('background-color', company.lightBg);
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
+        ).toBe(true);
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+
+        await page.reload();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveCSS('background-color', company.lightBg);
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
+        ).toBe(true);
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+
+        await page.locator('.group-frame-brand').click();
+        await expect(page).toHaveURL(/\/$/);
+        await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
+
+        await page.emulateMedia({ colorScheme: 'light' });
+        await page.evaluate(() => {
+          localStorage.setItem('wal-green-chemicals-theme', 'light');
+          localStorage.setItem('geron-pharma-theme', 'light');
+          localStorage.setItem('goodman-laboratories-theme', 'light');
+          localStorage.setItem('goodman-billing-theme', 'light');
+          localStorage.setItem('goodman-medical-equipment-theme', 'light');
+        });
+
+        const toggleToDark = page.getByRole('button', { name: 'Switch to dark mode' });
+        await toggleToDark.click();
+        await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'dark');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+        expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('dark');
+
+        await page.getByRole('link', { name: 'Our Companies' }).first().click();
+        await page.getByRole('link', { name: company.viewLinkName }).first().click();
+        await expect(page).toHaveURL(new RegExp(company.path));
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'dark');
+        await expect(companyFrame).toHaveCSS('background-color', company.darkBg);
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('dark');
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.darkThemeColor)
+        ).toBe(true);
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+      });
+
+      test('defaults to device preference on direct visit when Group preference is absent', async ({ page }) => {
+        await page.emulateMedia({ colorScheme: 'light' });
+        await page.addInitScript(() => {
+          localStorage.removeItem('goodman-group-theme');
+          localStorage.setItem('wal-green-chemicals-theme', 'light');
+          localStorage.setItem('geron-pharma-theme', 'light');
+          localStorage.setItem('goodman-laboratories-theme', 'light');
+          localStorage.setItem('goodman-billing-theme', 'light');
+          localStorage.setItem('goodman-medical-equipment-theme', 'light');
+        });
+
+        await page.goto(company.path);
+        const companyFrame = page.locator(company.pageSelector);
+        await expect(companyFrame).toBeVisible();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveCSS('background-color', company.lightBg);
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
+        ).toBe(true);
+        expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+      });
+
+      test('defaults to dark device preference on direct visit when Group preference is absent and device is dark', async ({ page }) => {
+        await page.emulateMedia({ colorScheme: 'dark' });
+        await page.addInitScript(() => {
+          localStorage.removeItem('goodman-group-theme');
+          localStorage.setItem('wal-green-chemicals-theme', 'light');
+          localStorage.setItem('geron-pharma-theme', 'light');
+          localStorage.setItem('goodman-laboratories-theme', 'light');
+          localStorage.setItem('goodman-billing-theme', 'light');
+          localStorage.setItem('goodman-medical-equipment-theme', 'light');
+        });
+
+        await page.goto(company.path);
+        const companyFrame = page.locator(company.pageSelector);
+        await expect(companyFrame).toBeVisible();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'dark');
+        await expect(companyFrame).toHaveCSS('background-color', company.darkBg);
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('dark');
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.darkThemeColor)
+        ).toBe(true);
+        expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+      });
+
+      test('defaults to device preference on direct visit when Group preference is malformed', async ({ page }) => {
+        await page.emulateMedia({ colorScheme: 'light' });
+        await page.addInitScript(() => {
+          localStorage.setItem('goodman-group-theme', 'unexpected-value');
+          localStorage.setItem('wal-green-chemicals-theme', 'light');
+          localStorage.setItem('geron-pharma-theme', 'light');
+          localStorage.setItem('goodman-laboratories-theme', 'light');
+          localStorage.setItem('goodman-billing-theme', 'light');
+          localStorage.setItem('goodman-medical-equipment-theme', 'light');
+        });
+
+        await page.goto(company.path);
+        const companyFrame = page.locator(company.pageSelector);
+        await expect(companyFrame).toBeVisible();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveCSS('background-color', company.lightBg);
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('light');
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
+        ).toBe(true);
+        expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('unexpected-value');
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+      });
+
+      test('preserves in-session selection during storage-denied client navigation and falls back to dark on reload', async ({ page }) => {
+        await page.emulateMedia({ colorScheme: 'dark' });
+        await page.addInitScript(() => {
+          Storage.prototype.getItem = () => { throw new Error('blocked'); };
+          Storage.prototype.setItem = () => { throw new Error('blocked'); };
+        });
+
+        await page.goto('/');
+        const shell = page.locator('.site-shell');
+        await expect(shell).toHaveAttribute('data-theme', 'dark');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+        await page.getByRole('button', { name: 'Switch to light mode' }).click();
+        await expect(shell).toHaveAttribute('data-theme', 'light');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+
+        await page.getByRole('link', { name: 'Our Companies' }).first().click();
+        await page.getByRole('link', { name: company.viewLinkName }).first().click();
+
+        const companyFrame = page.locator(company.pageSelector);
+        await expect(companyFrame).toBeVisible();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'light');
+        await expect(companyFrame).toHaveCSS('background-color', company.lightBg);
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
+        ).toBe(true);
+        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+
+        await page.reload();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+        await expect(companyFrame).toHaveAttribute('data-theme', 'dark');
+        await expect(companyFrame).toHaveCSS('background-color', company.darkBg);
+        await expect.poll(() =>
+          page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.darkThemeColor)
+        ).toBe(true);
+      });
+    });
+  }
 });
 
 test.describe('home page with reduced motion', () => {
@@ -361,7 +691,7 @@ test('keeps normal-link navigation available without JavaScript', async ({
 
   await expect(page.locator('.noscript-nav')).toBeVisible();
   await expect(page.locator('.menu-toggle')).toBeHidden();
-  await expect(page.locator('.noscript-nav a')).toHaveCount(5);
+  await expect(page.locator('.noscript-nav a')).toHaveCount(3);
   await context.close();
 });
 
@@ -408,14 +738,7 @@ test('exposes valid Organization JSON-LD and canonical metadata on home', async 
 
 test('provides functional audience routes and executive contact links', async ({ page }) => {
   await page.goto('/');
-  const procurement = page.getByRole('link', { name: /Procurement/i });
-  await expect(procurement).toHaveAttribute('href', '/companies');
-
-  const partnerships = page.getByRole('link', { name: /Partnerships/i });
-  const partnershipsHref = await partnerships.getAttribute('href');
-  expect(partnershipsHref).toContain('mailto:goodman@goodmangoc.com');
-
-  const generalInquiry = page.getByRole('link', { name: /General inquiry:/i });
+  const generalInquiry = page.getByRole('link', { name: 'goodman@goodmangoc.com' });
   await expect(generalInquiry).toHaveAttribute('href', /mailto:goodman@goodmangoc.com/);
 
   const execPhone = page.getByRole('link', { name: '+92 336 777 0770' });

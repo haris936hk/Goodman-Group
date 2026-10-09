@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -20,11 +20,22 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f5ff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0817" },
+  ],
+};
+
 export default function GeronPharmaPage() {
   const leader = company.leadership[0];
 
   return (
-    <CompanyGroupFrame company={company} className="geron-page">
+    <CompanyGroupFrame
+      company={company}
+      className="geron-page"
+    >
       <OrganizationJsonLd company={company} />
       <header className="geron-hero">
         <div className="geron-hero-inner">

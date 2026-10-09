@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -19,7 +18,6 @@ const navigation = [
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
   const pathname = usePathname() ?? "/";
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -83,6 +81,7 @@ export function SiteHeader() {
       const menuButton = menuButtonRef.current;
 
       if (menuButton && window.getComputedStyle(menuButton).display === "none") {
+        menuButton.blur();
         closeMenu(false);
       }
     };
@@ -111,12 +110,18 @@ export function SiteHeader() {
       window.removeEventListener("resize", closeWhenMenuToggleIsHidden);
       const focusTarget = focusRestoreRef.current;
       focusRestoreRef.current = null;
-      if (focusTarget) {
+      if (focusTarget?.isConnected) {
+        focusTarget.focus();
         window.requestAnimationFrame(() => {
           if (focusTarget.isConnected) {
             focusTarget.focus();
           }
         });
+        window.setTimeout(() => {
+          if (focusTarget.isConnected) {
+            focusTarget.focus();
+          }
+        }, 0);
       }
     };
   }, [closeMenu, isOpen]);
@@ -127,8 +132,8 @@ export function SiteHeader() {
         <Image
           src="/assets/logos/GG-white.png"
           alt="Goodman Group"
-          width={5555}
-          height={2368}
+          width={280}
+          height={119}
           sizes="(max-width: 1080px) 96px, 112px"
           priority
         />
@@ -169,83 +174,60 @@ export function SiteHeader() {
         {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
       </button>
 
-      {typeof document !== "undefined"
+      {typeof document !== "undefined" && isOpen
         ? createPortal(
-            <AnimatePresence>
-              {isOpen ? (
-                <motion.div
-                  ref={menuDialogRef}
-                  className="mobile-nav-backdrop"
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label="Site navigation"
-                  initial={shouldReduceMotion ? false : { opacity: 0, y: -12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{
-                    duration: shouldReduceMotion ? 0 : 0.2,
-                    ease: "easeOut",
-                  }}
-                  onPointerDown={(event) => {
-                    if (event.target === event.currentTarget) {
-                      closeMenu(true);
-                    }
-                  }}
-                >
-                  <nav
-                    id="mobile-navigation"
-                    className="mobile-nav glass-overlay"
-                    aria-label="Mobile navigation"
+            <div
+              ref={menuDialogRef}
+              className="mobile-nav-backdrop"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+              onPointerDown={(event) => {
+                if (event.target === event.currentTarget) {
+                  closeMenu(true);
+                }
+              }}
+            >
+              <nav
+                id="mobile-navigation"
+                className="mobile-nav glass-overlay"
+                aria-label="Mobile navigation"
+              >
+                <div className="mobile-nav-header">
+                  <span>Navigate</span>
+                  <button
+                    ref={closeButtonRef}
+                    className="mobile-nav-close"
+                    type="button"
+                    aria-label="Close navigation"
+                    onClick={() => closeMenu(true)}
                   >
-                    <div className="mobile-nav-header">
-                      <span>Navigate</span>
-                      <button
-                        ref={closeButtonRef}
-                        className="mobile-nav-close"
-                        type="button"
-                        aria-label="Close navigation"
-                        onClick={() => closeMenu(true)}
+                    <X aria-hidden="true" />
+                  </button>
+                </div>
+                <div className="mobile-nav-links">
+                  {navigation.map((item, index) => (
+                    <div key={item.label}>
+                      <Link
+                        href={item.href}
+                        aria-current={
+                          isCurrentDestination(item.href)
+                            ? "page"
+                            : undefined
+                        }
+                        onClick={() => closeMenu(false)}
                       >
-                        <X aria-hidden="true" />
-                      </button>
+                        <span>0{index + 1}</span>
+                        {item.label}
+                      </Link>
                     </div>
-                    <div className="mobile-nav-links">
-                      {navigation.map((item, index) => (
-                        <motion.div
-                          key={item.label}
-                          initial={
-                            shouldReduceMotion
-                              ? false
-                              : { opacity: 0, x: -10 }
-                          }
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{
-                            delay: shouldReduceMotion ? 0 : index * 0.035,
-                            duration: shouldReduceMotion ? 0 : undefined,
-                          }}
-                        >
-                          <Link
-                            href={item.href}
-                            aria-current={
-                              isCurrentDestination(item.href)
-                                ? "page"
-                                : undefined
-                            }
-                            onClick={() => closeMenu(false)}
-                          >
-                            <span>0{index + 1}</span>
-                            {item.label}
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </div>
-                    <p className="mobile-contact-status">
-                      Inquiries, partnerships and careers
-                    </p>
-                  </nav>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>,
+                  ))}
+                </div>
+                <p className="mobile-contact-status">
+                  Inquiries, partnerships and careers
+                </p>
+              </nav>
+            </div>,
             document.body,
           )
         : null}

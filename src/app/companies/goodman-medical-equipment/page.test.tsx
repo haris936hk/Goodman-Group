@@ -1,8 +1,17 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import GoodmanMedicalEquipmentPage from "./page";
 
+beforeEach(() => {
+  localStorage.clear();
+  const system = {
+    matches: false,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  } as unknown as MediaQueryList;
+  vi.stubGlobal("matchMedia", vi.fn(() => system));
+});
 describe("GoodmanMedicalEquipmentPage", () => {
   it("reveals the offsite instrument workflow independently of governance disclosures", () => {
     render(<GoodmanMedicalEquipmentPage />);

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import type { CompanyProfile } from "@/data/companies";
+import { CompanyThemeSync } from "@/components/company-theme-sync";
 
 export type CompanyGroupFrameProps = {
   company: CompanyProfile;
@@ -18,7 +19,8 @@ export function CompanyGroupFrame({
   const relationshipText = company.relationship ?? "A Goodman Group company";
 
   return (
-    <div className={`company-group-frame ${className}`.trim()}>
+    <div className={`company-group-frame ${className}`.trim()} suppressHydrationWarning>
+      <CompanyThemeSync />
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>

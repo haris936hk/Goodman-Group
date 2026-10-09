@@ -89,3 +89,13 @@ All supplied company content is owner-approved; UI, metadata, JSON-LD, applicati
 - V8 coverage requires **80% each for branches, functions, lines, and statements**. Next system files and `scroll-experience.tsx` are excluded; scroll choreography is exercised in browser journeys.
 - Playwright + Axe cover company routes, metadata/JSON-LD, sitemap/robots, disclosures, theme persistence, keyboard/mobile navigation, responsive overflow, reduced motion, no-JavaScript navigation, and 200% text sizing. Automated Axe checks are not full accessibility certification.
 - CI on `main` pushes/PRs runs install, lint, typecheck, unit coverage, production build, browser installation, and all three E2E projects. CI forbids focused tests, retries twice, and uses one worker. For UI changes, exercise the affected real browser surface in addition to relevant unit checks.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -1,23 +1,28 @@
 /* Wal Green Chemicals: Ivory, charcoal, and restrained green composition */
 .wal-green-page {
-  --wg-ivory: #faf8f5;
-  --wg-surface: #ffffff;
-  --wg-charcoal: #1e2421;
-  --wg-heading: #141916;
-  --wg-body: #3b4440;
-  --wg-muted: #647069;
-  --wg-green: #236c4b;
+  color-scheme: dark;
+  --wg-ivory: light-dark(#faf8f5, #111b16);
+  --wg-surface: light-dark(#ffffff, #1b2821);
+  --wg-charcoal: light-dark(#1e2421, #e2ebe5);
+  --wg-heading: light-dark(#141916, #f3f5ef);
+  --wg-body: light-dark(#3b4440, #c5d1c9);
+  --wg-muted: light-dark(#647069, #a5b6ab);
+  --wg-green: light-dark(#236c4b, #83d5a9);
   --wg-green-light: #5fbf92;
   --wg-green-tint: rgba(95, 191, 146, 0.12);
-  --wg-border: #e6e4df;
-  --wg-border-soft: #eeece7;
+  --wg-border: light-dark(#e6e4df, #3e5245);
+  --wg-border-soft: light-dark(#eeece7, #34473b);
+  --wg-action-bg: light-dark(#1e2421, #83d5a9);
+  --wg-action-fg: light-dark(#ffffff, #111b16);
+  --wg-action-hover: light-dark(#236c4b, #a6e4c1);
+  --wg-shadow: light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.2));
 
-  /* Frame token overrides */
-  --frame-fg: #1e2421;
-  --frame-bg: #faf8f5;
-  --frame-border: #e6e4df;
-  --frame-badge-bg: rgba(95, 191, 146, 0.15);
-  --frame-badge-fg: #236c4b;
+  /* The shared frame retains this company's brand palette. */
+  --frame-fg: var(--wg-charcoal);
+  --frame-bg: var(--wg-ivory);
+  --frame-border: var(--wg-border);
+  --frame-badge-bg: var(--wg-green-tint);
+  --frame-badge-fg: var(--wg-green);
 
   background-color: var(--wg-ivory);
   color: var(--wg-body);
@@ -26,6 +31,25 @@
   min-height: 100vh;
   overflow-x: clip;
 }
+
+.wal-green-page[data-theme="light"] { color-scheme: light; }
+.wal-green-page[data-theme="dark"] { color-scheme: dark; }
+
+html:has(.wal-green-page),
+body:has(.wal-green-page) {
+  color-scheme: dark;
+  background: light-dark(#faf8f5, #111b16);
+}
+html:has(.wal-green-page[data-theme="light"]),
+body:has(.wal-green-page[data-theme="light"]) { color-scheme: light; }
+html:has(.wal-green-page[data-theme="dark"]),
+body:has(.wal-green-page[data-theme="dark"]) { color-scheme: dark; }
+
+.wal-green-page ::selection {
+  background: var(--wg-green);
+  color: var(--wg-ivory);
+}
+.wal-green-page .group-frame-nav { gap: 1rem; }
 
 /* Hero Section */
 .wg-hero {
@@ -118,7 +142,8 @@
 
 /* Script Wordmark & Swoosh Stage */
 .wg-logo-stage {
-  background: var(--wg-surface);
+  /* Preserve the original black wordmark on its light brand plate. */
+  background: #ffffff;
   border: 1px solid var(--wg-border);
   border-radius: 1.5rem;
   padding: 3rem 2rem;
@@ -127,7 +152,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 30px -10px var(--wg-shadow);
 }
 
 .wg-logo-stage img {
@@ -209,7 +234,7 @@
   border: 1px solid var(--wg-border);
   border-radius: 1.5rem;
   padding: 3rem;
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 24px -8px var(--wg-shadow);
   scroll-margin-top: 4.5rem;
 }
 
@@ -652,8 +677,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--wg-charcoal);
-  color: #ffffff;
+  background: var(--wg-action-bg);
+  color: var(--wg-action-fg);
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;
   font-weight: 600;
@@ -663,7 +688,7 @@
 }
 
 .wg-contact-link:hover {
-  background: var(--wg-green);
+  background: var(--wg-action-hover);
 }
 
 /* Focus and motion */

@@ -38,7 +38,7 @@ export function BillingDirectory({ kind, entries }: BillingDirectoryProps) {
         {visible.map((entry) => (
           <article className="billing-directory-card" key={entry.name}>
             <div className="billing-card-icon" aria-hidden="true">
-              <Image src={entry.icon} alt="" width={64} height={64} unoptimized />
+              <Image src={entry.icon} alt="" width={64} height={64} sizes="64px" />
             </div>
             <h3>{entry.name}</h3>
             {entry.description ? <p>{entry.description}</p> : null}

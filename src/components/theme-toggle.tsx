@@ -3,16 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const storageKey = "goodman-group-theme";
-type Theme = "dark" | "light";
-
-function savedTheme(): Theme {
-  try {
-    return localStorage.getItem(storageKey) === "light" ? "light" : "dark";
-  } catch {
-    return "dark";
-  }
-}
+import { readSiteTheme, setSiteTheme, type Theme } from "@/lib/site-theme";
 
 function setChromeTheme(theme: Theme) {
   document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
@@ -27,17 +18,39 @@ export function ThemeToggle() {
   useEffect(() => {
     const shell = buttonRef.current?.closest<HTMLElement>(".site-shell");
     if (!shell) return;
-    const preference = savedTheme();
-    setChromeTheme(preference);
-    shell.dataset.theme = preference;
-    setTheme(preference);
-    const observer = new MutationObserver(() => {
-      if (shell.isConnected) setChromeTheme(shell.dataset.theme === "light" ? "light" : "dark");
+
+    const applyThemeToShell = (currentTheme: Theme) => {
+      setTheme(currentTheme);
+      if (shell.isConnected) {
+        shell.dataset.theme = currentTheme;
+        setChromeTheme(currentTheme);
+        const backdrop = document.querySelector<HTMLElement>(".mobile-nav-backdrop");
+        if (backdrop) backdrop.dataset.theme = currentTheme;
+      }
+    };
+
+    const preference = readSiteTheme();
+    applyThemeToShell(preference);
+
+    const rootObserver = new MutationObserver(() => {
+      const current = readSiteTheme();
+      applyThemeToShell(current);
     });
-    observer.observe(document.head, { childList: true });
+    rootObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    const headObserver = new MutationObserver(() => {
+      if (shell.isConnected) {
+        setChromeTheme(shell.dataset.theme === "light" ? "light" : "dark");
+      }
+    });
+    headObserver.observe(document.head, { childList: true });
+
     return () => {
-      observer.disconnect();
-      setChromeTheme("dark");
+      rootObserver.disconnect();
+      headObserver.disconnect();
     };
   }, []);
 
@@ -50,17 +63,13 @@ export function ThemeToggle() {
       aria-pressed={theme === "light"}
       onClick={() => {
         const next = theme === "dark" ? "light" : "dark";
+        setSiteTheme(next);
         const shell = buttonRef.current?.closest<HTMLElement>(".site-shell");
         if (shell) shell.dataset.theme = next;
         setChromeTheme(next);
         const backdrop = document.querySelector<HTMLElement>(".mobile-nav-backdrop");
         if (backdrop) backdrop.dataset.theme = next;
         setTheme(next);
-        try {
-          localStorage.setItem(storageKey, next);
-        } catch {
-          // Storage may be disabled; the current page remains usable.
-        }
       }}
     >
       {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}

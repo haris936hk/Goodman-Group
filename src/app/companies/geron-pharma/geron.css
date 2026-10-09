@@ -1,22 +1,30 @@
 /* Geron Pharma: Deep violet, circular healthcare-network composition */
 .geron-page {
-  --geron-bg: #0c0817;
-  --geron-surface: #17102b;
-  --geron-surface-card: #20153d;
-  --geron-purple: #8b5cf6;
-  --geron-purple-light: #c4b5fd;
-  --geron-glow: rgba(139, 92, 246, 0.25);
-  --geron-heading: #f5f3ff;
-  --geron-body: #ddd6fe;
-  --geron-muted: #a78bfa;
-  --geron-rule: rgba(139, 92, 246, 0.2);
+  color-scheme: dark;
+  --geron-bg: light-dark(#f8f5ff, #0c0817);
+  --geron-surface: light-dark(#ffffff, #17102b);
+  --geron-surface-card: light-dark(#eee7fc, #20153d);
+  --geron-purple: light-dark(#6d28d9, #8b5cf6);
+  --geron-purple-light: light-dark(#5925a6, #c4b5fd);
+  --geron-glow: light-dark(rgba(109, 40, 217, 0.1), rgba(139, 92, 246, 0.25));
+  --geron-heading: light-dark(#25133f, #f5f3ff);
+  --geron-body: light-dark(#453653, #ddd6fe);
+  --geron-muted: light-dark(#655176, #a78bfa);
+  --geron-rule: light-dark(#d4c4eb, rgba(139, 92, 246, 0.2));
+  --geron-orbit: light-dark(rgba(109, 40, 217, 0.4), rgba(139, 92, 246, 0.4));
+  --geron-ambient: light-dark(rgba(139, 92, 246, 0.09), rgba(139, 92, 246, 0.18));
+  --geron-ambient-soft: light-dark(rgba(91, 33, 182, 0.04), rgba(91, 33, 182, 0.08));
+  --geron-title-start: light-dark(#25133f, #ffffff);
+  --geron-title-end: light-dark(#6d28d9, #c4b5fd);
+  --geron-card-start: light-dark(rgba(255, 255, 255, 0.96), rgba(38, 25, 66, 0.92));
+  --geron-card-end: light-dark(rgba(240, 233, 252, 0.96), rgba(17, 12, 31, 0.94));
 
-  /* Frame token overrides */
-  --frame-fg: #f5f3ff;
-  --frame-bg: #0c0817;
-  --frame-border: rgba(139, 92, 246, 0.25);
-  --frame-badge-bg: rgba(139, 92, 246, 0.2);
-  --frame-badge-fg: #c4b5fd;
+  /* Frame retains Geron's brand palette in the shared site mode. */
+  --frame-fg: var(--geron-heading);
+  --frame-bg: var(--geron-bg);
+  --frame-border: var(--geron-rule);
+  --frame-badge-bg: var(--geron-glow);
+  --frame-badge-fg: var(--geron-purple-light);
 
   background-color: var(--geron-bg);
   color: var(--geron-body);
@@ -26,6 +34,25 @@
   position: relative;
   overflow-x: clip;
 }
+
+.geron-page[data-theme="light"] { color-scheme: light; }
+.geron-page[data-theme="dark"] { color-scheme: dark; }
+html:has(.geron-page),
+body:has(.geron-page) {
+  color-scheme: dark;
+  background: light-dark(#f8f5ff, #0c0817);
+}
+html:has(.geron-page[data-theme="light"]),
+body:has(.geron-page[data-theme="light"]) { color-scheme: light; }
+html:has(.geron-page[data-theme="dark"]),
+body:has(.geron-page[data-theme="dark"]) { color-scheme: dark; }
+
+.geron-page ::selection {
+  background: var(--geron-purple-light);
+  color: var(--geron-bg);
+}
+.geron-page .group-frame-nav { gap: 1rem; }
+.geron-page a.geron-pill:hover { background: var(--geron-surface-card); }
 
 /* Ambient radial glow background */
 .geron-page::before {
@@ -38,8 +65,8 @@
   height: 45rem;
   background: radial-gradient(
     circle at 50% 20%,
-    rgba(139, 92, 246, 0.18) 0%,
-    rgba(91, 33, 182, 0.08) 45%,
+    var(--geron-ambient) 0%,
+    var(--geron-ambient-soft) 45%,
     transparent 75%
   );
   pointer-events: none;
@@ -106,7 +133,7 @@
   color: var(--geron-heading);
   text-transform: uppercase;
   margin: 0 0 1rem;
-  background: linear-gradient(180deg, #ffffff 0%, #c4b5fd 100%);
+  background: linear-gradient(180deg, var(--geron-title-start) 0%, var(--geron-title-end) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -145,7 +172,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px dashed rgba(139, 92, 246, 0.4);
+  border: 1px dashed var(--geron-orbit);
   animation: geronOrbit 40s linear infinite;
   pointer-events: none;
 }
@@ -167,9 +194,10 @@
   width: 78%;
   height: 78%;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, var(--geron-surface-card), var(--geron-surface));
+  /* The supplied logo has a white canvas; preserve its original colors. */
+  background: #ffffff;
   border: 2px solid var(--geron-purple);
-  box-shadow: 0 0 35px var(--geron-glow), inset 0 0 20px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 35px var(--geron-glow), inset 0 0 20px var(--geron-glow);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,8 +256,8 @@
   border-radius: 1.5rem;
   background: linear-gradient(
     150deg,
-    rgba(38, 25, 66, 0.92),
-    rgba(17, 12, 31, 0.94)
+    var(--geron-card-start),
+    var(--geron-card-end)
   );
 }
 

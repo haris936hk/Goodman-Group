@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Check, PackageCheck, ShieldCheck, Stethoscope } from "lucide-react";
@@ -18,11 +18,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "/companies/goodman-medical-equipment" },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafbfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#101c26" },
+  ],
+};
 export default function GoodmanMedicalEquipmentPage() {
   const email = profile.contacts.find((contact) => contact.label === "Email")!;
 
   return (
-    <CompanyGroupFrame company={company} className="medical-equipment-page">
+    <CompanyGroupFrame
+      company={company}
+      className="medical-equipment-page"
+    >
       <OrganizationJsonLd company={company} />
       <header className="med-hero" id="med-top">
         <div className="med-shell med-hero-grid">

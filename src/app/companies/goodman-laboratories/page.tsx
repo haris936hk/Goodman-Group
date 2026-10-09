@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Check, ShieldCheck } from "lucide-react";
 
@@ -17,13 +17,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/companies/goodman-laboratories" },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fcfaf7" },
+    { media: "(prefers-color-scheme: dark)", color: "#191416" },
+  ],
+};
+
 export default function GoodmanLaboratoriesPage() {
   const leader = profile.leadership;
   const certifications = profile.certifications;
   const contact = profile.contactAndLocations;
 
   return (
-    <CompanyGroupFrame company={company} className="laboratories-page">
+    <CompanyGroupFrame
+      company={company}
+      className="laboratories-page"
+    >
       <OrganizationJsonLd company={company} />
       <header className="lab-hero" id="lab-top">
         <div className="lab-shell lab-hero-grid">

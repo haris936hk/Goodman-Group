@@ -1,34 +1,71 @@
 .medical-equipment-page {
-  --med-ink: #243c4d;
-  --med-accent: #365f7a;
-  --med-muted: #536573;
-  --med-paper: #fafbfc;
-  --med-tint: #edf2f5;
-  --med-rule: #d7e1e7;
-  --med-dark: #233d50;
+  --med-ink: light-dark(#243c4d, #edf4f8);
+  --med-accent: light-dark(#365f7a, #a7cce2);
+  --med-muted: light-dark(#536573, #b3c4d0);
+  --med-paper: light-dark(#fafbfc, #101c26);
+  --med-tint: light-dark(#edf2f5, #172a38);
+  --med-rule: light-dark(#d7e1e7, #365064);
+  --med-dark: light-dark(#233d50, #1b3344);
+  --med-hero-bg: light-dark(#e9eff3, #1a2f3f);
+  --med-surface: light-dark(#ffffff, #1c3141);
+  --med-product-alt: light-dark(#e8eff4, #253e50);
+  --med-presence-alt: light-dark(#e2ecf2, #213b4d);
+  --med-badge-bg: light-dark(#e0eaf0, #253e50);
+  --med-panel-fg: #f6f9fc;
+  --med-panel-muted: #c5d8e5;
+  --med-panel-dot: #adcddd;
+  --med-panel-rule: light-dark(#6d899b, #88aabd);
+  --med-hero-shadow: light-dark(#233d5014, #06111f40);
+  --med-workflow-rule: light-dark(#b8cbd7, #7395ad);
+  --med-disclosure-open-rule: light-dark(#8da9bb, #88aabd);
+  --med-target-rule: light-dark(#9fb5c4, #7395ad);
+  --med-action-bg: light-dark(#243c4d, #a7cce2);
+  --med-action-fg: light-dark(#ffffff, #13232e);
+  --med-action-hover: light-dark(#365f7a, #c7deeb);
+  --med-contact-action-bg: light-dark(#dce9f0, #c7deeb);
+  --med-contact-action-fg: light-dark(#233d50, #13232e);
+  --med-contact-action-hover: light-dark(#ffffff, #edf4f8);
+  --med-focus: light-dark(#365f7a, #a7cce2);
+  --med-control-rule: light-dark(#6d899b, #7395ad);
   --med-ease: cubic-bezier(.22, 1, .36, 1);
   --frame-fg: var(--med-ink);
   --frame-bg: var(--med-paper);
   --frame-border: var(--med-rule);
-  --frame-badge-bg: #e0eaf0;
+  --frame-badge-bg: var(--med-badge-bg);
   --frame-badge-fg: var(--med-accent);
   background: var(--med-paper);
   color: var(--med-ink);
-  color-scheme: light;
+  color-scheme: dark;
   overflow-wrap: anywhere;
 }
+
+.medical-equipment-page[data-theme="light"] { color-scheme: light; }
+.medical-equipment-page[data-theme="dark"] { color-scheme: dark; }
+
+html:has(.medical-equipment-page),
+body:has(.medical-equipment-page) {
+  color-scheme: dark;
+  background: light-dark(#fafbfc, #101c26);
+}
+html:has(.medical-equipment-page[data-theme="light"]),
+body:has(.medical-equipment-page[data-theme="light"]) { color-scheme: light; }
+html:has(.medical-equipment-page[data-theme="dark"]),
+body:has(.medical-equipment-page[data-theme="dark"]) { color-scheme: dark; }
+
+.medical-equipment-page .group-frame-nav { gap: 1rem; }
+
 .medical-equipment-page h1, .medical-equipment-page h2, .medical-equipment-page h3, .medical-equipment-page p { margin: 0; }
-.medical-equipment-page :focus-visible { outline: 2px solid var(--med-accent); outline-offset: 5px; }
+.medical-equipment-page :focus-visible { outline: 2px solid var(--med-focus); outline-offset: 5px; }
 .med-shell { width: min(1280px, calc(100% - 96px)); margin-inline: auto; }
 .med-kicker { font-size: .73rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 .med-prose { max-width: 65ch; color: var(--med-muted); font-size: .92rem; line-height: 1.8; }
-.med-hero { padding-block: 88px 80px; background: #e9eff3; }
+.med-hero { padding-block: 88px 80px; background: var(--med-hero-bg); }
 .med-hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 72px; align-items: center; }
 .med-hero h1 { font-size: clamp(2.8rem, 4.5vw, 4.8rem); line-height: 1.06; font-weight: 600; letter-spacing: -.06em; margin-block: 24px; }
 .med-hero h1 span { color: var(--med-accent); }
 .med-hero-message { font-size: 1.15rem; line-height: 1.6; max-width: 42ch; margin-bottom: 16px !important; }
 .med-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; margin-block: 30px; }
-.med-action { display: inline-flex; justify-content: center; align-items: center; gap: 18px; border-radius: 6px; padding: 16px 22px; background: var(--med-ink); color: #fff; font-size: .88rem; font-weight: 600; text-decoration: none; transition: transform 220ms var(--med-ease); }
+.med-action { display: inline-flex; justify-content: center; align-items: center; gap: 18px; border-radius: 6px; padding: 16px 22px; background: var(--med-action-bg); color: var(--med-action-fg); font-size: .88rem; font-weight: 600; text-decoration: none; transition: transform 220ms var(--med-ease); }
 .med-action:active { transform: scale(.98); }
 .med-text-link { display: inline-flex; align-items: center; gap: 10px; font-size: .85rem; font-weight: 600; text-underline-offset: 5px; }
 .med-action svg, .med-text-link svg { flex-shrink: 0; transition: transform 220ms var(--med-ease); }
@@ -36,19 +73,19 @@
 .med-text-link[href="#solutions"]:focus-visible svg { transform: translateY(3px); }
 .med-assurance { display: flex; align-items: center; gap: 10px; color: var(--med-muted); font-size: .76rem; line-height: 1.7; }
 .med-assurance svg { flex-shrink: 0; color: var(--med-accent); }
-.med-hero-panel { border-radius: 18px; padding: 36px; background: var(--med-dark); color: #f6f9fc; box-shadow: 0 24px 60px #233d5014; }
+.med-hero-panel { --med-focus: var(--med-panel-dot); border-radius: 18px; padding: 36px; background: var(--med-dark); color: var(--med-panel-fg); box-shadow: 0 24px 60px var(--med-hero-shadow); }
 .med-panel-brand { display: inline-flex; justify-content: center; align-items: center; background: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 24px; }
 .med-panel-brand img { display: block; width: 150px; max-width: 100%; height: auto; }
-.med-panel-label { display: flex; gap: 9px; align-items: center; font-size: .72rem; color: #c5d8e5; line-height: 1.6; }
-.med-panel-label > span { width: 7px; height: 7px; border-radius: 50%; background: #adcddd; flex-shrink: 0; }
+.med-panel-label { display: flex; gap: 9px; align-items: center; font-size: .72rem; color: var(--med-panel-muted); line-height: 1.6; }
+.med-panel-label > span { width: 7px; height: 7px; border-radius: 50%; background: var(--med-panel-dot); flex-shrink: 0; }
 .med-hero-panel h2 { font-size: clamp(1.6rem, 2.3vw, 2.4rem); letter-spacing: -.04em; line-height: 1.2; font-weight: 500; margin-block: 20px 26px; }
 .med-panel-products { list-style: none; padding: 0; margin: 0 0 26px; display: grid; gap: 10px; }
-.med-panel-products li { display: flex; align-items: center; gap: 14px; padding: 15px; border: 1px solid #6d899b; border-radius: 8px; font-size: .82rem; line-height: 1.6; }
-.med-panel-products li > span { color: #c5d8e5; font-size: .72rem; }
-.med-panel-products svg { flex-shrink: 0; margin-left: auto; color: #c5d8e5; }
-.med-panel-foundation { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; padding-top: 22px; border-top: 1px solid #6d899b; }
+.med-panel-products li { display: flex; align-items: center; gap: 14px; padding: 15px; border: 1px solid var(--med-panel-rule); border-radius: 8px; font-size: .82rem; line-height: 1.6; }
+.med-panel-products li > span { color: var(--med-panel-muted); font-size: .72rem; }
+.med-panel-products svg { flex-shrink: 0; margin-left: auto; color: var(--med-panel-muted); }
+.med-panel-foundation { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; padding-top: 22px; border-top: 1px solid var(--med-panel-rule); }
 .med-panel-foundation strong { font-size: 1.7rem; font-weight: 500; letter-spacing: -.04em; }
-.med-panel-foundation > span { font-size: .75rem; color: #c5d8e5; line-height: 1.8; }
+.med-panel-foundation > span { font-size: .75rem; color: var(--med-panel-muted); line-height: 1.8; }
 .med-section-nav { border-bottom: 1px solid var(--med-rule); background: var(--med-paper); }
 .med-section-nav .med-shell { display: flex; flex-wrap: wrap; gap: 18px 30px; padding-block: 20px; }
 .med-section-nav a { display: inline-flex; align-items: center; gap: 8px; position: relative; min-height: 28px; font-size: .8rem; font-weight: 600; text-decoration: none; }
@@ -64,10 +101,10 @@
 .med-section h3 { font-size: 1.15rem; line-height: 1.4; font-weight: 600; letter-spacing: -.02em; }
 .med-number { color: var(--med-accent); font-size: .74rem; font-weight: 600; letter-spacing: .04em; }
 .med-products { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; }
-.med-products article { padding: 32px; border: 1px solid var(--med-rule); border-radius: 12px; background: #fff; transition: transform 240ms var(--med-ease); }
-.med-products article:last-child { background: #e8eff4; }
+.med-products article { padding: 32px; border: 1px solid var(--med-rule); border-radius: 12px; background: var(--med-surface); transition: transform 240ms var(--med-ease); }
+.med-products article:last-child { background: var(--med-product-alt); }
 .med-product-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; }
-.med-icon { display: grid; place-items: center; width: 64px; height: 64px; background: var(--med-dark); color: #fff; border-radius: 18px; }
+.med-icon { display: grid; place-items: center; width: 64px; height: 64px; background: var(--med-dark); color: var(--med-panel-fg); border-radius: 18px; }
 .med-products h3 { font-size: 1.5rem; margin-bottom: 14px; letter-spacing: -.035em; }
 .med-products p { color: var(--med-muted); font-size: .92rem; line-height: 1.8; max-width: 55ch; }
 .med-product-caption { display: block; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--med-rule); color: var(--med-muted); font-size: .74rem; }
@@ -85,21 +122,21 @@
 .med-workflow { --med-marker-size: 52px; list-style: none; padding: 0; margin: 0; }
 .med-workflow li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 24px; }
 .med-workflow-marker { display: flex; flex-direction: column; align-items: center; position: relative; min-height: calc(var(--med-marker-size) + 44px); }
-.med-workflow-marker > span { display: grid; place-items: center; flex-shrink: 0; width: var(--med-marker-size); height: var(--med-marker-size); border: 1px solid #b8cbd7; border-radius: 50%; color: var(--med-accent); background: var(--med-paper); font-size: .82rem; font-weight: 600; transition: transform 240ms var(--med-ease); }
-.med-workflow-marker::after { content: ""; width: 1px; background: #b8cbd7; flex: 1; margin-block: 8px; }
+.med-workflow-marker > span { display: grid; place-items: center; flex-shrink: 0; width: var(--med-marker-size); height: var(--med-marker-size); border: 1px solid var(--med-workflow-rule); border-radius: 50%; color: var(--med-accent); background: var(--med-paper); font-size: .82rem; font-weight: 600; transition: transform 240ms var(--med-ease); }
+.med-workflow-marker::after { content: ""; width: 1px; background: var(--med-workflow-rule); flex: 1; margin-block: 8px; }
 .med-workflow-marker svg { position: absolute; top: calc(50% + var(--med-marker-size) / 2 - 8.5px); background: var(--med-tint); color: var(--med-accent); }
 .med-workflow li:last-child .med-workflow-marker { min-height: var(--med-marker-size); }
 .med-workflow li:last-child .med-workflow-marker::after { display: none; }
-.med-workflow li:last-child .med-workflow-marker > span { background: var(--med-dark); color: #fff; border-color: var(--med-dark); }
+.med-workflow li:last-child .med-workflow-marker > span { background: var(--med-dark); color: var(--med-panel-fg); border-color: var(--med-dark); }
 .med-workflow li > p { padding: 12px 0 32px; color: var(--med-muted); line-height: 1.8; font-size: .94rem; }
 .med-workflow li + li > p { border-top: 1px solid var(--med-rule); }
-.med-disclosure { min-width: 0; border: 1px solid var(--med-rule); background: #fff; border-radius: 10px; padding-inline: 26px; }
+.med-disclosure { min-width: 0; border: 1px solid var(--med-rule); background: var(--med-surface); border-radius: 10px; padding-inline: 26px; }
 .med-disclosure summary { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 23px 28px 23px 0; cursor: pointer; list-style: none; font-size: .94rem; font-weight: 600; line-height: 1.6; }
 .med-disclosure summary::-webkit-details-marker { display: none; }
 .med-disclosure summary::before, .med-disclosure summary::after { content: ""; position: absolute; right: 2px; top: calc(50% - 1px); width: 14px; height: 2px; background: var(--med-accent); }
 .med-disclosure summary::before { transform: rotate(90deg); transition: transform 240ms var(--med-ease), opacity 180ms; }
 .med-disclosure[open] summary::before { transform: rotate(0); opacity: 0; }
-.med-disclosure[open] { border-color: #8da9bb; }
+.med-disclosure[open] { border-color: var(--med-disclosure-open-rule); }
 .med-disclosure summary:active::after { transform: scaleX(.8); }
 .med-disclosure summary small { color: var(--med-muted); font-size: .75rem; flex-shrink: 0; font-weight: 400; }
 .med-disclosure-content { padding-bottom: 26px; }
@@ -112,7 +149,7 @@
 .med-instrument-steps p { color: var(--med-muted); font-size: .87rem; line-height: 1.8; }
 .med-presence-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; }
 .med-presence-grid article { padding: 32px; background: var(--med-tint); border: 1px solid var(--med-rule); border-radius: 12px; }
-.med-presence-grid article:last-child { background: #e2ecf2; }
+.med-presence-grid article:last-child { background: var(--med-presence-alt); }
 .med-presence-grid h3 { margin-block: 22px 10px; font-size: 2rem; letter-spacing: -.04em; }
 .med-presence-grid p { font-size: .88rem; color: var(--med-muted); }
 .med-presence-grid address { border-top: 1px solid var(--med-rule); margin-top: 26px; padding-top: 18px; font-size: .8rem; font-style: normal; }
@@ -132,7 +169,7 @@
 .med-operating-markets h3, .med-target-markets h3 { margin-top: 16px; font-size: 1.5rem; }
 .med-target-markets { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--med-rule); }
 .med-target-markets ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; padding: 0; margin: 24px 0 0; gap: 16px; }
-.med-target-markets li { padding: 20px; border: 1px dashed #9fb5c4; border-radius: 8px; font-size: .9rem; }
+.med-target-markets li { padding: 20px; border: 1px dashed var(--med-target-rule); border-radius: 8px; font-size: .9rem; }
 .med-target-markets li > span { display: block; margin-top: 7px; color: var(--med-muted); font-size: .71rem; }
 .med-leadership-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 72px; align-items: center; }
 .med-leadership-intro > p:not(.med-kicker):not(.med-prose) { color: var(--med-accent); font-size: 1rem; margin-bottom: 16px; }
@@ -146,23 +183,23 @@
 .med-board li > span { color: var(--med-muted); font-size: .75rem; }
 .med-disclosures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 .med-disclosure-content .med-check-list { margin-top: 0; }
-.med-contact { background: var(--med-dark); color: #f6f9fc; padding-block: 80px; scroll-margin-top: 24px; }
+.med-contact { --med-focus: var(--med-panel-dot); background: var(--med-dark); color: var(--med-panel-fg); padding-block: 80px; scroll-margin-top: 24px; }
 .med-contact-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 100px; }
-.med-contact .med-kicker { color: #c5d8e5; }
-.med-contact-layout > div > p:not(.med-kicker):not(.med-contact-legal) { color: #c5d8e5; max-width: 46ch; line-height: 1.8; margin-bottom: 26px; }
-.med-contact .med-action { background: #dce9f0; color: var(--med-dark); }
-.med-contact-legal { margin-top: 26px !important; font-size: .76rem; color: #c5d8e5; line-height: 1.8; }
+.med-contact .med-kicker { color: var(--med-panel-muted); }
+.med-contact-layout > div > p:not(.med-kicker):not(.med-contact-legal) { color: var(--med-panel-muted); max-width: 46ch; line-height: 1.8; margin-bottom: 26px; }
+.med-contact .med-action { background: var(--med-contact-action-bg); color: var(--med-contact-action-fg); }
+.med-contact-legal { margin-top: 26px !important; font-size: .76rem; color: var(--med-panel-muted); line-height: 1.8; }
 .med-contact-list { display: grid; gap: 24px; margin: 0; }
 .med-contact-list dt { font-size: .76rem; font-weight: 600; margin-bottom: 7px; }
-.med-contact-list dd { margin: 0; color: #c5d8e5; font-size: .85rem; line-height: 1.8; }
+.med-contact-list dd { margin: 0; color: var(--med-panel-muted); font-size: .85rem; line-height: 1.8; }
 .med-contact-list a { display: inline-flex; align-items: center; gap: 8px; text-underline-offset: 5px; transition: opacity 180ms; }
 .med-contact-list svg { flex-shrink: 0; }
 .med-group-routing-link { margin-top: 30px; line-height: 1.7; }
 .med-back-top { display: block; width: fit-content; margin-top: 22px; }
 .med-icon svg, .med-panel-products svg, .med-founders .med-number { transition: transform 240ms var(--med-ease); }
 @media (hover: hover) and (pointer: fine) {
-  .med-action:hover { background: var(--med-accent); transform: translateY(-2px); }
-  .med-contact .med-action:hover { background: #fff; }
+  .med-action:hover { background: var(--med-action-hover); transform: translateY(-2px); }
+  .med-contact .med-action:hover { background: var(--med-contact-action-hover); }
   .med-action:active { transform: scale(.98); }
   .med-action:hover svg, .med-text-link:hover svg { transform: translate(2px, -2px); }
   .med-text-link[href="#solutions"]:hover svg { transform: translateY(3px); }
