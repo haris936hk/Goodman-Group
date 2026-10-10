@@ -1,15 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { mockMatchMedia } from "../../../../tests/test-utils";
 import WalGreenChemicalsPage, { metadata } from "./page";
 
 describe("WalGreenChemicalsPage", () => {
   beforeEach(() => {
-    vi.stubGlobal("matchMedia", vi.fn(() => ({
-      matches: false,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    })));
+    mockMatchMedia(false);
   });
   it("exports valid canonical metadata", () => {
     expect(metadata.title).toBe("Wal Green Chemicals");
@@ -132,5 +129,32 @@ describe("WalGreenChemicalsPage", () => {
         /Wal Green Chemicals states that it looks forward to building long-term supply partnerships with customers\./i,
       ),
     ).toBeInTheDocument();
+  });
+
+  it("renders fallbacks when company logo is omitted", async () => {
+    vi.resetModules();
+    vi.doMock("@/data/companies", () => ({
+      getCompanyBySlug: (slug: string) => ({
+        slug,
+        displayName: "Wal Green Chemicals",
+        legalName: "Wal Green Chemicals (Pvt.) Ltd.",
+        relationship: null,
+        business: "Raw materials",
+        summary: "Summary.",
+        logo: null,
+        accent: "#1e7e50",
+        founded: "2021",
+        locations: [],
+        leadership: [],
+        capabilities: [],
+        contacts: [],
+      }),
+    }));
+    // Exception: dynamic import is required to evaluate the page module under vi.doMock isolation.
+    const { default: MockWalGreenPage } = await import("./page");
+    render(<MockWalGreenPage />);
+    expect(screen.queryByAltText("Wal Green Chemicals logo")).not.toBeInTheDocument();
+    vi.doUnmock("@/data/companies");
+    vi.resetModules();
   });
 });

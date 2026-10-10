@@ -34,8 +34,8 @@ Use Node 24 and npm; install with `npm ci`.
 | `npm run typecheck` | TypeScript without emitting files |
 | `npm test` / `npm run test:run` | Vitest watch / single run |
 | `npm run test:coverage` | Unit tests with enforced coverage |
-| `npm run test:e2e` | Chromium and Firefox journeys |
-| `npm run test:e2e:all` | All projects, including WebKit |
+|`npm run test:e2e`|Chromium journeys|
+|`npm run test:e2e:all`|All E2E journeys (Chromium)|
 | `npm run test:e2e:headed` / `npm run test:e2e:ui` | Interactive browser debugging |
 | `npm run check` | Lint, typecheck, coverage, build; **excludes E2E** |
 

@@ -1,16 +1,13 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
+import { mockMatchMedia } from "../../../../tests/test-utils";
 import GoodmanBillingPage from "./page";
 
 describe("Goodman Billing directories", () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.stubGlobal("matchMedia", vi.fn(() => ({
-      matches: false,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    })));
+    mockMatchMedia(false);
   });
 
   it("finds services by benefit text and restores the directory after an empty search", () => {

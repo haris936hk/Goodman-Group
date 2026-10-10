@@ -83,4 +83,92 @@ describe("POST /api/enquiries", () => {
     vi.stubEnv("ENQUIRY_TRUST_PROXY", "false");
     expect((await POST(request())).status).toBe(503);
   });
+  it("rejects non-JSON content types with 415", async () => {
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain", Origin: "https://goodmangoc.com", "x-forwarded-for": "203.0.113.5" },
+      body: JSON.stringify(valid),
+    });
+    expect((await POST(req)).status).toBe(415);
+  });
+  it("rejects request without body with 400", async () => {
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://goodmangoc.com", "x-forwarded-for": "203.0.113.5" },
+    });
+    expect((await POST(req)).status).toBe(400);
+  });
+  it("handles stream read failures gracefully with 400", async () => {
+    const errorStream = new ReadableStream({
+      pull() {
+        throw new Error("stream read failure");
+      },
+    });
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://goodmangoc.com", "x-forwarded-for": "203.0.113.5" },
+      body: errorStream,
+      // @ts-expect-error duplex streaming
+      duplex: "half",
+    });
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect((await response.json()).message).toContain("could not be read");
+  });
+  it("rejects malformed JSON syntax with 400", async () => {
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://goodmangoc.com", "x-forwarded-for": "203.0.113.5" },
+      body: "{not-valid-json",
+    });
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect((await response.json()).message).toBe("Please send a valid enquiry.");
+  });
+  it.each([
+    Response.json({}),
+    Response.json({ result: "not-a-number" }),
+    Response.json({ result: -1 }),
+    Response.json({ result: 0 }),
+    new Response("null", { status: 200, headers: { "Content-Type": "application/json" } }),
+  ])("fails closed with 502 when rate limiter response shape is invalid %#", async (limiterPayload) => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(limiterPayload));
+    const response = await POST(request());
+    expect(response.status).toBe(502);
+  });
+  it("resolves client IP from x-vercel-forwarded-for when running on Vercel", async () => {
+    vi.stubEnv("VERCEL", "1");
+    const fetcher = vi.fn().mockResolvedValueOnce(Response.json({ result: 1 })).mockResolvedValueOnce(Response.json({ id: "ok" }));
+    vi.stubGlobal("fetch", fetcher);
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://goodmangoc.com", "x-vercel-forwarded-for": "203.0.113.10" },
+      body: JSON.stringify(valid),
+    });
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+  });
+  it("rejects invalid client IP addresses with 503", async () => {
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://goodmangoc.com", "x-forwarded-for": "invalid-ip" },
+      body: JSON.stringify(valid),
+    });
+    expect((await POST(req)).status).toBe(503);
+  });
+  it("falls back to x-forwarded-for on Vercel when x-vercel-forwarded-for is missing", async () => {
+    vi.stubEnv("VERCEL", "1");
+    const fetcher = vi.fn().mockResolvedValueOnce(Response.json({ result: 1 })).mockResolvedValueOnce(Response.json({ id: "ok" }));
+    vi.stubGlobal("fetch", fetcher);
+    const req = new Request("https://goodmangoc.com/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://goodmangoc.com", "x-forwarded-for": "203.0.113.11" },
+      body: JSON.stringify(valid),
+    });
+    expect((await POST(req)).status).toBe(200);
+  });
+  it("returns 502 when rate limiter response is not ok", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("error", { status: 500 })));
+    expect((await POST(request())).status).toBe(502);
+  });
 });

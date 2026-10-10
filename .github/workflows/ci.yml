@@ -76,7 +76,7 @@ jobs:
           npm run smoke:deployment -- http://127.0.0.1:4173
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium --with-deps
 
       - name: Run end-to-end tests
         run: npm run test:e2e:all

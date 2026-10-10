@@ -129,7 +129,7 @@ export default function GeronPharmaPage() {
             style={{ textDecoration: "none", display: "inline-flex" }}
           >
             <span>Direct inquiries via Goodman Group</span>
-            <ArrowUpRight className="w-4 h-4" />
+            <ArrowUpRight className="size-4" />
           </Link>
         </div>
       </section>

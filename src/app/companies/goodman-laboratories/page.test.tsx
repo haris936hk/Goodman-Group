@@ -1,16 +1,13 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { mockMatchMedia } from "../../../../tests/test-utils";
 import GoodmanLaboratoriesPage from "./page";
 
 describe("GoodmanLaboratoriesPage", () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.stubGlobal("matchMedia", vi.fn(() => ({
-      matches: false,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    })));
+    mockMatchMedia(false);
   });
 
 
@@ -40,5 +37,49 @@ describe("GoodmanLaboratoriesPage", () => {
     expect(screen.getByRole("link", { name: "director.goodman786@gmail.com" })).toHaveAttribute("href", "mailto:director.goodman786@gmail.com");
     expect(screen.getByRole("link", { name: "+92 51 4455193–195" })).toHaveAttribute("href", "tel:+92514455193");
     expect(screen.getByRole("link", { name: "+92 51 4499156" })).toHaveAttribute("href", "tel:+92514499156");
+  });
+
+  it("renders fallbacks when company logo is omitted and handles single product category", async () => {
+    vi.resetModules();
+    vi.doMock("@/data/companies", () => ({
+      getCompanyBySlug: (slug: string) => ({
+        slug,
+        displayName: "Goodman Laboratories",
+        legalName: "Goodman Laboratories (Pvt.) Ltd.",
+        relationship: null,
+        business: "Pharmaceutical manufacturing",
+        summary: "Summary.",
+        logo: null,
+        accent: "#b4232c",
+        founded: "2008",
+        locations: [],
+        leadership: [],
+        capabilities: [],
+        contacts: [],
+      }),
+    }));
+    vi.doMock("@/data/goodman-laboratories", async (importOriginal) => {
+      const actual = await importOriginal<typeof import("@/data/goodman-laboratories")>();
+      return {
+        ...actual,
+        goodmanLaboratoriesProfile: {
+          ...actual.goodmanLaboratoriesProfile,
+          productCategories: [
+            {
+              name: "Single Product Category",
+              products: [{ name: "SoloDrug", details: "Single item detail" }],
+            },
+          ],
+        },
+      };
+    });
+    // Exception: dynamic import is required to evaluate the page module under vi.doMock isolation.
+    const { default: MockLaboratoriesPage } = await import("./page");
+    render(<MockLaboratoriesPage />);
+    expect(screen.queryByAltText("Goodman Laboratories logo")).not.toBeInTheDocument();
+    expect(screen.getByText("1 product")).toBeInTheDocument();
+    vi.doUnmock("@/data/companies");
+    vi.doUnmock("@/data/goodman-laboratories");
+    vi.resetModules();
   });
 });

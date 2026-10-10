@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { companies } from "@/data/companies";
 
@@ -81,5 +81,34 @@ describe("CompaniesPage", () => {
     expect(
       screen.queryByText("Automobiles are among Goodman Group's areas of activity."),
     ).not.toBeInTheDocument();
+  });
+  it("renders company cards without legalName and with text identity when logo is null", async () => {
+    vi.resetModules();
+    vi.doMock("@/data/companies", () => ({
+      companies: [
+        {
+          slug: "simple-corp",
+          displayName: "Simple Corp",
+          legalName: null,
+          relationship: null,
+          business: "Services",
+          summary: "Summary of simple corp.",
+          logo: null,
+          accent: "#123456",
+          founded: null,
+          locations: [],
+          leadership: [],
+          capabilities: [],
+          contacts: [],
+        },
+      ],
+    }));
+    // Exception: dynamic import is required to evaluate the page module under vi.doMock isolation.
+    const { default: MockCompaniesPage } = await import("./page");
+    render(<MockCompaniesPage />);
+    expect(screen.getByRole("heading", { level: 3, name: "Simple Corp" })).toBeInTheDocument();
+    expect(screen.getByText("Simple Corp", { selector: ".directory-text-identity" })).toBeInTheDocument();
+    vi.doUnmock("@/data/companies");
+    vi.resetModules();
   });
 });

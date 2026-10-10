@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { companies } from '@/data/companies';
 import { SITE_ORIGIN } from '@/data/goodman-group';
@@ -26,5 +26,18 @@ describe('sitemap.xml', () => {
       expect(xml).not.toContain(`/companies/${slug}`);
     }
     expect(xml).not.toContain('&quot;');
+  });
+  it('escapes XML special characters in URLs and supports invocation without request', async () => {
+    vi.resetModules();
+    vi.doMock('@/data/companies', () => ({
+      companies: [{ slug: 'test<slug>&"quote\'' }],
+    }));
+    // Exception: dynamic import reloads the route module under vi.doMock isolation.
+    const { GET: getRoute } = await import('./route');
+    const response = getRoute();
+    const xml = await response.text();
+    expect(xml).toContain('test&lt;slug&gt;&amp;&quot;quote&apos;');
+    vi.doUnmock('@/data/companies');
+    vi.resetModules();
   });
 });

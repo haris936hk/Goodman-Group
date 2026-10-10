@@ -5,6 +5,14 @@ import { useEffect, useRef, type ReactNode } from "react";
 type ScrollExperienceProps = {
   children?: ReactNode;
 };
+function loadScrollLibraries() {
+  return Promise.all([
+    import("lenis"),
+    import("gsap"),
+    import("gsap/ScrollTrigger"),
+  ]);
+}
+
 
 export function ScrollExperience({ children }: ScrollExperienceProps = {}) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -67,11 +75,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps = {}) {
     async function createExperience() {
       const currentGeneration = generation;
       const [{ default: Lenis }, { gsap }, { ScrollTrigger }] =
-        await Promise.all([
-          import("lenis"),
-          import("gsap"),
-          import("gsap/ScrollTrigger"),
-        ]);
+        await loadScrollLibraries();
 
       if (
         currentGeneration !== generation ||

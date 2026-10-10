@@ -22,7 +22,7 @@ export default defineConfig({
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         ...coverageConfigDefaults.exclude,
-        'src/app/**/{layout,loading,error,global-error,not-found,template}.tsx',
+        'src/app/**/{layout,loading,error,global-error,template}.tsx',
         // Scroll choreography is exercised through reduced-motion and browser
         // journeys; frame-level implementation coverage would be brittle.
         'src/components/scroll-experience.tsx',

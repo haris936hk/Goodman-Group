@@ -36,7 +36,7 @@ export function CompanyGroupFrame({
           </div>
           <nav className="group-frame-nav" aria-label="Group navigation">
             <Link href="/companies" className="group-frame-back-link">
-              <ArrowLeft aria-hidden="true" className="w-4 h-4" />
+              <ArrowLeft aria-hidden="true" className="size-4" />
               <span>All companies</span>
             </Link>
           </nav>

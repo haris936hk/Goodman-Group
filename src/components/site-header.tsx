@@ -21,7 +21,7 @@ export function SiteHeader() {
   const pathname = usePathname() ?? "/";
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const menuDialogRef = useRef<HTMLDivElement>(null);
+  const menuDialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const focusRestoreRef = useRef<HTMLElement | null>(null);
 
@@ -176,12 +176,15 @@ export function SiteHeader() {
 
       {typeof document !== "undefined" && isOpen
         ? createPortal(
-            <div
+            <dialog
               ref={menuDialogRef}
               className="mobile-nav-backdrop"
-              role="dialog"
-              aria-modal="true"
               aria-label="Site navigation"
+              open
+              onCancel={(event) => {
+                event.preventDefault();
+                closeMenu(true);
+              }}
               onPointerDown={(event) => {
                 if (event.target === event.currentTarget) {
                   closeMenu(true);
@@ -227,7 +230,7 @@ export function SiteHeader() {
                   Inquiries, partnerships and careers
                 </p>
               </nav>
-            </div>,
+            </dialog>,
             document.body,
           )
         : null}

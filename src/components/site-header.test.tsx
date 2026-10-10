@@ -44,6 +44,23 @@ describe('SiteHeader', () => {
     expect(document.body.style.overflow).toBe('');
     expect(screen.getByRole('button', { name: 'Open navigation' })).toHaveFocus();
   });
+  it('handles native dialog cancel event and restores scrolling', async () => {
+    const user = userEvent.setup();
+    render(<SiteHeader />);
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation' }));
+    const dialog = document.querySelector('dialog.mobile-nav-backdrop');
+    expect(dialog).toBeInTheDocument();
+
+    fireEvent(dialog!, new Event('cancel'));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('navigation', { name: 'Mobile navigation' }),
+      ).not.toBeInTheDocument();
+    });
+    expect(document.body.style.overflow).toBe('');
+  });
 
   it('follows the rendered menu toggle state after resize', async () => {
     const user = userEvent.setup();

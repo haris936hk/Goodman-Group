@@ -169,6 +169,42 @@ async function smoke(baseUrlArgument) {
   if (compressionCheck.headers.get("content-encoding") !== "gzip") {
     fail(baseUrl.href, "expected Content-Encoding: gzip when requested with Accept-Encoding: gzip");
   }
+  const notFoundUrl = new URL("/_smoke_non_existent_page", baseUrl);
+  const notFoundResponse = await fetch(notFoundUrl, { redirect: "manual", signal: AbortSignal.timeout(requestTimeoutMs) });
+  if (notFoundResponse.status !== 404) {
+    fail(notFoundUrl, `expected HTTP 404 on unmapped route, received ${notFoundResponse.status}`);
+  }
+  const notFoundHtml = await notFoundResponse.text();
+  if (!notFoundHtml.includes("This route has moved beyond the map.")) {
+    fail(notFoundUrl, "expected 404 page heading in response body");
+  }
+  console.log(`PASS ${notFoundUrl.href} (HTTP 404 verified)`);
+
+  const robotsUrl = new URL("/robots.txt", baseUrl);
+  const robotsResponse = await fetch(robotsUrl, { redirect: "manual", signal: AbortSignal.timeout(requestTimeoutMs) });
+  if (robotsResponse.status !== 200) {
+    fail(robotsUrl, `expected HTTP 200 for robots.txt, received ${robotsResponse.status}`);
+  }
+  const robotsText = await robotsResponse.text();
+  if (!robotsText.includes("Sitemap: https://goodmangoc.com/sitemap.xml")) {
+    fail(robotsUrl, "expected canonical sitemap directive in robots.txt");
+  }
+  console.log(`PASS ${robotsUrl.href} (robots.txt verified)`);
+
+  const sitemapUrl = new URL("/sitemap.xml", baseUrl);
+  const sitemapResponse = await fetch(sitemapUrl, { redirect: "manual", signal: AbortSignal.timeout(requestTimeoutMs) });
+  if (sitemapResponse.status !== 200) {
+    fail(sitemapUrl, `expected HTTP 200 for sitemap.xml, received ${sitemapResponse.status}`);
+  }
+  const sitemapContentType = sitemapResponse.headers.get("content-type") ?? "";
+  if (!sitemapContentType.includes("xml")) {
+    fail(sitemapUrl, `expected XML content-type, received ${sitemapContentType}`);
+  }
+  const sitemapXml = await sitemapResponse.text();
+  if (!sitemapXml.includes("<loc>https://goodmangoc.com/</loc>") || !sitemapXml.includes("<loc>https://goodmangoc.com/companies</loc>")) {
+    fail(sitemapUrl, "expected canonical origin URLs in sitemap.xml");
+  }
+  console.log(`PASS ${sitemapUrl.href} (sitemap.xml verified)`);
   for (const route of checkedRoutes) {
     console.log(`PASS ${route.url.href} (${route.assetCount} static references)`);
   }

@@ -1,9 +1,13 @@
 "use client";
 
 import {
-  getCountries,
-  getCountryCallingCode,
-} from "libphonenumber-js/min";
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type RefObject,
+} from "react";
 import {
   AlertCircle,
   Check,
@@ -13,12 +17,6 @@ import {
   Loader2,
   Send,
 } from "lucide-react";
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
 import {
   Button,
   ComboBox,
@@ -30,6 +28,7 @@ import {
   Select,
   SelectValue,
 } from "react-aria-components";
+import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 
 import {
   companyOptions,
@@ -49,15 +48,15 @@ interface CountryOption {
 let cachedCountryOptions: readonly CountryOption[] | null = null;
 let cachedCountryByLabel: Record<string, CountryOption> | null = null;
 
+const regionDisplayNames =
+  typeof Intl !== "undefined" && Intl.DisplayNames
+    ? new Intl.DisplayNames(["en"], { type: "region" })
+    : null;
+
 function getCountryOptions(): readonly CountryOption[] {
   if (!cachedCountryOptions) {
-    const displayNames =
-      typeof Intl !== "undefined" && Intl.DisplayNames
-        ? new Intl.DisplayNames(["en"], { type: "region" })
-        : null;
-
     cachedCountryOptions = getCountries().map((code) => {
-      const name = displayNames?.of(code) || code;
+      const name = regionDisplayNames?.of(code) || code;
       const callingCode = `+${getCountryCallingCode(code)}`;
       return { id: code, name, callingCode, label: `${name} (${callingCode})` };
     }).sort((a, b) => a.name.localeCompare(b.name, "en"));
@@ -90,37 +89,32 @@ const countryFilter = (textValue: string, inputValue: string): boolean => {
   return false;
 };
 
-export function EnquirySection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isSubmittingRef = useRef(false);
+const FIELD_ORDER = [
+  { key: "name", id: "enquiry-name" },
+  { key: "email", id: "enquiry-email" },
+  { key: "organisation", id: "enquiry-organisation" },
+  { key: "company", id: "enquiry-company-button" },
+  { key: "enquiryType", id: "enquiry-type-button" },
+  { key: "country", id: "enquiry-country-input" },
+  { key: "phone", id: "enquiry-phone" },
+  { key: "message", id: "enquiry-message" },
+] as const;
 
+function focusFirstInvalid(errorObj: Record<string, string>) {
+  for (const field of FIELD_ORDER) {
+    if (errorObj[field.key]) {
+      const el = document.getElementById(field.id);
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: "instant", block: "nearest" });
+        return;
+      }
+    }
+  }
+}
+
+function useEnquiryTheme(sectionRef: RefObject<HTMLElement | null>) {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Field states
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [organisation, setOrganisation] = useState("");
-  const [company, setCompany] = useState<CompanyOptionId | null>(null);
-  const [enquiryType, setEnquiryType] = useState<EnquiryTypeId | null>(null);
-  const [countryKey, setCountryKey] = useState<string | null>(null);
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
-  const [website, setWebsite] = useState(""); // honeypot
-  const countryOptions = useMemo(() => getCountryOptions(), []);
-
-  // Form field refs for focusing first invalid control
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const orgInputRef = useRef<HTMLInputElement>(null);
-  const companyButtonRef = useRef<HTMLButtonElement>(null);
-  const enquiryTypeButtonRef = useRef<HTMLButtonElement>(null);
-  const countryInputRef = useRef<HTMLInputElement>(null);
-  const phoneInputRef = useRef<HTMLInputElement>(null);
-  const messageTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const shell = sectionRef.current?.closest<HTMLElement>(".site-shell");
@@ -147,31 +141,526 @@ export function EnquirySection() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [sectionRef]);
 
-  const focusFirstInvalid = (errorObj: Record<string, string>) => {
-    const fieldOrder = [
-      { key: "name", id: "enquiry-name", ref: nameInputRef },
-      { key: "email", id: "enquiry-email", ref: emailInputRef },
-      { key: "organisation", id: "enquiry-organisation", ref: orgInputRef },
-      { key: "company", id: "enquiry-company-button", ref: companyButtonRef },
-      { key: "enquiryType", id: "enquiry-type-button", ref: enquiryTypeButtonRef },
-      { key: "country", id: "enquiry-country-input", ref: countryInputRef },
-      { key: "phone", id: "enquiry-phone", ref: phoneInputRef },
-      { key: "message", id: "enquiry-message", ref: messageTextareaRef },
-    ];
+  return theme;
+}
 
-    for (const field of fieldOrder) {
-      if (errorObj[field.key]) {
-        const el = field.ref.current || document.getElementById(field.id);
-        if (el) {
-          el.focus();
-          el.scrollIntoView({ behavior: "instant", block: "nearest" });
-          return;
-        }
-      }
-    }
-  };
+function EnquiryHeader() {
+  return (
+    <header className="enquiry-intro" data-reveal>
+      <p className="chapter-index">05 / Connect</p>
+      <h2 id="enquiry-heading" className="enquiry-heading">
+        Let’s start a conversation.
+      </h2>
+      <p className="enquiry-lead">
+        Tell us what you’re looking for, and we’ll connect you with the right
+        team within Goodman Group.
+      </p>
+      <div className="enquiry-clock-badge">
+        <Clock className="size-4 enquiry-badge-icon" aria-hidden="true" />
+        <span>We’ll respond within 24 hours</span>
+      </div>
+    </header>
+  );
+}
+
+function EnquiryNoscript() {
+  return (
+    <noscript>
+      <div className="enquiry-noscript">
+        <p>
+          Online enquiries require JavaScript to be enabled. You can contact Goodman Group
+          directly at{" "}
+          <a href="mailto:goodman@goodmangoc.com" className="enquiry-mailto-link">
+            goodman@goodmangoc.com
+          </a>
+          .
+        </p>
+      </div>
+    </noscript>
+  );
+}
+
+function EnquirySuccessView({
+  name,
+  onReset,
+}: {
+  readonly name: string;
+  readonly onReset: () => void;
+}) {
+  return (
+    <div className="enquiry-success-view" role="status" aria-live="polite">
+      <div className="enquiry-success-icon-wrap" aria-hidden="true">
+        <CheckCircle2 className="size-12 enquiry-success-icon" />
+      </div>
+      <h3 className="enquiry-success-heading">Enquiry Received</h3>
+      <p className="enquiry-success-message">
+        Thank you{name ? `, ${name}` : ""}. Your enquiry has been received.
+      </p>
+      <div className="enquiry-clock-badge enquiry-success-badge">
+        <Clock className="size-4 enquiry-badge-icon" aria-hidden="true" />
+        <span>We’ll respond within 24 hours</span>
+      </div>
+      <button
+        type="button"
+        onClick={onReset}
+        className="enquiry-reset-btn"
+      >
+        Send another enquiry
+      </button>
+    </div>
+  );
+}
+
+function EnquiryErrorAlert({ message }: { readonly message: string }) {
+  return (
+    <div className="enquiry-alert enquiry-alert-error" role="alert">
+      <AlertCircle className="size-5 shrink-0" aria-hidden="true" />
+      <p>{message}</p>
+    </div>
+  );
+}
+
+function EnquiryNameField({
+  value,
+  error,
+  onChange,
+}: {
+  readonly value: string;
+  readonly error?: string;
+  readonly onChange: (val: string) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-name">
+      <label htmlFor="enquiry-name" className="enquiry-label">
+        Full name <span className="enquiry-required" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="enquiry-name"
+        name="name"
+        type="text"
+        required
+        autoComplete="name"
+        placeholder="Your full name"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`enquiry-input ${error ? "enquiry-input-invalid" : ""}`}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? "enquiry-name-error" : undefined}
+      />
+      {error && (
+        <p id="enquiry-name-error" className="enquiry-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquiryEmailField({
+  value,
+  error,
+  onChange,
+}: {
+  readonly value: string;
+  readonly error?: string;
+  readonly onChange: (val: string) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-email">
+      <label htmlFor="enquiry-email" className="enquiry-label">
+        Email address <span className="enquiry-required" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="enquiry-email"
+        name="email"
+        type="email"
+        required
+        autoComplete="email"
+        spellCheck={false}
+        placeholder="you@example.com"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`enquiry-input ${error ? "enquiry-input-invalid" : ""}`}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? "enquiry-email-error" : undefined}
+      />
+      {error && (
+        <p id="enquiry-email-error" className="enquiry-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquiryOrgField({
+  value,
+  error,
+  onChange,
+}: {
+  readonly value: string;
+  readonly error?: string;
+  readonly onChange: (val: string) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-full enquiry-field-org">
+      <label htmlFor="enquiry-organisation" className="enquiry-label">
+        Organisation <span className="enquiry-optional">(optional)</span>
+      </label>
+      <input
+        id="enquiry-organisation"
+        name="organisation"
+        type="text"
+        autoComplete="organization"
+        placeholder="Company or institution name"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`enquiry-input ${error ? "enquiry-input-invalid" : ""}`}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? "enquiry-organisation-error" : undefined}
+      />
+      {error && (
+        <p id="enquiry-organisation-error" className="enquiry-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquiryCompanySelect({
+  theme,
+  company,
+  error,
+  onSelect,
+}: {
+  readonly theme: "light" | "dark";
+  readonly company: CompanyOptionId | null;
+  readonly error?: string;
+  readonly onSelect: (val: CompanyOptionId | null) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-company">
+      <Select
+        name="company"
+        isRequired
+        selectedKey={company}
+        onSelectionChange={(key) => {
+          onSelect(key ? (String(key) as CompanyOptionId) : null);
+        }}
+        className="enquiry-select-group"
+        isInvalid={Boolean(error)}
+        aria-describedby={error ? "enquiry-company-error" : undefined}
+      >
+        <Label className="enquiry-label">
+          Company of interest <span className="enquiry-required" aria-hidden="true">*</span>
+        </Label>
+        <Button
+          id="enquiry-company-button"
+          className={`enquiry-select-trigger ${error ? "enquiry-input-invalid" : ""}`}
+        >
+          <SelectValue className="enquiry-select-value">
+            {({ isPlaceholder, defaultChildren }) =>
+              isPlaceholder ? (
+                <span className="enquiry-placeholder">Choose a company</span>
+              ) : (
+                defaultChildren
+              )
+            }
+          </SelectValue>
+          <ChevronDown className="enquiry-chevron" aria-hidden="true" />
+        </Button>
+        <Popover className="enquiry-popover" data-theme={theme} data-lenis-prevent>
+          <ListBox className="enquiry-listbox" aria-label="Company of interest">
+            {companyOptions.map((opt) => (
+              <ListBoxItem
+                key={opt.id}
+                id={opt.id}
+                textValue={opt.label}
+                className="enquiry-listbox-item"
+              >
+                {({ isSelected }) => (
+                  <>
+                    <span className="enquiry-item-text">{opt.label}</span>
+                    {isSelected && (
+                      <Check className="enquiry-check" aria-hidden="true" />
+                    )}
+                  </>
+                )}
+              </ListBoxItem>
+            ))}
+          </ListBox>
+        </Popover>
+      </Select>
+      {error && (
+        <p id="enquiry-company-error" className="enquiry-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquiryTypeSelect({
+  theme,
+  enquiryType,
+  error,
+  onSelect,
+}: {
+  readonly theme: "light" | "dark";
+  readonly enquiryType: EnquiryTypeId | null;
+  readonly error?: string;
+  readonly onSelect: (val: EnquiryTypeId | null) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-type">
+      <Select
+        name="enquiryType"
+        isRequired
+        selectedKey={enquiryType}
+        onSelectionChange={(key) => {
+          onSelect(key ? (String(key) as EnquiryTypeId) : null);
+        }}
+        className="enquiry-select-group"
+        isInvalid={Boolean(error)}
+        aria-describedby={error ? "enquiry-type-error" : undefined}
+      >
+        <Label className="enquiry-label">
+          Enquiry type <span className="enquiry-required" aria-hidden="true">*</span>
+        </Label>
+        <Button
+          id="enquiry-type-button"
+          className={`enquiry-select-trigger ${error ? "enquiry-input-invalid" : ""}`}
+        >
+          <SelectValue className="enquiry-select-value">
+            {({ isPlaceholder, defaultChildren }) =>
+              isPlaceholder ? (
+                <span className="enquiry-placeholder">Select enquiry purpose</span>
+              ) : (
+                defaultChildren
+              )
+            }
+          </SelectValue>
+          <ChevronDown className="enquiry-chevron" aria-hidden="true" />
+        </Button>
+        <Popover className="enquiry-popover" data-theme={theme} data-lenis-prevent>
+          <ListBox className="enquiry-listbox" aria-label="Enquiry type">
+            {enquiryTypeOptions.map((opt) => (
+              <ListBoxItem
+                key={opt.id}
+                id={opt.id}
+                textValue={opt.label}
+                className="enquiry-listbox-item"
+              >
+                {({ isSelected }) => (
+                  <>
+                    <span className="enquiry-item-text">{opt.label}</span>
+                    {isSelected && (
+                      <Check className="enquiry-check" aria-hidden="true" />
+                    )}
+                  </>
+                )}
+              </ListBoxItem>
+            ))}
+          </ListBox>
+        </Popover>
+      </Select>
+      {error && (
+        <p id="enquiry-type-error" className="enquiry-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquiryPhoneField({
+  theme,
+  countryKey,
+  phone,
+  countryError,
+  phoneError,
+  countryOptions,
+  onCountryChange,
+  onPhoneChange,
+}: {
+  readonly theme: "light" | "dark";
+  readonly countryKey: string | null;
+  readonly phone: string;
+  readonly countryError?: string;
+  readonly phoneError?: string;
+  readonly countryOptions: readonly CountryOption[];
+  readonly onCountryChange: (val: string | null) => void;
+  readonly onPhoneChange: (val: string) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-full enquiry-field-phone">
+      <span id="enquiry-phone-label" className="enquiry-label">
+        Phone Number <span className="enquiry-optional">(optional)</span>
+      </span>
+      <div className="enquiry-phone-compound">
+        <ComboBox<CountryOption>
+          aria-label="Country calling code"
+          selectedKey={countryKey}
+          onSelectionChange={(key) => {
+            onCountryChange(key ? String(key) : null);
+          }}
+          defaultItems={countryOptions}
+          defaultFilter={countryFilter}
+          className="enquiry-country-combobox"
+          isInvalid={Boolean(countryError)}
+        >
+          <div className="enquiry-combobox-wrap">
+            <Input
+              id="enquiry-country-input"
+              aria-label="Country calling code"
+              placeholder="Country code"
+              className={`enquiry-combobox-input ${countryError ? "enquiry-input-invalid" : ""}`}
+              aria-describedby={countryError ? "enquiry-country-error" : undefined}
+            />
+            <Button
+              className="enquiry-combobox-toggle"
+              aria-label="Open country code selection"
+            >
+              <ChevronDown className="enquiry-chevron" aria-hidden="true" />
+            </Button>
+          </div>
+          <Popover className="enquiry-popover enquiry-popover-country" data-theme={theme} data-lenis-prevent>
+            <ListBox<CountryOption> className="enquiry-listbox">
+              {(item) => (
+                <ListBoxItem
+                  id={item.id}
+                  textValue={item.label}
+                  className="enquiry-listbox-item"
+                >
+                  {({ isSelected }) => (
+                    <>
+                      <span className="enquiry-item-country-name">{item.name}</span>
+                      <span className="enquiry-item-country-code">{item.callingCode}</span>
+                      {isSelected && (
+                        <Check className="enquiry-check" aria-hidden="true" />
+                      )}
+                    </>
+                  )}
+                </ListBoxItem>
+              )}
+            </ListBox>
+          </Popover>
+        </ComboBox>
+
+        <input
+          id="enquiry-phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel-national"
+          placeholder="e.g. 51 4455193"
+          value={phone}
+          onChange={(e) => onPhoneChange(e.target.value)}
+          className={`enquiry-input enquiry-phone-input ${phoneError ? "enquiry-input-invalid" : ""}`}
+          aria-label="Phone number without country code"
+          aria-invalid={Boolean(phoneError)}
+          aria-describedby={phoneError ? "enquiry-phone-error" : undefined}
+        />
+      </div>
+      {countryError && (
+        <p id="enquiry-country-error" className="enquiry-error" role="alert">
+          {countryError}
+        </p>
+      )}
+      {phoneError && (
+        <p id="enquiry-phone-error" className="enquiry-error" role="alert">
+          {phoneError}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquiryMessageField({
+  value,
+  error,
+  onChange,
+}: {
+  readonly value: string;
+  readonly error?: string;
+  readonly onChange: (val: string) => void;
+}) {
+  return (
+    <div className="enquiry-field enquiry-field-full enquiry-field-message">
+      <label htmlFor="enquiry-message" className="enquiry-label">
+        Message <span className="enquiry-required" aria-hidden="true">*</span>
+      </label>
+      <textarea
+        id="enquiry-message"
+        name="message"
+        required
+        rows={5}
+        maxLength={5000}
+        placeholder="Tell us about your requirement, proposal, or question."
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`enquiry-textarea ${error ? "enquiry-input-invalid" : ""}`}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? "enquiry-message-error" : undefined}
+      />
+      {error && (
+        <p id="enquiry-message-error" className="enquiry-error" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function EnquirySubmitButton({ isSubmitting }: { readonly isSubmitting: boolean }) {
+  return (
+    <div className="enquiry-field enquiry-field-full enquiry-field-submit">
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="enquiry-submit-btn"
+        aria-disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <Loader2 className="size-4 enquiry-spinner" aria-hidden="true" />
+            <span>Sending enquiry...</span>
+          </>
+        ) : (
+          <>
+            <span>Send enquiry</span>
+            <Send className="size-4 enquiry-btn-icon" aria-hidden="true" />
+          </>
+        )}
+      </button>
+    </div>
+  );
+}
+
+export function EnquirySection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isSubmittingRef = useRef(false);
+
+  const theme = useEnquiryTheme(sectionRef);
+  const countryOptions = useMemo(() => getCountryOptions(), []);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Field states
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [organisation, setOrganisation] = useState("");
+  const [company, setCompany] = useState<CompanyOptionId | null>(null);
+  const [enquiryType, setEnquiryType] = useState<EnquiryTypeId | null>(null);
+  const [countryKey, setCountryKey] = useState<string | null>(null);
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
 
   const clearFieldError = (fieldName: string) => {
     if (errors[fieldName]) {
@@ -183,12 +672,10 @@ export function EnquirySection() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Prevent duplicate submit including immediate ref check
     if (isSubmittingRef.current) return;
-
     setSubmitError(null);
 
     const payload = {
@@ -203,7 +690,6 @@ export function EnquirySection() {
       website,
     };
 
-    // Client-side validation using shared validateEnquiry before sending
     const validation = validateEnquiry(payload);
     if (Object.keys(validation.errors).length > 0) {
       setErrors(validation.errors);
@@ -237,7 +723,6 @@ export function EnquirySection() {
         // Fallback if response is not valid JSON
       }
 
-      // No success state except when response is ok and resJson.ok is true
       if (!res.ok || !resJson?.ok) {
         if (resJson?.errors && Object.keys(resJson.errors).length > 0) {
           setErrors(resJson.errors);
@@ -247,18 +732,17 @@ export function EnquirySection() {
           resJson?.message ||
             "Unable to deliver your enquiry at this time. Please try again or email us directly at goodman@goodmangoc.com."
         );
-        return;
+      } else {
+        setIsSuccess(true);
       }
-
-      setIsSuccess(true);
     } catch {
       setSubmitError(
         "A network error occurred while sending your enquiry. Please check your connection and try again."
       );
-    } finally {
-      isSubmittingRef.current = false;
-      setIsSubmitting(false);
     }
+
+    isSubmittingRef.current = false;
+    setIsSubmitting(false);
   };
 
   const handleReset = () => {
@@ -286,56 +770,16 @@ export function EnquirySection() {
       aria-labelledby="enquiry-heading"
     >
       <div className="enquiry-layout">
-        <header className="enquiry-intro" data-reveal>
-          <p className="chapter-index">05 / Connect</p>
-          <h2 id="enquiry-heading" className="enquiry-heading">
-            Let’s start a conversation.
-          </h2>
-          <p className="enquiry-lead">
-            Tell us what you’re looking for, and we’ll connect you with the right
-            team within Goodman Group.
-          </p>
-          <div className="enquiry-clock-badge">
-            <Clock className="w-4 h-4 enquiry-badge-icon" aria-hidden="true" />
-            <span>We’ll respond within 24 hours</span>
-          </div>
-        </header>
+        <EnquiryHeader />
 
         <div className="enquiry-card">
-          <noscript>
-            <div className="enquiry-noscript">
-              <p>
-                Online enquiries require JavaScript to be enabled. You can contact Goodman Group
-                directly at{" "}
-                <a href="mailto:goodman@goodmangoc.com" className="enquiry-mailto-link">
-                  goodman@goodmangoc.com
-                </a>
-                .
-              </p>
-            </div>
-          </noscript>
+          <EnquiryNoscript />
 
           {isSuccess ? (
-            <div className="enquiry-success-view" role="status" aria-live="polite">
-              <div className="enquiry-success-icon-wrap" aria-hidden="true">
-                <CheckCircle2 className="w-12 h-12 enquiry-success-icon" />
-              </div>
-              <h3 className="enquiry-success-heading">Enquiry Received</h3>
-              <p className="enquiry-success-message">
-                Thank you{name ? `, ${name}` : ""}. Your enquiry has been received.
-              </p>
-              <div className="enquiry-clock-badge enquiry-success-badge">
-                <Clock className="w-4 h-4 enquiry-badge-icon" aria-hidden="true" />
-                <span>We’ll respond within 24 hours</span>
-              </div>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="enquiry-reset-btn"
-              >
-                Send another enquiry
-              </button>
-            </div>
+            <EnquirySuccessView
+              name={name}
+              onReset={handleReset}
+            />
           ) : (
             <form
               noValidate
@@ -346,10 +790,7 @@ export function EnquirySection() {
               aria-label="Goodman Group enquiry form"
             >
               {submitError && (
-                <div className="enquiry-alert enquiry-alert-error" role="alert">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                  <p>{submitError}</p>
-                </div>
+                <EnquiryErrorAlert message={submitError} />
               )}
 
               {/* Honeypot field - invisible and inaccessible */}
@@ -367,354 +808,80 @@ export function EnquirySection() {
               </div>
 
               <div className="enquiry-grid">
-                {/* 1. Name */}
-                <div className="enquiry-field enquiry-field-name">
-                  <label htmlFor="enquiry-name" className="enquiry-label">
-                    Full name <span className="enquiry-required" aria-hidden="true">*</span>
-                  </label>
-                  <input
-                    ref={nameInputRef}
-                    id="enquiry-name"
-                    name="name"
-                    type="text"
-                    required
-                    autoComplete="name"
-                    placeholder="Your full name"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      clearFieldError("name");
-                    }}
-                    className={`enquiry-input ${errors.name ? "enquiry-input-invalid" : ""}`}
-                    aria-invalid={Boolean(errors.name)}
-                    aria-describedby={errors.name ? "enquiry-name-error" : undefined}
-                  />
-                  {errors.name && (
-                    <p id="enquiry-name-error" className="enquiry-error" role="alert">
-                      {errors.name}
-                    </p>
-                  )}
-                </div>
+                <EnquiryNameField
+                  value={name}
+                  error={errors.name}
+                  onChange={(val) => {
+                    setName(val);
+                    clearFieldError("name");
+                  }}
+                />
 
-                {/* 2. Email */}
-                <div className="enquiry-field enquiry-field-email">
-                  <label htmlFor="enquiry-email" className="enquiry-label">
-                    Email address <span className="enquiry-required" aria-hidden="true">*</span>
-                  </label>
-                  <input
-                    ref={emailInputRef}
-                    id="enquiry-email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    spellCheck={false}
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      clearFieldError("email");
-                    }}
-                    className={`enquiry-input ${errors.email ? "enquiry-input-invalid" : ""}`}
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? "enquiry-email-error" : undefined}
-                  />
-                  {errors.email && (
-                    <p id="enquiry-email-error" className="enquiry-error" role="alert">
-                      {errors.email}
-                    </p>
-                  )}
-                </div>
+                <EnquiryEmailField
+                  value={email}
+                  error={errors.email}
+                  onChange={(val) => {
+                    setEmail(val);
+                    clearFieldError("email");
+                  }}
+                />
 
-                {/* 3. Organisation (optional) */}
-                <div className="enquiry-field enquiry-field-full enquiry-field-org">
-                  <label htmlFor="enquiry-organisation" className="enquiry-label">
-                    Organisation <span className="enquiry-optional">(optional)</span>
-                  </label>
-                  <input
-                    ref={orgInputRef}
-                    id="enquiry-organisation"
-                    name="organisation"
-                    type="text"
-                    autoComplete="organization"
-                    placeholder="Company or institution name"
-                    value={organisation}
-                    onChange={(e) => {
-                      setOrganisation(e.target.value);
-                      clearFieldError("organisation");
-                    }}
-                    className={`enquiry-input ${errors.organisation ? "enquiry-input-invalid" : ""}`}
-                    aria-invalid={Boolean(errors.organisation)}
-                    aria-describedby={errors.organisation ? "enquiry-organisation-error" : undefined}
-                  />
-                  {errors.organisation && (
-                    <p id="enquiry-organisation-error" className="enquiry-error" role="alert">
-                      {errors.organisation}
-                    </p>
-                  )}
-                </div>
+                <EnquiryOrgField
+                  value={organisation}
+                  error={errors.organisation}
+                  onChange={(val) => {
+                    setOrganisation(val);
+                    clearFieldError("organisation");
+                  }}
+                />
 
-                {/* 4. Company (Select) */}
-                <div className="enquiry-field enquiry-field-company">
-                  <Select
-                    name="company"
-                    isRequired
-                    selectedKey={company}
-                    onSelectionChange={(key) => {
-                      setCompany(key ? (String(key) as CompanyOptionId) : null);
-                      clearFieldError("company");
-                    }}
-                    className="enquiry-select-group"
-                    isInvalid={Boolean(errors.company)}
-                    aria-describedby={errors.company ? "enquiry-company-error" : undefined}
-                  >
-                    <Label className="enquiry-label">
-                      Company of interest <span className="enquiry-required" aria-hidden="true">*</span>
-                    </Label>
-                    <Button
-                      ref={companyButtonRef}
-                      id="enquiry-company-button"
-                      className={`enquiry-select-trigger ${errors.company ? "enquiry-input-invalid" : ""}`}
-                    >
-                      <SelectValue className="enquiry-select-value">
-                        {({ isPlaceholder, defaultChildren }) =>
-                          isPlaceholder ? (
-                            <span className="enquiry-placeholder">Choose a company</span>
-                          ) : (
-                            defaultChildren
-                          )
-                        }
-                      </SelectValue>
-                      <ChevronDown className="enquiry-chevron" aria-hidden="true" />
-                    </Button>
-                    <Popover className="enquiry-popover" data-theme={theme} data-lenis-prevent>
-                      <ListBox className="enquiry-listbox" aria-label="Company of interest">
-                        {companyOptions.map((opt) => (
-                          <ListBoxItem
-                            key={opt.id}
-                            id={opt.id}
-                            textValue={opt.label}
-                            className="enquiry-listbox-item"
-                          >
-                            {({ isSelected }) => (
-                              <>
-                                <span className="enquiry-item-text">{opt.label}</span>
-                                {isSelected && (
-                                  <Check className="enquiry-check" aria-hidden="true" />
-                                )}
-                              </>
-                            )}
-                          </ListBoxItem>
-                        ))}
-                      </ListBox>
-                    </Popover>
-                  </Select>
-                  {errors.company && (
-                    <p id="enquiry-company-error" className="enquiry-error" role="alert">
-                      {errors.company}
-                    </p>
-                  )}
-                </div>
+                <EnquiryCompanySelect
+                  theme={theme}
+                  company={company}
+                  error={errors.company}
+                  onSelect={(val) => {
+                    setCompany(val);
+                    clearFieldError("company");
+                  }}
+                />
 
-                {/* 5. Enquiry Type (Select) */}
-                <div className="enquiry-field enquiry-field-type">
-                  <Select
-                    name="enquiryType"
-                    isRequired
-                    selectedKey={enquiryType}
-                    onSelectionChange={(key) => {
-                      setEnquiryType(key ? (String(key) as EnquiryTypeId) : null);
-                      clearFieldError("enquiryType");
-                    }}
-                    className="enquiry-select-group"
-                    isInvalid={Boolean(errors.enquiryType)}
-                    aria-describedby={errors.enquiryType ? "enquiry-type-error" : undefined}
-                  >
-                    <Label className="enquiry-label">
-                      Enquiry type <span className="enquiry-required" aria-hidden="true">*</span>
-                    </Label>
-                    <Button
-                      ref={enquiryTypeButtonRef}
-                      id="enquiry-type-button"
-                      className={`enquiry-select-trigger ${errors.enquiryType ? "enquiry-input-invalid" : ""}`}
-                    >
-                      <SelectValue className="enquiry-select-value">
-                        {({ isPlaceholder, defaultChildren }) =>
-                          isPlaceholder ? (
-                            <span className="enquiry-placeholder">Select enquiry purpose</span>
-                          ) : (
-                            defaultChildren
-                          )
-                        }
-                      </SelectValue>
-                      <ChevronDown className="enquiry-chevron" aria-hidden="true" />
-                    </Button>
-                    <Popover className="enquiry-popover" data-theme={theme} data-lenis-prevent>
-                      <ListBox className="enquiry-listbox" aria-label="Enquiry type">
-                        {enquiryTypeOptions.map((opt) => (
-                          <ListBoxItem
-                            key={opt.id}
-                            id={opt.id}
-                            textValue={opt.label}
-                            className="enquiry-listbox-item"
-                          >
-                            {({ isSelected }) => (
-                              <>
-                                <span className="enquiry-item-text">{opt.label}</span>
-                                {isSelected && (
-                                  <Check className="enquiry-check" aria-hidden="true" />
-                                )}
-                              </>
-                            )}
-                          </ListBoxItem>
-                        ))}
-                      </ListBox>
-                    </Popover>
-                  </Select>
-                  {errors.enquiryType && (
-                    <p id="enquiry-type-error" className="enquiry-error" role="alert">
-                      {errors.enquiryType}
-                    </p>
-                  )}
-                </div>
+                <EnquiryTypeSelect
+                  theme={theme}
+                  enquiryType={enquiryType}
+                  error={errors.enquiryType}
+                  onSelect={(val) => {
+                    setEnquiryType(val);
+                    clearFieldError("enquiryType");
+                  }}
+                />
 
-                {/* 6. Phone Compound (ComboBox Country + Tel Input) */}
-                <div className="enquiry-field enquiry-field-full enquiry-field-phone">
-                  <span id="enquiry-phone-label" className="enquiry-label">
-                    Phone Number <span className="enquiry-optional">(optional)</span>
-                  </span>
-                  <div className="enquiry-phone-compound">
-                    <ComboBox<CountryOption>
-                      aria-label="Country calling code"
-                      selectedKey={countryKey}
-                      onSelectionChange={(key) => {
-                        setCountryKey(key ? String(key) : null);
-                        clearFieldError("country");
-                      }}
-                      defaultItems={countryOptions}
-                      defaultFilter={countryFilter}
-                      className="enquiry-country-combobox"
-                      isInvalid={Boolean(errors.country)}
-                    >
-                      <div className="enquiry-combobox-wrap">
-                        <Input
-                          ref={countryInputRef}
-                          id="enquiry-country-input"
-                          aria-label="Country calling code"
-                          placeholder="Country code"
-                          className={`enquiry-combobox-input ${errors.country ? "enquiry-input-invalid" : ""}`}
-                          aria-describedby={errors.country ? "enquiry-country-error" : undefined}
-                        />
-                        <Button
-                          className="enquiry-combobox-toggle"
-                          aria-label="Open country code selection"
-                        >
-                          <ChevronDown className="enquiry-chevron" aria-hidden="true" />
-                        </Button>
-                      </div>
-                      <Popover className="enquiry-popover enquiry-popover-country" data-theme={theme} data-lenis-prevent>
-                        <ListBox<CountryOption> className="enquiry-listbox">
-                          {(item) => (
-                            <ListBoxItem
-                              id={item.id}
-                              textValue={item.label}
-                              className="enquiry-listbox-item"
-                            >
-                              {({ isSelected }) => (
-                                <>
-                                  <span className="enquiry-item-country-name">{item.name}</span>
-                                  <span className="enquiry-item-country-code">{item.callingCode}</span>
-                                  {isSelected && (
-                                    <Check className="enquiry-check" aria-hidden="true" />
-                                  )}
-                                </>
-                              )}
-                            </ListBoxItem>
-                          )}
-                        </ListBox>
-                      </Popover>
-                    </ComboBox>
+                <EnquiryPhoneField
+                  theme={theme}
+                  countryKey={countryKey}
+                  phone={phone}
+                  countryError={errors.country}
+                  phoneError={errors.phone}
+                  countryOptions={countryOptions}
+                  onCountryChange={(val) => {
+                    setCountryKey(val);
+                    clearFieldError("country");
+                  }}
+                  onPhoneChange={(val) => {
+                    setPhone(val);
+                    clearFieldError("phone");
+                  }}
+                />
 
-                    <input
-                      ref={phoneInputRef}
-                      id="enquiry-phone"
-                      name="phone"
-                      type="tel"
-                      autoComplete="tel-national"
-                      placeholder="e.g. 51 4455193"
-                      value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        clearFieldError("phone");
-                      }}
-                      className={`enquiry-input enquiry-phone-input ${errors.phone ? "enquiry-input-invalid" : ""}`}
-                      aria-label="Phone number without country code"
-                      aria-invalid={Boolean(errors.phone)}
-                      aria-describedby={errors.phone ? "enquiry-phone-error" : undefined}
-                    />
-                  </div>
-                  {errors.country && (
-                    <p id="enquiry-country-error" className="enquiry-error" role="alert">
-                      {errors.country}
-                    </p>
-                  )}
-                  {errors.phone && (
-                    <p id="enquiry-phone-error" className="enquiry-error" role="alert">
-                      {errors.phone}
-                    </p>
-                  )}
-                </div>
+                <EnquiryMessageField
+                  value={message}
+                  error={errors.message}
+                  onChange={(val) => {
+                    setMessage(val);
+                    clearFieldError("message");
+                  }}
+                />
 
-                {/* 7. Message */}
-                <div className="enquiry-field enquiry-field-full enquiry-field-message">
-                  <label htmlFor="enquiry-message" className="enquiry-label">
-                    Message <span className="enquiry-required" aria-hidden="true">*</span>
-                  </label>
-                  <textarea
-                    ref={messageTextareaRef}
-                    id="enquiry-message"
-                    name="message"
-                    required
-                    rows={5}
-                    maxLength={5000}
-                    placeholder="Tell us about your requirement, proposal, or question."
-                    value={message}
-                    onChange={(e) => {
-                      setMessage(e.target.value);
-                      clearFieldError("message");
-                    }}
-                    className={`enquiry-textarea ${errors.message ? "enquiry-input-invalid" : ""}`}
-                    aria-invalid={Boolean(errors.message)}
-                    aria-describedby={errors.message ? "enquiry-message-error" : undefined}
-                  />
-                  {errors.message && (
-                    <p id="enquiry-message-error" className="enquiry-error" role="alert">
-                      {errors.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Submit button */}
-                <div className="enquiry-field enquiry-field-full enquiry-field-submit">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="enquiry-submit-btn"
-                    aria-disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 enquiry-spinner" aria-hidden="true" />
-                        <span>Sending enquiry...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Send enquiry</span>
-                        <Send className="w-4 h-4 enquiry-btn-icon" aria-hidden="true" />
-                      </>
-                    )}
-                  </button>
-                </div>
+                <EnquirySubmitButton isSubmitting={isSubmitting} />
               </div>
             </form>
           )}

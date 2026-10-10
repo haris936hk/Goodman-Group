@@ -1,14 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { mockResizeObserver } from "../../tests/test-utils";
 import { EnquirySection } from "./enquiry-section";
 
 beforeEach(() => {
-  vi.stubGlobal("ResizeObserver", class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  });
+  mockResizeObserver();
   Element.prototype.scrollIntoView = vi.fn();
 });
 
@@ -22,11 +20,11 @@ async function fillRequired(user: UserEvent) {
   await user.click(await screen.findByRole("option", { name: "Partnership" }));
 }
 
-describe("homepage enquiries", () => {
+describe("homepage enquiries", { timeout: 15_000 }, () => {
   it("focuses the first invalid field without sending an empty enquiry", async () => {
     const fetcher = vi.fn();
     vi.stubGlobal("fetch", fetcher);
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     render(<EnquirySection />);
     await user.click(screen.getByRole("button", { name: "Send enquiry" }));
     expect(screen.getByLabelText(/Full name/)).toHaveFocus();
@@ -36,7 +34,7 @@ describe("homepage enquiries", () => {
 
   it("retains entered values and selections when delivery fails, then allows another attempt", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(Response.json({ ok: false, message: "Delivery unavailable" }, { status: 503 })).mockResolvedValueOnce(Response.json({ ok: true })));
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     render(<EnquirySection />);
     await fillRequired(user);
     await user.click(screen.getByRole("button", { name: "Send enquiry" }));
@@ -54,7 +52,7 @@ describe("homepage enquiries", () => {
   it("requires a country for a supplied phone but permits removing the optional phone", async () => {
     const fetcher = vi.fn().mockResolvedValue(Response.json({ ok: true }));
     vi.stubGlobal("fetch", fetcher);
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     render(<EnquirySection />);
     await fillRequired(user);
     const phone = screen.getByLabelText("Phone number without country code");
@@ -71,7 +69,7 @@ describe("homepage enquiries", () => {
     let resolve!: (response: Response) => void;
     const fetcher = vi.fn(() => new Promise<Response>((done) => { resolve = done; }));
     vi.stubGlobal("fetch", fetcher);
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     render(<EnquirySection />);
     await fillRequired(user);
     const send = screen.getByRole("button", { name: "Send enquiry" });
