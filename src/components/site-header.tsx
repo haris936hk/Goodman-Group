@@ -14,6 +14,7 @@ const navigation = [
   { label: "About the Group", href: "/#about" },
   { label: "Our Companies", href: "/companies" },
   { label: "Our Presence", href: "/#presence" },
+  { label: "Blog", href: "/blog" },
 ] as const;
 
 export function SiteHeader() {
@@ -33,6 +34,9 @@ export function SiteHeader() {
   const isCurrentDestination = (href: string) => {
     if (href === "/companies") {
       return pathname.startsWith("/companies");
+    }
+    if (href === "/blog") {
+      return pathname === "/blog" || pathname.startsWith("/blog/");
     }
 
     return pathname === "/" && href === "/#about";

@@ -72,7 +72,7 @@ export const goodmanGroup: GoodmanGroupFacts = {
   contacts: {
     website: "https://goodmangoc.com/",
     email: "goodman@goodmangoc.com",
-    usContactAddress: "15650 Grosvenor Lane, Macomb, MI 48044",
+    usContactAddress: "91 Ferry Street, Apt 3, Jersey City, New Jersey 07307-0730, United States",
   },
   leadership: {
     name: "Syed Talib Hussain Hashmi",

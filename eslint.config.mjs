@@ -16,6 +16,10 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "blob-report/**",
     "next-env.d.ts",
+    "dist/**",
+    "src/payload-types.ts",
+    "src/migrations/**",
+    "src/app/(payload)/admin/importMap.js",
   ]),
 ]);
 

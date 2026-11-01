@@ -1,10 +1,19 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { companies } from "@/data/companies";
 import { goodmanGroup } from "@/data/goodman-group";
 
 import { SiteFooter } from "./site-footer";
+
+const navigationState = vi.hoisted(() => ({ pathname: "/" }));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => navigationState.pathname,
+}));
+
+afterEach(() => {
+  navigationState.pathname = "/";
+});
 
 describe("SiteFooter", () => {
   it("renders branding, group description, and navigation landmarks", () => {
@@ -14,15 +23,15 @@ describe("SiteFooter", () => {
     expect(brandImg).toBeInTheDocument();
     expect(screen.getByText(goodmanGroup.description)).toBeInTheDocument();
 
-    expect(screen.getByRole("link", { name: "About the Group" })).toHaveAttribute("href", "/#about");
-    expect(screen.getByRole("link", { name: "Our Presence" })).toHaveAttribute("href", "/#presence");
+    expect(screen.getByRole("navigation", { name: "Footer navigation" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute("href", "/blog");
+  });
 
-    for (const company of companies) {
-      expect(screen.getByRole("link", { name: company.displayName })).toHaveAttribute(
-        "href",
-        `/companies/${company.slug}`,
-      );
-    }
+  it("marks Blog as current on nested blog routes", () => {
+    navigationState.pathname = "/blog/announcement";
+    render(<SiteFooter />);
+
+    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute("aria-current", "page");
   });
 
   it("renders contact links and all three physical addresses", () => {
@@ -33,7 +42,7 @@ describe("SiteFooter", () => {
 
     expect(screen.getByText(/Flat No\. 4, Block No\. 26/i)).toBeInTheDocument();
     expect(screen.getByText(/Plot No\. 5, Street S-5, National Industrial Zone/i)).toBeInTheDocument();
-    expect(screen.getByText(/15650 Grosvenor Lane, Macomb, MI 48044/i)).toBeInTheDocument();
+    expect(screen.getByText(/91 Ferry Street, Apt 3, Jersey City, New Jersey 07307-0730/i)).toBeInTheDocument();
 
     const backToTop = screen.getByRole("link", { name: "Back to top ↑" });
     expect(backToTop).toHaveAttribute("href", "#top");

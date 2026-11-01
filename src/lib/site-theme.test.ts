@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { readSiteTheme, setSiteTheme } from "./site-theme";
+import { readSiteTheme, setSiteTheme, syncDocumentTheme } from "./site-theme";
 
 describe("site-theme", () => {
   beforeEach(() => {
@@ -91,6 +91,57 @@ describe("site-theme", () => {
       expect(() => setSiteTheme("light")).not.toThrow();
       expect(document.documentElement.dataset.theme).toBe("light");
       expect(document.documentElement.dataset.themeExplicit).toBe("true");
+    });
+  });
+
+  describe("syncDocumentTheme", () => {
+    it("applies stored light preference to document and shell elements", () => {
+      localStorage.setItem("goodman-group-theme", "light");
+      const shell = document.createElement("div");
+      shell.className = "site-shell";
+      document.body.appendChild(shell);
+
+      syncDocumentTheme();
+
+      expect(document.documentElement.dataset.theme).toBe("light");
+      expect(document.documentElement.dataset.themeExplicit).toBe("true");
+      expect(shell.dataset.theme).toBe("light");
+      shell.remove();
+    });
+    it("preserves an explicit in-document preference when storage is inaccessible", () => {
+      document.documentElement.dataset.theme = "light";
+      document.documentElement.dataset.themeExplicit = "true";
+      vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("storage denied"); });
+      vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({ matches: true }));
+      syncDocumentTheme();
+      expect(document.documentElement.dataset.theme).toBe("light");
+    });
+
+    it.each([false, true])("applies device preference without persisting an explicit override (dark=%s)", (dark) => {
+      vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({ matches: dark }));
+      const shell = document.createElement("div");
+      shell.className = "site-shell";
+      const meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.body.append(shell);
+      document.head.append(meta);
+      try {
+        syncDocumentTheme();
+        expect(shell.dataset.theme).toBe(dark ? "dark" : "light");
+        expect(meta.content).toBe(dark ? "#06111f" : "#ffffff");
+        expect(document.documentElement.dataset.themeExplicit).toBeUndefined();
+        expect(localStorage.getItem("goodman-group-theme")).toBeNull();
+      } finally {
+        shell.remove();
+        meta.remove();
+      }
+    });
+
+    it("retains a safe theme when storage and device preference queries both fail", () => {
+      vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("storage denied"); });
+      vi.stubGlobal("matchMedia", vi.fn().mockImplementation(() => { throw new Error("media unavailable"); }));
+      syncDocumentTheme();
+      expect(document.documentElement.dataset.theme).toBe("dark");
     });
   });
 });

@@ -37,8 +37,8 @@ describe("OrganizationJsonLd", () => {
     expect(payload["@type"]).toBe("Organization");
     expect(payload.name).toBe("Goodman Group");
     expect(payload.url).toBe(`${SITE_ORIGIN}/`);
-    expect(payload.address.addressLocality).toBe("Macomb");
-    expect(payload.address.postalCode).toBe("48044");
+    expect(payload.address.addressLocality).toBe("Jersey City");
+    expect(payload.address.postalCode).toBe("07307-0730");
   });
 
   it("renders company schema with legalName and logo when present", () => {

@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { BlogFooterLink } from "@/components/blog-footer-link";
 import { companies } from "@/data/companies";
 import { goodmanGroup } from "@/data/goodman-group";
 import { goodmanLaboratoriesProfile } from "@/data/goodman-laboratories";
+
 const footerLinks = [
   ["About the Group", "/#about"],
   ["Our Presence", "/#presence"],
+  ["Blog", "/blog"],
 ] as const;
 
 export function SiteFooter() {
@@ -29,9 +32,13 @@ export function SiteFooter() {
           <h2 className="footer-section-label">Explore the Group</h2>
           <div className="footer-nav">
             {footerLinks.map(([label, href]) => (
-              <Link key={label} href={href}>
-                {label}
-              </Link>
+              href === "/blog" ? (
+                <BlogFooterLink key={label} />
+              ) : (
+                <Link key={label} href={href}>
+                  {label}
+                </Link>
+              )
             ))}
             {companies.map((company) => (
               <Link key={company.slug} href={`/companies/${company.slug}`}>
@@ -56,7 +63,7 @@ export function SiteFooter() {
             <span>{goodmanGroup.contacts.usContactAddress}</span>
             <a
               className="footer-map-link"
-              href="https://maps.app.goo.gl/hnyVHMW6GQLpt8d16"
+              href="https://maps.app.goo.gl/bcR9n6BEF7GsEq5V6"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="View US contact address on Google Maps (opens in a new tab)"

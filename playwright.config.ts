@@ -41,6 +41,7 @@ export default defineConfig({
         '**/company-routes.spec.ts',
         '**/enquiry-journey.spec.ts',
         '**/not-found-journey.spec.ts',
+        '**/blog.spec.ts',
         '**/*-theme.spec.ts',
       ],
     },

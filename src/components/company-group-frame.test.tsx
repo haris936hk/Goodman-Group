@@ -35,7 +35,6 @@ describe("CompanyGroupFrame", () => {
     const brandLinks = screen.getAllByRole("link", { name: "Goodman Group" });
     expect(brandLinks.length).toBeGreaterThanOrEqual(1);
     expect(brandLinks[0]).toHaveAttribute("href", "/");
-    expect(screen.getByText("GG")).toBeInTheDocument();
 
     const backLinks = screen.getAllByRole("link", { name: "All companies" });
     expect(backLinks.length).toBeGreaterThanOrEqual(1);

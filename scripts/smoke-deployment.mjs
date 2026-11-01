@@ -45,6 +45,24 @@ async function getResponse(url) {
   return response;
 }
 
+async function getAnyResponse(url) {
+  try {
+    return await fetch(url, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(requestTimeoutMs),
+    });
+  } catch (error) {
+    fail(url, `request failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+function requireHeaderToken(response, url, headerName, token) {
+  const value = response.headers.get(headerName) ?? "";
+  if (!value.toLowerCase().includes(token.toLowerCase())) {
+    fail(url, `expected ${headerName} to include ${JSON.stringify(token)}, received ${JSON.stringify(value)}`);
+  }
+}
+
 function requireContentType(response, url, expected) {
   const contentType = response.headers.get("content-type") ?? "";
   const isExpected = expected === "html"
@@ -83,6 +101,9 @@ async function smoke(baseUrlArgument) {
   for (const route of deploymentRoutes) {
     const routeUrl = new URL(route.path, baseUrl);
     const response = await getResponse(routeUrl);
+    if (route.path === "/blog") {
+      requireHeaderToken(response, routeUrl, "cache-control", "no-store");
+    }
     requireContentType(response, routeUrl, "html");
 
     const html = await response.text();
@@ -189,6 +210,12 @@ async function smoke(baseUrlArgument) {
   if (!robotsText.includes("Sitemap: https://goodmangoc.com/sitemap.xml")) {
     fail(robotsUrl, "expected canonical sitemap directive in robots.txt");
   }
+  if (!robotsText.includes("Allow: /api/cms/media/file/")) {
+    fail(robotsUrl, "expected robots.txt to allow crawling public media files");
+  }
+  if (!robotsText.includes("Disallow: /blog/preview/") || robotsText.includes("Disallow: /blog/preview\n") || robotsText.includes("Disallow: /blog/preview\r\n")) {
+    fail(robotsUrl, "expected robots.txt to restrict preview directory with trailing slash without blocking preview-* slugs");
+  }
   console.log(`PASS ${robotsUrl.href} (robots.txt verified)`);
 
   const sitemapUrl = new URL("/sitemap.xml", baseUrl);
@@ -196,6 +223,7 @@ async function smoke(baseUrlArgument) {
   if (sitemapResponse.status !== 200) {
     fail(sitemapUrl, `expected HTTP 200 for sitemap.xml, received ${sitemapResponse.status}`);
   }
+  requireHeaderToken(sitemapResponse, sitemapUrl, "cache-control", "no-store");
   const sitemapContentType = sitemapResponse.headers.get("content-type") ?? "";
   if (!sitemapContentType.includes("xml")) {
     fail(sitemapUrl, `expected XML content-type, received ${sitemapContentType}`);
@@ -205,6 +233,34 @@ async function smoke(baseUrlArgument) {
     fail(sitemapUrl, "expected canonical origin URLs in sitemap.xml");
   }
   console.log(`PASS ${sitemapUrl.href} (sitemap.xml verified)`);
+
+  const adminApiUrl = new URL("/api/cms/administrators?limit=1", baseUrl);
+  const adminApiResponse = await getAnyResponse(adminApiUrl);
+  if (adminApiResponse.status !== 401 && adminApiResponse.status !== 403) {
+    fail(adminApiUrl, `expected anonymous administrator API access to be denied with HTTP 401 or 403, received ${adminApiResponse.status}`);
+  }
+  requireHeaderToken(adminApiResponse, adminApiUrl, "x-robots-tag", "noindex");
+  const adminApiBody = (await adminApiResponse.text()).toLowerCase();
+  if (process.env.CMS_TEST_ADMIN_EMAIL && adminApiBody.includes(process.env.CMS_TEST_ADMIN_EMAIL.toLowerCase())) {
+    fail(adminApiUrl, "anonymous administrator API response exposed the disposable administrator email");
+  }
+  console.log(`PASS ${adminApiUrl.href} (anonymous access denied with HTTP ${adminApiResponse.status})`);
+
+  const previewUrl = new URL("/blog/preview/smoke-anonymous-check", baseUrl);
+  const previewResponse = await getResponse(previewUrl);
+  requireHeaderToken(previewResponse, previewUrl, "cache-control", "private");
+  requireHeaderToken(previewResponse, previewUrl, "cache-control", "no-store");
+  requireHeaderToken(previewResponse, previewUrl, "x-robots-tag", "noindex");
+  const previewHtml = await previewResponse.text();
+  const previewText = new JSDOM(previewHtml).window.document.body.textContent ?? "";
+  if (!previewText.includes("Administrator sign-in required")) {
+    fail(previewUrl, "expected the unauthenticated preview login-required message");
+  }
+  if (process.env.CMS_TEST_ADMIN_EMAIL && previewText.toLowerCase().includes(process.env.CMS_TEST_ADMIN_EMAIL.toLowerCase())) {
+    fail(previewUrl, "unauthenticated preview response exposed the administrator email");
+  }
+  console.log(`PASS ${previewUrl.href} (HTTP 200, private/no-store and noindex verified)`);
+
   for (const route of checkedRoutes) {
     console.log(`PASS ${route.url.href} (${route.assetCount} static references)`);
   }

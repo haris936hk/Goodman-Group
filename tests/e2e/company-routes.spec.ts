@@ -36,7 +36,7 @@ const companyRouteExpectations = [
   {
     slug: 'goodman-billing',
     displayName: 'Goodman Billing',
-    verifiedFact: '15650 Grosvenor Lane, Macomb, Michigan 48044, United States',
+    verifiedFact: '91 Ferry Street, Apt 3, Jersey City, New Jersey 07307-0730, United States',
     pageLandmarkHeading: 'Revenue-Cycle Workflow',
   },
 ] as const;

@@ -17,6 +17,13 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      CMS_TEST_ROOT: /tmp/goodman-cms-${{ github.run_id }}-${{ github.run_attempt }}
+      DATABASE_URL: file:/tmp/goodman-cms-${{ github.run_id }}-${{ github.run_attempt }}/blog.sqlite
+      UPLOAD_DIR: /tmp/goodman-cms-${{ github.run_id }}-${{ github.run_attempt }}/uploads
+      PAYLOAD_SECRET: goodman-ci-disposable-payload-secret-32chars-minimum
+      CMS_TEST_ADMIN_EMAIL: cms-admin@example.test
+      CMS_TEST_ADMIN_PASSWORD: Goodman-CI-only-password-92!
 
     steps:
       - name: Check out repository
@@ -28,8 +35,17 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Install pinned npm
+        run: npm install --global npm@11.17.0
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Prepare disposable CMS database and administrator
+        run: npm run payload -- run scripts/cms-test-setup.ts
+
+      - name: Run CMS integration tests
+        run: npm run test:cms
 
       - name: Lint
         run: npm run lint
@@ -88,3 +104,4 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+

@@ -671,11 +671,11 @@ test.describe('home page on mobile', () => {
     await page.locator('.menu-toggle').click();
 
     const navigation = page.getByRole('navigation', { name: 'Mobile navigation' });
-    const links = navigation.getByRole('link');
-    await expect(links).toHaveCount(3);
-    await expect(links.nth(0)).toHaveAttribute('href', '/#about');
-    await expect(links.nth(1)).toHaveAttribute('href', '/companies');
-    await expect(links.nth(2)).toHaveAttribute('href', '/#presence');
+    await expect(navigation).toBeVisible();
+    await expect(navigation.getByRole('link', { name: /About the Group/i })).toHaveAttribute('href', '/#about');
+    await expect(navigation.getByRole('link', { name: /Our Companies/i })).toHaveAttribute('href', '/companies');
+    await expect(navigation.getByRole('link', { name: /Our Presence/i })).toHaveAttribute('href', '/#presence');
+    await expect(navigation.getByRole('link', { name: /Blog/i })).toHaveAttribute('href', '/blog');
   });
 });
 
@@ -689,9 +689,13 @@ test('keeps normal-link navigation available without JavaScript', async ({
   const page = await context.newPage();
   await page.goto('/');
 
-  await expect(page.locator('.noscript-nav')).toBeVisible();
+  const noscriptNav = page.locator('.noscript-nav');
+  await expect(noscriptNav).toBeVisible();
   await expect(page.locator('.menu-toggle')).toBeHidden();
-  await expect(page.locator('.noscript-nav a')).toHaveCount(3);
+  await expect(noscriptNav.getByRole('link', { name: /About the Group/i })).toHaveAttribute('href', '/#about');
+  await expect(noscriptNav.getByRole('link', { name: /Our Companies/i })).toHaveAttribute('href', '/companies');
+  await expect(noscriptNav.getByRole('link', { name: /Our Presence/i })).toHaveAttribute('href', '/#presence');
+  await expect(noscriptNav.getByRole('link', { name: /Blog/i })).toHaveAttribute('href', '/blog');
   await context.close();
 });
 
@@ -711,7 +715,11 @@ test('publishes crawl and sitemap endpoints', async ({ request }) => {
   const sitemap = await request.get('/sitemap.xml');
 
   expect(robots.status()).toBe(200);
-  expect(await robots.text()).toContain('Sitemap: https://goodmangoc.com/sitemap.xml');
+  const robotsText = await robots.text();
+  expect(robotsText).toContain('Sitemap: https://goodmangoc.com/sitemap.xml');
+  expect(robotsText).toContain('Allow: /api/cms/media/file/');
+  expect(robotsText).toContain('Disallow: /blog/preview/');
+  expect(robotsText).not.toContain('Disallow: /blog/preview\n');
   expect(sitemap.status()).toBe(200);
   const sitemapText = await sitemap.text();
   expect(sitemapText).toContain('<loc>https://goodmangoc.com/</loc>');

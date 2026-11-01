@@ -1,0 +1,5 @@
+{
+  "/(website)/[...unmatched]/page": "app/(website)/[...unmatched]/page.js",
+  "/(website)/companies/goodman-laboratories/page": "app/(website)/companies/goodman-laboratories/page.js",
+  "/(website)/page": "app/(website)/page.js"
+}

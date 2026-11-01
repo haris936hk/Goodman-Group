@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withPayload } from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -10,6 +11,22 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      ...["/blog", "/blog/:path*", "/sitemap.xml"].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      })),
+      ...[
+        "/admin/:path*",
+        "/api/cms",
+        "/api/cms/:path((?!media/file/).*)",
+        "/blog/preview/:path*",
+      ].map((source) => ({
+        source,
+        headers: [
+          { key: "Cache-Control", value: "private, no-store" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      })),
       {
         source: "/assets/:path*",
         headers: [
@@ -41,4 +58,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPayload(nextConfig);

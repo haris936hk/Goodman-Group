@@ -189,7 +189,7 @@ export const companies = [
     accent: "#174a87",
     founded: null,
     locations: [
-      "15650 Grosvenor Lane, Macomb, Michigan 48044, United States",
+      "91 Ferry Street, Apt 3, Jersey City, New Jersey 07307-0730, United States",
     ],
     leadership: [
       {

@@ -49,10 +49,8 @@ export function MouseGlowCard({
     card.style.setProperty("--glow-y", `${event.clientY - bounds.top}px`);
   }
 
-  function handlePointerLeave(event: ReactPointerEvent<HTMLElement>) {
+  function handlePointerLeave() {
     boundsRef.current = null;
-    event.currentTarget.style.removeProperty("--glow-x");
-    event.currentTarget.style.removeProperty("--glow-y");
   }
   return (
     <Tag

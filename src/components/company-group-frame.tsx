@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 
-import type { CompanyProfile } from "@/data/companies";
+import { companies, type CompanyProfile } from "@/data/companies";
 import { CompanyThemeSync } from "@/components/company-theme-sync";
 
 export type CompanyGroupFrameProps = {
@@ -28,11 +29,11 @@ export function CompanyGroupFrame({
       <header className="group-frame-header" aria-label="Goodman Group Navigation">
         <div className="group-frame-header-inner">
           <Link href="/" className="group-frame-brand" aria-label="Goodman Group">
-            <span className="group-frame-brand-mark" aria-hidden="true">GG</span>
-            <span className="group-frame-brand-text">Goodman Group</span>
+            <Image src="/assets/logos/GG-white.png" alt="Goodman Group" width={280} height={119} className="group-frame-logo" />
           </Link>
           <div className="group-frame-relationship">
-            <span className="group-frame-relation-text">{relationshipText}</span>
+            <span className="group-frame-eyebrow">{relationshipText}</span>
+            <span className="group-frame-company-name">{company.displayName}</span>
           </div>
           <nav className="group-frame-nav" aria-label="Group navigation">
             <Link href="/companies" className="group-frame-back-link">
@@ -47,21 +48,39 @@ export function CompanyGroupFrame({
         {children}
       </main>
 
-      <footer className="group-frame-footer" aria-label="Goodman Group Return">
+      <footer className="group-frame-footer" aria-label="Goodman Group">
         <div className="group-frame-footer-inner">
           <div className="group-frame-footer-brand">
-            <Link href="/" className="group-frame-footer-home">
-              Goodman Group
+            <Link href="/" className="group-frame-footer-home" aria-label="Goodman Group">
+              <Image src="/assets/logos/GG-white.png" alt="Goodman Group" width={280} height={119} className="group-frame-footer-logo" />
             </Link>
-            <p className="group-frame-footer-desc">
-              Goodman Group parent brand · {relationshipText}
-            </p>
+            <p className="group-frame-footer-statement">Distinct expertise.<br />One Goodman Group.</p>
+            <p className="group-frame-footer-desc">{relationshipText}</p>
+            <Link href="/#contact" className="group-frame-contact">
+              Contact Group <ArrowUpRight aria-hidden="true" size={18} />
+            </Link>
           </div>
-          <div className="group-frame-footer-links">
-            <Link href="/companies">All companies</Link>
+          <nav className="group-frame-company-links" aria-label="Our companies">
+            <h2 className="group-frame-eyebrow">Explore our companies</h2>
+            <ul>
+              {companies.map((item, index) => (
+                <li key={item.slug}>
+                  <Link href={`/companies/${item.slug}`} aria-current={item.slug === company.slug ? "page" : undefined}>
+                    <span className="group-frame-company-index" aria-hidden="true">0{index + 1}</span>
+                    <span>{item.displayName}</span>
+                    <ArrowUpRight aria-hidden="true" size={18} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+        <div className="group-frame-footer-bottom">
+          <span>© {new Date().getFullYear()} Goodman Group</span>
+          <nav className="group-frame-footer-links" aria-label="Group footer navigation">
             <Link href="/">Group home</Link>
-            <Link href="/#contact">Contact Group</Link>
-          </div>
+            <Link href="/companies">All companies <ArrowUpRight aria-hidden="true" size={14} /></Link>
+          </nav>
         </div>
       </footer>
     </div>

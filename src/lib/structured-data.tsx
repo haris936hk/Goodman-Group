@@ -12,10 +12,10 @@ export function OrganizationJsonLd({ company }: { company?: CompanyProfile }) {
       email: goodmanGroup.contacts.email,
       address: {
         "@type": "PostalAddress",
-        streetAddress: "15650 Grosvenor Lane",
-        addressLocality: "Macomb",
-        addressRegion: "MI",
-        postalCode: "48044",
+        streetAddress: "91 Ferry Street, Apt 3",
+        addressLocality: "Jersey City",
+        addressRegion: "NJ",
+        postalCode: "07307-0730",
         addressCountry: "US",
       },
     };

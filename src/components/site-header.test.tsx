@@ -244,6 +244,17 @@ describe('SiteHeader', () => {
       screen.getByRole('link', { name: 'Our Companies' }),
     ).toHaveAttribute('aria-current', 'page');
   });
+
+  it('marks Blog as current on blog article routes', () => {
+    navigationState.pathname = '/blog/announcement';
+    render(<SiteHeader />);
+
+    expect(
+      within(screen.getByRole('navigation', { name: 'Primary navigation' })).getByRole('link', {
+        name: 'Blog',
+      }),
+    ).toHaveAttribute('aria-current', 'page');
+  });
 });
 
 describe('Group theme control', () => {
