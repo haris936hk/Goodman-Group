@@ -764,7 +764,6 @@ export function EnquirySection() {
 
   return (
     <section
-      id="contact"
       ref={sectionRef}
       className="chapter section-shell enquiry-chapter"
       aria-labelledby="enquiry-heading"

@@ -14,6 +14,10 @@
     radial-gradient(circle at 88% 75%, rgba(80, 212, 242, 0.05), transparent 34rem);
 }
 
+.enquiry-deferred {
+  min-height: 56rem;
+}
+
 .site-shell[data-theme="light"] .enquiry-chapter,
 body:has(.site-shell[data-theme="light"]) .enquiry-chapter {
   background:
@@ -286,7 +290,7 @@ body:has(.site-shell[data-theme="light"]) .enquiry-combobox-input:focus {
 
 .site-shell[data-theme="light"] .enquiry-placeholder,
 body:has(.site-shell[data-theme="light"]) .enquiry-placeholder {
-  color: #94a3b8;
+  color: #475569;
 }
 
 .enquiry-chevron {

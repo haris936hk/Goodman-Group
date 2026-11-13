@@ -57,6 +57,8 @@ Company profiles use a consistent dark-teal parent-brand masthead and footer wit
 
 `MouseGlowCard` retains its last pointer coordinates on exit so the glow fades out in place rather than resetting to the card center.
 
+The homepage loads the interactive enquiry form as its contact section approaches the viewport. The initial contact section retains an email link without JavaScript, and keyboard users can open the form explicitly; failed loads offer a retry.
+
 ### Portfolio content model and data flow
 
 `src/data/companies.ts` is the portfolio index. Its readonly, typed records hold the shared identity and directory-level facts—slug, name, business, summary, logo, locations, leadership, capabilities, and contact details—and `getCompanyBySlug` provides the route lookup. `src/data/goodman-group.ts` holds group-level facts and the canonical site origin. More detailed records live in company-specific modules under `src/data/` where needed; each route decides how to present those details.

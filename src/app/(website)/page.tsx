@@ -7,15 +7,12 @@ import {
   Phone,
   Store,
 } from "lucide-react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
 import { CompanyCard } from "@/components/company-card";
 
-const EnquirySection = dynamic(
-  () => import("@/components/enquiry-section").then((mod) => mod.EnquirySection)
-);
+import { DeferredEnquiry } from "@/components/deferred-enquiry";
 import { ScrollExperience } from "@/components/scroll-experience";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -408,7 +405,7 @@ export default function Home() {
         <HomeClientsSection />
         <HomePresenceSection />
         <HomeHeritageSection />
-        <EnquirySection />
+        <DeferredEnquiry />
       </main>
 
       <SiteFooter />

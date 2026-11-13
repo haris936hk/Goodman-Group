@@ -31,7 +31,7 @@ export function CompanyCard({ company, compact = false }: CompanyCardProps) {
               alt={`${company.displayName} logo`}
               width={company.logo.width}
               height={company.logo.height}
-              sizes="(max-width: 720px) calc(100vw - 68px), (max-width: 1180px) 42vw, 220px"
+              sizes="auto, 16rem"
             />
           ) : (
             <span className="company-text-identity">{company.displayName}</span>

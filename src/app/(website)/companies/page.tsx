@@ -64,7 +64,7 @@ export default function CompaniesPage() {
                         alt={`${company.displayName} logo`}
                         width={company.logo.width}
                         height={company.logo.height}
-                        sizes="(max-width: 640px) 180px, 220px"
+                        sizes="auto, 9rem"
                       />
                     ) : (
                       <span className="directory-text-identity">
