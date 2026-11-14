@@ -14,6 +14,7 @@ import { DesktopServiceArt, MobileServiceArt, WebServiceArt } from "./technologi
 import { TechnologiesWorkbench } from "./technologies-workbench";
 import { TechnologiesApproach } from "./technologies-approach";
 import { TechnologiesCommitments } from "./technologies-commitments";
+import { TechnologiesDirector } from "./technologies-director";
 import "./technologies.css";
 
 const company = getCompanyBySlug("goodman-technologies")!;
@@ -58,7 +59,7 @@ export default function GoodmanTechnologiesPage() {
         <div className="technologies-shell technologies-hero-footnote"><span>Strategy meets craft. Code meets possibility.</span><a href="#services">Scroll to explore <ArrowDown size={14} aria-hidden="true" /></a></div>
       </header>
 
-      <nav className="technologies-nav" aria-label="On this page"><div className="technologies-shell"><a href="#services">Services</a><a href="#technology">Technology</a><a href="#approach">Our approach</a><a href="#why-goodman">Why Goodman</a><a href="#contact">Let&apos;s talk <ArrowUpRight size={15} aria-hidden="true" /></a></div></nav>
+      <nav className="technologies-nav" aria-label="On this page"><div className="technologies-shell"><a href="#services">Services</a><a href="#technology">Technology</a><a href="#approach">Our approach</a><a href="#why-goodman">Why Goodman</a><a href="#director">The director</a><a href="#contact">Let&apos;s talk <ArrowUpRight size={15} aria-hidden="true" /></a></div></nav>
 
       <section className="technologies-experience" aria-label="Goodman Technologies experience"><div className="technologies-shell technologies-metrics">{profile.metrics.map((metric) => <div key={metric.label}><strong>{metric.value}</strong><span>{metric.label}</span></div>)}</div></section>
 
@@ -95,7 +96,9 @@ export default function GoodmanTechnologiesPage() {
         <TechnologiesCommitments />
       </div></section>
 
-      <section className="technologies-section technologies-contact" id="contact" aria-labelledby="contact-heading"><div className="technologies-shell technologies-contact-inner" data-technologies-reveal><div><p className="technologies-eyebrow">05 / Let&apos;s talk</p><h2 id="contact-heading">Let&apos;s build what comes next.</h2><p>Choose Goodman Technologies in the company-of-interest field.</p><div className="technologies-actions"><Link className="technologies-button" href="/#contact">Start a project <ArrowUpRight size={18} aria-hidden="true" /></Link><a className="technologies-text-link" href={`mailto:${goodmanGroup.contacts.email}`}>Goodman Group enquiries <ArrowUpRight size={17} aria-hidden="true" /></a></div></div><a className="technologies-back-top" href="#technologies-top">Back to top <ArrowUp size={17} aria-hidden="true" /></a></div></section>
+      <TechnologiesDirector />
+
+      <section className="technologies-section technologies-contact" id="contact" aria-labelledby="contact-heading"><div className="technologies-shell technologies-contact-inner" data-technologies-reveal><div><p className="technologies-eyebrow">06 / Let&apos;s talk</p><h2 id="contact-heading">Let&apos;s build what comes next.</h2><p>Choose Goodman Technologies in the company-of-interest field.</p><div className="technologies-actions"><Link className="technologies-button" href="/#contact">Start a project <ArrowUpRight size={18} aria-hidden="true" /></Link><a className="technologies-text-link" href={`mailto:${goodmanGroup.contacts.email}`}>Goodman Group enquiries <ArrowUpRight size={17} aria-hidden="true" /></a></div></div><a className="technologies-back-top" href="#technologies-top">Back to top <ArrowUp size={17} aria-hidden="true" /></a></div></section>
     </CompanyGroupFrame>
   );
 }

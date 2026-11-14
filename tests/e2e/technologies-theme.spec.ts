@@ -9,6 +9,7 @@ const sections = [
   ['Technology', 'technology'],
   ['Our approach', 'approach'],
   ['Why Goodman', 'why-goodman'],
+  ['The director', 'director'],
   ["Let's talk", 'contact'],
 ] as const;
 
@@ -350,4 +351,51 @@ test('keeps every commitment readable and takes keyboard users to the existing c
   await expect(page).toHaveURL(/#contact$/);
   await expect(page.locator('#contact h2')).toBeInViewport();
   await expect(page.locator('#contact').getByText('Choose Goodman Technologies in the company-of-interest field.', { exact: true })).toBeVisible();
+});
+
+test('keeps director motion brief and responds to live reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto(`${route}#director`);
+  const director = page.locator('#director');
+  const tracks = director.locator('.technologies-director-track');
+  await director.scrollIntoViewIfNeeded();
+  await expect.poll(() => tracks.evaluateAll((elements) => elements.flatMap(
+    (element) => element.getAnimations().filter((animation) => animation.playState === 'running'),
+  ).length)).toBe(3);
+  await expect.poll(() => tracks.evaluateAll((elements) => elements.flatMap(
+    (element) => element.getAnimations().filter((animation) => animation.playState === 'running'),
+  ).length), { timeout: 6000 }).toBe(0);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => tracks.evaluateAll((elements) => elements.flatMap(
+    (element) => element.getAnimations().filter((animation) => animation.playState === 'running'),
+  ).length)).toBe(0);
+  await expect(director.getByRole('link', { name: 'Explore his portfolio' })).toBeVisible();
+});
+
+test('keeps director expertise and profile links readable with narrow screens and enlarged text', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(`${route}#director`);
+  const director = page.locator('#director');
+  for (const [width, fontSize] of [[1440, '100%'], [320, '100%'], [390, '200%'], [1440, '200%']] as const) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, fontSize);
+    const orbitBounds = await director.locator('.technologies-director-orbit').boundingBox();
+    const orbitCenter = orbitBounds!.x + orbitBounds!.width / 2;
+    for (const text of await director.locator('.technologies-director-heading > *').all()) {
+      const bounds = await text.boundingBox();
+      expect(Math.abs(bounds!.x + bounds!.width / 2 - orbitCenter)).toBeLessThan(1);
+      await expect(text).toHaveCSS('text-align', 'center');
+    }
+    for (const name of ['Full-stack engineering', 'Applied AI', 'Data & systems', 'Software delivery']) {
+      const heading = director.getByRole('heading', { name, exact: true });
+      await expect(heading).toBeVisible();
+      expect(await heading.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    for (const link of await director.getByRole('link').all()) {
+      await link.focus();
+      await expect(link).toBeFocused();
+      expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    }
+  }
 });

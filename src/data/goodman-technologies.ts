@@ -2,6 +2,21 @@ export type GoodmanTechnologiesProfile = {
   readonly tagline: string;
   readonly headline: string;
   readonly introduction: string;
+  readonly director: {
+    readonly name: string;
+    readonly role: string;
+    readonly profession: string;
+    readonly portrait: { readonly src: string; readonly width: number; readonly height: number };
+    readonly portfolio: string;
+    readonly linkedIn: string;
+    readonly expertise: readonly {
+      readonly id: string;
+      readonly category: string;
+      readonly title: string;
+      readonly stack: string;
+      readonly description: string;
+    }[];
+  };
   readonly metrics: readonly { readonly value: string; readonly label: string }[];
   readonly services: readonly {
     readonly id: string;
@@ -23,6 +38,44 @@ export const goodmanTechnologiesProfile = {
   headline: "From idea to software that ships.",
   introduction:
     "We design and build custom websites, web applications, mobile apps, and desktop software—from the first sketch to production launch.",
+  director: {
+    name: "Haris Khan",
+    role: "Director, Goodman Technologies",
+    profession: "Senior Software Engineer",
+    portrait: { src: "/assets/technologies/haris-khan.webp", width: 800, height: 800 },
+    portfolio: "https://hariskhan-portfolio-chi.vercel.app/",
+    linkedIn: "https://www.linkedin.com/in/haris936hk/",
+    expertise: [
+      {
+        id: "engineering",
+        category: "Engineering",
+        title: "Full-stack engineering",
+        stack: "Interfaces · Application logic · Data",
+        description: "Connecting the layers of the software stack.",
+      },
+      {
+        id: "intelligence",
+        category: "Intelligence",
+        title: "Applied AI",
+        stack: "AI integration · Intelligent workflows",
+        description: "Integrating AI into practical digital workflows.",
+      },
+      {
+        id: "data",
+        category: "Data",
+        title: "Data & systems",
+        stack: "Databases · APIs · Connected systems",
+        description: "Working with the systems that connect data.",
+      },
+      {
+        id: "delivery",
+        category: "Delivery",
+        title: "Software delivery",
+        stack: "Development · Testing · Deployment",
+        description: "Working across the software lifecycle.",
+      },
+    ],
+  },
   metrics: [
     { value: "3+", label: "Years of experience" },
     { value: "20+", label: "Projects delivered" },

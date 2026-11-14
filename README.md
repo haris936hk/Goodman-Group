@@ -71,6 +71,8 @@ Our approach uses a six-stage, keyboard-accessible tab navigator with bespoke se
 
 Why Goodman uses a server-rendered commitment board: a dimensional code-handover illustration, direct communication and project-planning panels, and a 30-day support strip linking to the existing contact section. The support value and label are structured in the company profile. Only the SVG assembles on scroll; commitment text and the contact link remain fully opaque. Reduced motion retains the static illustration, and the board stacks naturally on smaller screens without pinning or hidden content.
 
+The director section presents Haris Khan through an Expertise Orbit: a locally hosted portrait, four server-rendered expertise cards, and theme-aware orbital arcs. Its heading and subheading are centered across the full orbit width. The profile and links live in the typed Technologies record. A small client boundary adds fine-pointer portrait parallax and a brief orbital-node entrance when the section comes into view. Live reduced-motion changes disable animation and pointer transforms. Narrow layouts and enlarged text move the portrait above an intrinsic card grid, and the complete profile remains available without JavaScript.
+
 The homepage loads the interactive enquiry form as its contact section approaches the viewport. The initial contact section retains an email link without JavaScript, and keyboard users can open the form explicitly; failed loads offer a retry.
 
 ### Portfolio content model and data flow
