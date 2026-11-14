@@ -9,6 +9,7 @@ const palettes = [
   { className: "laboratories-page", light: "#fcfaf7", dark: "#191416" },
   { className: "billing-page", light: "#fafbf8", dark: "#101c19" },
   { className: "medical-equipment-page", light: "#fafbfc", dark: "#101c26" },
+  { className: "technologies-page", light: "#f7f7fc", dark: "#080d1c" },
 ] as const;
 
 export function CompanyThemeSync(): null {

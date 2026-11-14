@@ -3,10 +3,6 @@ import { describe, expect, it } from "vitest";
 import { companies, getCompanyBySlug } from "./companies";
 
 describe("companies domain invariants", () => {
-  it("contains exactly five canonical companies", () => {
-    expect(companies).toHaveLength(5);
-  });
-
   it("enforces unique, lowercase kebab-case slugs", () => {
     const slugs = companies.map((c) => c.slug);
     const uniqueSlugs = new Set(slugs);

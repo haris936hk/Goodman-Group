@@ -12,32 +12,44 @@ const companyRouteExpectations = [
   {
     slug: 'goodman-laboratories',
     displayName: 'Goodman Laboratories',
+    heading: 'Goodman Laboratories',
     verifiedFact: 'To provide affordable pharmaceutical products across the globe.',
     pageLandmarkHeading: 'Registered and marketed products',
   },
   {
     slug: 'geron-pharma',
     displayName: 'Geron Pharma',
+    heading: 'Geron Pharma',
     verifiedFact: 'Chief Executive Officer since 2019.',
     pageLandmarkHeading: 'Company information',
   },
   {
     slug: 'goodman-medical-equipment',
     displayName: 'Goodman Medical Equipment Trading',
+    heading: 'Goodman Medical Equipment Trading',
     verifiedFact: 'United Arab Emirates',
     pageLandmarkHeading: 'Dual-Region Trading Presence',
   },
   {
     slug: 'wal-green-chemicals',
     displayName: 'Wal Green Chemicals',
+    heading: 'Wal Green Chemicals',
     verifiedFact: 'CEO since 2021',
     pageLandmarkHeading: 'Product & Material Portfolio',
   },
   {
     slug: 'goodman-billing',
     displayName: 'Goodman Billing',
+    heading: 'Medical Billing. Redefined.',
     verifiedFact: '91 Ferry Street, Apt 3, Jersey City, New Jersey 07307-0730, United States',
     pageLandmarkHeading: 'Revenue-Cycle Workflow',
+  },
+  {
+    slug: 'goodman-technologies',
+    displayName: 'Goodman Technologies',
+    heading: 'From idea to software that ships.',
+    verifiedFact: 'Full code ownership',
+    pageLandmarkHeading: 'Software for every screen.',
   },
 ] as const;
 
@@ -102,7 +114,7 @@ for (const company of companyRouteExpectations) {
 
     // Company heading & logo
     await expect(
-      page.getByRole('heading', { level: 1, name: company.slug === 'goodman-billing' ? 'Medical Billing. Redefined.' : company.displayName }),
+      page.getByRole('heading', { level: 1, name: company.heading }),
     ).toBeVisible();
     const canonical = companies.find((c) => c.slug === company.slug);
     if (canonical?.logo) {
@@ -111,7 +123,7 @@ for (const company of companyRouteExpectations) {
       ).toBeVisible();
     } else {
       await expect(
-        page.getByRole('heading', { level: 1, name: company.slug === 'goodman-billing' ? 'Medical Billing. Redefined.' : company.displayName }),
+        page.getByRole('heading', { level: 1, name: company.heading }),
       ).toBeVisible();
     }
 
@@ -256,6 +268,7 @@ test('exposes canonical URL and non-ownership JSON-LD on every company route', a
     expect(parsed['@type']).toBe('Organization');
     expect(parsed.name).toBe(company.displayName);
     expect(parsed.url).toBe(`https://goodmangoc.com/companies/${company.slug}`);
+    if (company.logo) expect(parsed.logo).toBe(`https://goodmangoc.com${company.logo.src}`);
     expect(parsed.brand).toEqual({ '@type': 'Brand', name: 'Goodman Group' });
     expect(parsed).not.toHaveProperty('parentOrganization');
     expect(parsed).not.toHaveProperty('subOrganization');

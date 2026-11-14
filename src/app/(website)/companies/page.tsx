@@ -57,7 +57,7 @@ export default function CompaniesPage() {
               >
                 <div className="directory-panel-brand">
                   <span className="directory-panel-index">0{index + 1}</span>
-                  <div className="directory-panel-logo glass-opaque">
+                  <div className="directory-panel-logo glass-opaque" data-company={company.slug}>
                     {company.logo ? (
                       <Image
                         src={company.logo.src}

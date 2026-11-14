@@ -91,8 +91,15 @@ export function SiteHeader() {
     };
 
     if (menuDialogRef.current) {
-      menuDialogRef.current.dataset.theme =
-        headerRef.current?.closest<HTMLElement>(".site-shell")?.dataset.theme === "light" ? "light" : "dark";
+      const shell = headerRef.current?.closest<HTMLElement>(".site-shell, .company-group-frame");
+      menuDialogRef.current.dataset.theme = shell?.dataset.theme === "light" ? "light" : "dark";
+      if (shell?.classList.contains("company-group-frame")) {
+        menuDialogRef.current.dataset.companyTheme = "";
+        menuDialogRef.current.style.setProperty(
+          "--company-header-accent",
+          window.getComputedStyle(shell).getPropertyValue("--frame-badge-fg"),
+        );
+      }
     }
     document.body.style.overflow = "hidden";
     backgroundElements.forEach((element) => {

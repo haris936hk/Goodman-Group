@@ -208,6 +208,34 @@ export const companies = [
     ],
     contacts: ["goodman@goodmangoc.com"],
   },
+  {
+    slug: "goodman-technologies",
+    displayName: "Goodman Technologies",
+    legalName: null,
+    relationship: null,
+    business: "Software development and digital solutions",
+    summary:
+      "Goodman Technologies designs and builds custom websites, web applications, mobile apps, and desktop software, with UI/UX design, testing, deployment, and ongoing support.",
+    logo: {
+      src: "/assets/logos/goodman-technologies.png",
+      width: 1383,
+      height: 1137,
+    },
+    accent: "#683fc1",
+    founded: null,
+    locations: [],
+    leadership: [],
+    capabilities: [
+      "Web development",
+      "Mobile app development",
+      "Desktop applications",
+      "UI/UX design",
+      "Testing & QA",
+      "Performance optimization",
+      "Maintenance & support",
+    ],
+    contacts: [],
+  },
 ] as const satisfies readonly CompanyProfile[];
 export function getCompanyBySlug(slug: string): CompanyProfile | undefined {
   return companies.find((company) => company.slug === slug);

@@ -1,10 +1,10 @@
 # Goodman Group — Corporate Portfolio
 
-An architecture case study of a corporate portfolio and announcement Blog built with Next.js App Router, React, strict TypeScript, and embedded Payload CMS. The site connects a group-level story to a directory of five companies and five individually composed company profiles, while keeping content, metadata, and discovery endpoints aligned.
+An architecture case study of a corporate portfolio and announcement Blog built with Next.js App Router, React, strict TypeScript, and embedded Payload CMS. The site connects a group-level story to a directory of six companies and six individually composed company profiles, while keeping content, metadata, and discovery endpoints aligned.
 
 ## Case study: one portfolio, distinct businesses
 
-The engineering problem is a balance: the parent brand needs a coherent point of entry, but a pharmaceutical manufacturer, a medical-equipment trader, a chemicals business, a medical-billing company, and a pharmaceutical business do not fit a single uniform profile layout. The site also needs stable company discovery, machine-readable organization metadata, a working enquiry channel, and interactive presentation without turning every route into a client-rendered application.
+The engineering problem is a balance: the parent brand needs a coherent point of entry, but pharmaceutical businesses, a medical-equipment trader, a chemicals business, a medical-billing company, and a software-development company do not fit a single uniform profile layout. The site also needs stable company discovery, machine-readable organization metadata, a working enquiry channel, and interactive presentation without turning every route into a client-rendered application.
 
 The implementation addresses that shape with three boundaries:
 
@@ -57,6 +57,20 @@ Company profiles use a consistent dark-teal parent-brand masthead and footer wit
 
 `MouseGlowCard` retains its last pointer coordinates on exit so the glow fades out in place rather than resetting to the card center.
 
+Goodman Technologies demonstrates a layered CSS 3D software assembly with resolution-independent SVG surfaces, untransformed readable labels, keyboard/touch layer selection, and an assemble/separate control. Its route-local motion component lazily loads GSAP/ScrollTrigger for scroll-linked depth, staggered section entrances, and fine-pointer perspective. Live reduced-motion changes revert animation styles and listeners; server content and the static illustration remain available without JavaScript. It does not initialize another smooth-scroll instance.
+
+The showcase inherits the shared Group theme: its panel, controls, SVG gradients, and diagram strokes use CSS `light-dark()` tokens. Light mode uses white/lavender/cyan surfaces with dark accents; dark mode retains navy surfaces. Theme changes do not remount the illustration or reset the selected layer.
+
+The three primary service cards use server-rendered SVG scenes for responsive websites, mobile apps, and desktop software. Their vector surfaces share theme-aware colors, with short hover depth transitions limited to fine pointers and disabled under reduced motion.
+
+The Technology section groups a 25-item inventory into languages/foundations, frameworks/runtimes, data/persistence, and tools/delivery. It uses a GSAP-pinned card stage with reading pauses, reversible scroll-driven transitions, and an active-layer rail. Pinning is enabled only on wide, sufficiently tall viewports when the measured content fits below the shared header. Enlarged text, reduced motion, forced colors, narrow/short viewports, and unavailable JavaScript retain all technology cards in normal document flow. Resize observers watch the card content rather than the pin spacer, and cleanup restores flow and removes the scroll triggers.
+
+The pinned composition is vertically centered within the viewport area below the fixed header. Its scroll distance is based on card-stage height and the number of transitions, rather than a viewport-height multiplier, to avoid a prolonged empty tail.
+
+Our approach uses a six-stage, keyboard-accessible tab navigator with bespoke server-rendered SVG scenes. Left/right arrows, Home, and End select stages; Tab moves into the selected panel. Panel transitions preserve full text contrast and stop under reduced motion. Without JavaScript, the navigator remains native section links and all six descriptions stay visible. Direct stage links open the matching panel.
+
+Why Goodman uses a server-rendered commitment board: a dimensional code-handover illustration, direct communication and project-planning panels, and a 30-day support strip linking to the existing contact section. The support value and label are structured in the company profile. Only the SVG assembles on scroll; commitment text and the contact link remain fully opaque. Reduced motion retains the static illustration, and the board stacks naturally on smaller screens without pinning or hidden content.
+
 The homepage loads the interactive enquiry form as its contact section approaches the viewport. The initial contact section retains an email link without JavaScript, and keyboard users can open the form explicitly; failed loads offer a retry.
 
 ### Portfolio content model and data flow
@@ -70,7 +84,7 @@ flowchart LR
   Registry["companies.ts<br/>readonly CompanyProfile records"] --> HomeCards[Home portfolio cards and orbit links]
   Registry --> Directory[Company directory]
   Registry --> Lookup[getCompanyBySlug]
-  Lookup --> Bespoke[Five dedicated company page components]
+  Lookup --> Bespoke[Six dedicated company page components]
   Registry --> FormChoices[Enquiry company choices]
   Registry --> Sitemap[Sitemap company URLs]
   Registry --> CompanyJSONLD[Company Organization JSON-LD]
@@ -99,6 +113,7 @@ This company registry keeps the portfolio home, directory, profile lookup, enqui
 | `/companies/goodman-medical-equipment` | Dedicated profile route | Medical-equipment trading profile |
 | `/companies/wal-green-chemicals` | Dedicated profile route | Chemicals and raw-materials profile |
 | `/companies/goodman-billing` | Dedicated profile route, including a billing directory | Medical-billing profile and its supporting content |
+| `/companies/goodman-technologies` | Software studio with interactive architecture and progressive motion | Software-development profile |
 | `/blog`, `/blog/[slug]` | Request-time published announcement listing and article | Public, server-rendered Blog |
 | `/blog/preview/[id]` | Authenticated saved-draft preview | Private, uncached editorial preview |
 | `/admin` | Payload admin under its separate root layout | Authenticated CMS administration |

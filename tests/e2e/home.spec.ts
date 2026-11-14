@@ -309,6 +309,18 @@ const companyThemeRoutes = [
     darkThemeColor: '#101c26',
     historicalKey: 'goodman-medical-equipment-theme',
   },
+  {
+    name: 'Goodman Technologies',
+    slug: 'goodman-technologies',
+    path: '/companies/goodman-technologies',
+    pageSelector: '.technologies-page',
+    viewLinkName: 'View Goodman Technologies',
+    lightBg: 'rgb(247, 247, 252)',
+    darkBg: 'rgb(8, 13, 28)',
+    lightThemeColor: '#f7f7fc',
+    darkThemeColor: '#080d1c',
+    historicalKey: 'goodman-technologies-theme',
+  },
 ] as const;
 
 test.describe('Group theme shared-ownership across bespoke company routes', () => {
@@ -322,6 +334,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           localStorage.setItem('goodman-laboratories-theme', 'dark');
           localStorage.setItem('goodman-billing-theme', 'dark');
           localStorage.setItem('goodman-medical-equipment-theme', 'dark');
+          localStorage.setItem('goodman-technologies-theme', 'dark');
         });
 
         await page.goto('/');
@@ -352,7 +365,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
         await expect.poll(() =>
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
         ).toBe(true);
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to dark mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to dark mode"]'))).toHaveCount(1);
 
         await page.reload();
         await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -362,9 +375,9 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
         await expect.poll(() =>
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
         ).toBe(true);
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to dark mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to dark mode"]'))).toHaveCount(1);
 
-        await page.locator('.group-frame-brand').click();
+        await page.getByRole('link', { name: 'Goodman Group home' }).click();
         await expect(page).toHaveURL(/\/$/);
         await expect(page.locator('.site-shell')).toHaveAttribute('data-theme', 'light');
 
@@ -375,6 +388,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           localStorage.setItem('goodman-laboratories-theme', 'light');
           localStorage.setItem('goodman-billing-theme', 'light');
           localStorage.setItem('goodman-medical-equipment-theme', 'light');
+          localStorage.setItem('goodman-technologies-theme', 'light');
         });
 
         const toggleToDark = page.getByRole('button', { name: 'Switch to dark mode' });
@@ -393,7 +407,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
         await expect.poll(() =>
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.darkThemeColor)
         ).toBe(true);
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to light mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to light mode"]'))).toHaveCount(1);
       });
 
       test('defaults to device preference on direct visit when Group preference is absent', async ({ page }) => {
@@ -405,6 +419,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           localStorage.setItem('goodman-laboratories-theme', 'light');
           localStorage.setItem('goodman-billing-theme', 'light');
           localStorage.setItem('goodman-medical-equipment-theme', 'light');
+          localStorage.setItem('goodman-technologies-theme', 'light');
         });
 
         await page.goto(company.path);
@@ -418,7 +433,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
         ).toBe(true);
         expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to dark mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to dark mode"]'))).toHaveCount(1);
       });
 
       test('defaults to dark device preference on direct visit when Group preference is absent and device is dark', async ({ page }) => {
@@ -430,6 +445,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           localStorage.setItem('goodman-laboratories-theme', 'light');
           localStorage.setItem('goodman-billing-theme', 'light');
           localStorage.setItem('goodman-medical-equipment-theme', 'light');
+          localStorage.setItem('goodman-technologies-theme', 'light');
         });
 
         await page.goto(company.path);
@@ -443,7 +459,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.darkThemeColor)
         ).toBe(true);
         expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBeNull();
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to light mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to light mode"]'))).toHaveCount(1);
       });
 
       test('defaults to device preference on direct visit when Group preference is malformed', async ({ page }) => {
@@ -455,6 +471,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           localStorage.setItem('goodman-laboratories-theme', 'light');
           localStorage.setItem('goodman-billing-theme', 'light');
           localStorage.setItem('goodman-medical-equipment-theme', 'light');
+          localStorage.setItem('goodman-technologies-theme', 'light');
         });
 
         await page.goto(company.path);
@@ -468,7 +485,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
         ).toBe(true);
         expect(await page.evaluate(() => localStorage.getItem('goodman-group-theme'))).toBe('unexpected-value');
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to dark mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to dark mode"]'))).toHaveCount(1);
       });
 
       test('preserves in-session selection during storage-denied client navigation and falls back to dark on reload', async ({ page }) => {
@@ -498,7 +515,7 @@ test.describe('Group theme shared-ownership across bespoke company routes', () =
         await expect.poll(() =>
           page.locator('meta[name="theme-color"]').evaluateAll((metas, color) => metas.every((meta) => meta.getAttribute('content') === color), company.lightThemeColor)
         ).toBe(true);
-        await expect(page.getByRole('button', { name: /Switch to .* mode|Change color theme/ })).toHaveCount(0);
+        await expect(page.locator('.site-header .theme-toggle').getByRole('button', { name: 'Switch to dark mode' }).or(page.locator('.site-header button.theme-toggle[aria-label="Switch to dark mode"]'))).toHaveCount(1);
 
         await page.reload();
         await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');

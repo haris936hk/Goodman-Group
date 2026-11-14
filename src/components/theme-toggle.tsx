@@ -16,14 +16,14 @@ export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
-    const shell = buttonRef.current?.closest<HTMLElement>(".site-shell");
+    const shell = buttonRef.current?.closest<HTMLElement>(".site-shell, .company-group-frame");
     if (!shell) return;
 
     const applyThemeToShell = (currentTheme: Theme) => {
       setTheme(currentTheme);
       if (shell.isConnected) {
         shell.dataset.theme = currentTheme;
-        setChromeTheme(currentTheme);
+        if (shell.classList.contains("site-shell")) setChromeTheme(currentTheme);
         const backdrop = document.querySelector<HTMLElement>(".mobile-nav-backdrop");
         if (backdrop) backdrop.dataset.theme = currentTheme;
       }
@@ -42,7 +42,7 @@ export function ThemeToggle() {
     });
 
     const headObserver = new MutationObserver(() => {
-      if (shell.isConnected) {
+      if (shell.isConnected && shell.classList.contains("site-shell")) {
         setChromeTheme(shell.dataset.theme === "light" ? "light" : "dark");
       }
     });
@@ -64,9 +64,9 @@ export function ThemeToggle() {
       onClick={() => {
         const next = theme === "dark" ? "light" : "dark";
         setSiteTheme(next);
-        const shell = buttonRef.current?.closest<HTMLElement>(".site-shell");
+        const shell = buttonRef.current?.closest<HTMLElement>(".site-shell, .company-group-frame");
         if (shell) shell.dataset.theme = next;
-        setChromeTheme(next);
+        if (shell?.classList.contains("site-shell")) setChromeTheme(next);
         const backdrop = document.querySelector<HTMLElement>(".mobile-nav-backdrop");
         if (backdrop) backdrop.dataset.theme = next;
         setTheme(next);

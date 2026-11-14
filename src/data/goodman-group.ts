@@ -50,6 +50,7 @@ export const goodmanGroup: GoodmanGroupFacts = {
     "Medical equipment",
     "Chemicals",
     "Laboratory operations",
+    "Software development",
     "Automotive",
     "Real estate",
   ],

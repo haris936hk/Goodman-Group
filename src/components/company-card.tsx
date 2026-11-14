@@ -24,7 +24,7 @@ export function CompanyCard({ company, compact = false }: CompanyCardProps) {
         <div className="company-card-topline">
           <span>{company.business}</span>
         </div>
-        <div className="company-logo-frame glass-opaque">
+        <div className="company-logo-frame glass-opaque" data-company={company.slug}>
           {company.logo ? (
             <Image
               src={company.logo.src}

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | Goodman Group",
   },
   description:
-    "Goodman Group brings together companies and capabilities across healthcare, medical equipment, chemicals, and other business areas.",
+    "Goodman Group brings together companies and capabilities across healthcare, medical equipment, chemicals, software development, and other business areas.",
   alternates: {
     canonical: "/",
   },

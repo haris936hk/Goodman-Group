@@ -136,6 +136,23 @@ describe('SiteHeader', () => {
     ).toBeVisible();
   });
 
+  it('applies the company palette to the portaled mobile menu', async () => {
+    const user = userEvent.setup();
+    document.documentElement.dataset.theme = 'light';
+    document.documentElement.dataset.themeExplicit = 'true';
+    render(
+      <div className="company-group-frame" data-theme="light" style={{ '--frame-badge-fg': '#5925a6' } as React.CSSProperties}>
+        <SiteHeader />
+      </div>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation' }));
+    const dialog = screen.getByRole('dialog', { name: 'Site navigation' });
+    expect(dialog).toHaveAttribute('data-company-theme');
+    expect(dialog).toHaveAttribute('data-theme', 'light');
+    expect(dialog.style.getPropertyValue('--company-header-accent')).toBe('#5925a6');
+  });
+
   it('toggles closed when clicking the menu toggle while open', async () => {
     const user = userEvent.setup();
     render(<SiteHeader />);

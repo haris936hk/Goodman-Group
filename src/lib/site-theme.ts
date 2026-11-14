@@ -61,12 +61,13 @@ export const initializeGroupTheme = `(function () {
   document.documentElement.dataset.theme = theme;
 
   function apply(activeTheme) {
-    var companyShell = document.querySelector(".wal-green-page, .geron-page, .laboratories-page, .billing-page, .medical-equipment-page");
+    var companyShell = document.querySelector(".wal-green-page, .geron-page, .laboratories-page, .billing-page, .medical-equipment-page, .technologies-page");
     if (companyShell) {
       var isBilling = companyShell.classList.contains("billing-page");
       var isGeron = companyShell.classList.contains("geron-page");
       var isLaboratories = companyShell.classList.contains("laboratories-page");
       var isMedical = companyShell.classList.contains("medical-equipment-page");
+      var isTechnologies = companyShell.classList.contains("technologies-page");
       companyShell.dataset.theme = activeTheme;
       document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
         meta.content = isBilling
@@ -77,7 +78,9 @@ export const initializeGroupTheme = `(function () {
               ? (activeTheme === "dark" ? "#191416" : "#fcfaf7")
               : isMedical
                 ? (activeTheme === "dark" ? "#101c26" : "#fafbfc")
-                : (activeTheme === "dark" ? "#111b16" : "#faf8f5");
+                : isTechnologies
+                  ? (activeTheme === "dark" ? "#080d1c" : "#f7f7fc")
+                  : (activeTheme === "dark" ? "#111b16" : "#faf8f5");
       });
       return true;
     }

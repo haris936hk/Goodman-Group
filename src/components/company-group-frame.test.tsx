@@ -1,9 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { CompanyProfile } from "@/data/companies";
 
 import { CompanyGroupFrame } from "./company-group-frame";
+
+vi.mock("next/navigation", () => ({ usePathname: () => "/companies/test-corp" }));
 
 const mockCompanyBase: CompanyProfile = {
   slug: "test-corp",
@@ -32,13 +34,11 @@ describe("CompanyGroupFrame", () => {
     const skipLink = screen.getByRole("link", { name: "Skip to main content" });
     expect(skipLink).toHaveAttribute("href", "#main-content");
 
-    const brandLinks = screen.getAllByRole("link", { name: "Goodman Group" });
-    expect(brandLinks.length).toBeGreaterThanOrEqual(1);
-    expect(brandLinks[0]).toHaveAttribute("href", "/");
-
-    const backLinks = screen.getAllByRole("link", { name: "All companies" });
-    expect(backLinks.length).toBeGreaterThanOrEqual(1);
-    expect(backLinks[0]).toHaveAttribute("href", "/companies");
+    expect(screen.getByRole("link", { name: "Goodman Group home" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("navigation", { name: "Primary navigation" }))
+      .toHaveTextContent("Our Companies");
+    expect(screen.getByRole("link", { name: "Our Companies" }))
+      .toHaveAttribute("href", "/companies");
 
     expect(screen.getAllByText("A Goodman Group company").length).toBeGreaterThanOrEqual(1);
 

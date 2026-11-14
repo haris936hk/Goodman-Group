@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { companies, type CompanyProfile } from "@/data/companies";
 import { CompanyThemeSync } from "@/components/company-theme-sync";
+import { SiteHeader } from "@/components/site-header";
 
 export type CompanyGroupFrameProps = {
   company: CompanyProfile;
@@ -26,23 +27,7 @@ export function CompanyGroupFrame({
         Skip to main content
       </a>
 
-      <header className="group-frame-header" aria-label="Goodman Group Navigation">
-        <div className="group-frame-header-inner">
-          <Link href="/" className="group-frame-brand" aria-label="Goodman Group">
-            <Image src="/assets/logos/GG-white.png" alt="Goodman Group" width={280} height={119} className="group-frame-logo" />
-          </Link>
-          <div className="group-frame-relationship">
-            <span className="group-frame-eyebrow">{relationshipText}</span>
-            <span className="group-frame-company-name">{company.displayName}</span>
-          </div>
-          <nav className="group-frame-nav" aria-label="Group navigation">
-            <Link href="/companies" className="group-frame-back-link">
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              <span>All companies</span>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main id="main-content" tabIndex={-1}>
         {children}

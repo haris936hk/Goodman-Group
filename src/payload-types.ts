@@ -166,6 +166,7 @@ export interface Announcement {
         | 'goodman-medical-equipment'
         | 'wal-green-chemicals'
         | 'goodman-billing'
+        | 'goodman-technologies'
       )[]
     | null;
   publishedAt?: string | null;

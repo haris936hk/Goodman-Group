@@ -36,5 +36,10 @@
     "path": "/companies/goodman-billing",
     "slug": "goodman-billing",
     "heading": "Medical Billing. Redefined."
+  },
+  {
+    "path": "/companies/goodman-technologies",
+    "slug": "goodman-technologies",
+    "heading": "From idea to software that ships."
   }
 ]

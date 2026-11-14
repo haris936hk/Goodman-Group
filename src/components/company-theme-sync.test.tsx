@@ -42,6 +42,24 @@ describe("CompanyThemeSync", () => {
     });
   });
 
+  it("synchronizes the Goodman Technologies palette", async () => {
+    const { container } = render(
+      <div className="company-group-frame technologies-page">
+        <CompanyThemeSync />
+      </div>,
+    );
+
+    const frame = container.querySelector(".company-group-frame") as HTMLElement;
+    expect(frame.dataset.theme).toBe("dark");
+    expect(metaThemeColor.content).toBe("#080d1c");
+
+    document.documentElement.dataset.theme = "light";
+    await waitFor(() => {
+      expect(frame.dataset.theme).toBe("light");
+      expect(metaThemeColor.content).toBe("#f7f7fc");
+    });
+  });
+
   it("handles head mutations by reapplying the active palette", async () => {
     const { container } = render(
       <div className="company-group-frame medical-equipment-page">
