@@ -61,7 +61,10 @@ export async function assertOutsideRelease(path, label) {
 export function readCmsDataPaths() {
   const databaseUrl = process.env.DATABASE_URL;
   const uploadDir = process.env.UPLOAD_DIR;
-  if (!databaseUrl?.startsWith('file:') || !uploadDir) fail('Set DATABASE_URL=file:/ABSOLUTE_PRIVATE_PATH/data/blog.sqlite and an absolute UPLOAD_DIR in the protected CMS environment.');
+  if (process.env.BLOB_READ_WRITE_TOKEN || (databaseUrl && /^postgres(?:ql)?:/i.test(databaseUrl))) {
+    fail('PostgreSQL and Vercel Blob backup/restore are not supported by these legacy SQLite/local-file tools. No remote CMS data was backed up or restored.');
+  }
+  if (!databaseUrl?.startsWith('file:') || !uploadDir) fail('Legacy SQLite/local-file operation only: set DATABASE_URL=file:/ABSOLUTE_PRIVATE_PATH/data/blog.sqlite and an absolute UPLOAD_DIR. These tools do not back up or restore PostgreSQL or Vercel Blob.');
   let databasePath;
   try {
     const parsed = new URL(databaseUrl);

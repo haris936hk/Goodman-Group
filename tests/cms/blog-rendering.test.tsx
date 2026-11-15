@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
@@ -14,7 +14,7 @@ import {
   getAccessFallbackHTTPStatus,
 } from "next/dist/client/components/http-access-fallback/http-access-fallback";
 
-// Replace only Next's import-time environment sentinel; all CMS reads use real SQLite.
+// Replace only Next's import-time environment sentinel; all CMS reads use real Postgres.
 vi.mock("server-only", () => ({}));
 
 // Mock Next headers only to inject real authenticated cookie headers with sec-fetch-site same-origin.
@@ -27,6 +27,7 @@ import { withCmsMutation } from "../../src/cms/mutation-gate";
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
 import { SITE_ORIGIN } from "../../src/data/goodman-group";
 import type { Announcement, Media } from "../../src/payload-types";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 import BlogPage, {
   generateMetadata as generateBlogMetadata,
 } from "../../src/app/(website)/blog/page";
@@ -37,6 +38,7 @@ import AnnouncementPreviewPage from "../../src/app/(website)/blog/preview/[id]/p
 
 let payload: Payload;
 let directory: string;
+let fixture: CmsFixture;
 let adminToken: string;
 
 const createBody = (text: string): NonNullable<Announcement["body"]> => ({
@@ -75,7 +77,7 @@ async function addMedia(
   alt = "Meaningful image description",
   caption?: string,
 ): Promise<Media> {
-  const inputPath = path.join(directory, `upload-${randomUUID()}.${extension}`);
+  const inputPath = path.join(directory, `${fixture.prefix}upload-${randomUUID()}.${extension}`);
   await writeFile(inputPath, bytes);
   try {
     return await withCmsMutation(() =>
@@ -126,12 +128,7 @@ async function expectRedirect(action: () => Promise<unknown>, expectedDestinatio
 
 beforeAll(async () => {
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-blog-rendering-"));
-  process.env.DATABASE_URL = `file:${directory}/blog.sqlite`;
-  process.env.UPLOAD_DIR = `${directory}/uploads`;
-  process.env.PAYLOAD_SECRET = "disposable-blog-rendering-secret-of-at-least-32-chars";
-  await mkdir(process.env.UPLOAD_DIR);
-
-  // Load config lazily after isolated paths and secret are assigned to the environment.
+  fixture = await createCmsFixture({ realBlob: true });
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
@@ -158,8 +155,11 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
 });
 
 beforeEach(() => {

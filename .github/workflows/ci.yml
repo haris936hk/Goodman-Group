@@ -18,9 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      CMS_TEST_ROOT: /tmp/goodman-cms-${{ github.run_id }}-${{ github.run_attempt }}
-      DATABASE_URL: file:/tmp/goodman-cms-${{ github.run_id }}-${{ github.run_attempt }}/blog.sqlite
-      UPLOAD_DIR: /tmp/goodman-cms-${{ github.run_id }}-${{ github.run_attempt }}/uploads
+      BLOB_READ_WRITE_TOKEN: vercel_blob_rw_emulator_local
+      CMS_TEST_BLOB_READ_WRITE_TOKEN: vercel_blob_rw_emulator_local
+      CMS_TEST_BLOB_STORE_ID: emulator
+      CMS_TEST_REAL_BLOB_READ_WRITE_TOKEN: ${{ secrets.CMS_TEST_BLOB_READ_WRITE_TOKEN }}
+      CMS_TEST_REAL_BLOB_STORE_ID: ${{ vars.CMS_TEST_BLOB_STORE_ID }}
+      VERCEL_BLOB_API_URL: http://127.0.0.1:3100/api/blob
+      STORAGE_VERCEL_BLOB_BASE_URL: http://127.0.0.1:3100
+      VERCEL_BLOB_RETRIES: "0"
       PAYLOAD_SECRET: goodman-ci-disposable-payload-secret-32chars-minimum
       CMS_TEST_ADMIN_EMAIL: cms-admin@example.test
       CMS_TEST_ADMIN_PASSWORD: Goodman-CI-only-password-92!
@@ -41,12 +46,45 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Start disposable PostgreSQL
+        run: |
+          set -euo pipefail
+          blob="$(docker run -d --rm -p 127.0.0.1:3100:3000 -e EMULATOR_BASE_URL=http://127.0.0.1:3100 ghcr.io/payloadcms/vercel-blob-emulator:latest)"
+          echo "CMS_TEST_BLOB_CONTAINER=$blob" >> "$GITHUB_ENV"
+          for attempt in $(seq 1 60); do
+            if curl --silent http://127.0.0.1:3100/api/blob >/dev/null; then break; fi
+            if [ "$attempt" = 60 ]; then echo "Blob emulator did not become ready."; exit 1; fi
+            sleep 1
+          done
+          password="$(openssl rand -hex 24)"
+          echo "::add-mask::$password"
+          container="$(docker run -d --rm --label goodman.cms.disposable=true -e POSTGRES_PASSWORD="$password" -e POSTGRES_DB=goodman_test -p 127.0.0.1::5432 postgres:17-alpine)"
+          echo "CMS_TEST_POSTGRES_CONTAINER=$container" >> "$GITHUB_ENV"
+          port="$(docker port "$container" 5432/tcp | sed 's/.*://')"
+          echo "DATABASE_URL=postgresql://postgres:$password@127.0.0.1:$port/goodman_test" >> "$GITHUB_ENV"
+          for attempt in $(seq 1 60); do
+            if docker exec "$container" pg_isready -U postgres -d goodman_test; then exit 0; fi
+            sleep 1
+          done
+          echo "Disposable PostgreSQL did not become ready."
+          exit 1
+
       - name: Prepare disposable CMS database and administrator
         run: npm run payload -- run scripts/cms-test-setup.ts
 
       - name: Run CMS integration tests
         run: npm run test:cms
 
+
+      - name: Select dedicated real Blob store for production-mode checks
+        run: |
+          set -euo pipefail
+          [[ "$CMS_TEST_REAL_BLOB_STORE_ID" =~ ^[a-zA-Z0-9]+$ ]] || { echo "CMS_TEST_BLOB_STORE_ID must identify a dedicated real test store."; exit 1; }
+          [[ "$CMS_TEST_REAL_BLOB_READ_WRITE_TOKEN" == "vercel_blob_rw_${CMS_TEST_REAL_BLOB_STORE_ID}_"* ]] || { echo "A matching dedicated CMS_TEST_BLOB_READ_WRITE_TOKEN secret is required for production-mode checks."; exit 1; }
+          echo "BLOB_READ_WRITE_TOKEN=$CMS_TEST_REAL_BLOB_READ_WRITE_TOKEN" >> "$GITHUB_ENV"
+          echo "VERCEL_BLOB_API_URL=" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_VERCEL_BLOB_API_URL=" >> "$GITHUB_ENV"
+          echo "STORAGE_VERCEL_BLOB_BASE_URL=" >> "$GITHUB_ENV"
       - name: Lint
         run: npm run lint
 
@@ -104,4 +142,10 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+
+      - name: Remove disposable services
+        if: ${{ always() }}
+        run: |
+          if [ -n "${CMS_TEST_POSTGRES_CONTAINER:-}" ]; then docker rm --force "$CMS_TEST_POSTGRES_CONTAINER"; fi
+          if [ -n "${CMS_TEST_BLOB_CONTAINER:-}" ]; then docker rm --force "$CMS_TEST_BLOB_CONTAINER"; fi
 

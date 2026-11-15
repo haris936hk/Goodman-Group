@@ -4,9 +4,8 @@ import { chmod, copyFile, link, lstat, mkdir, mkdtemp, readFile, readdir, readli
 import { spawnSync } from 'node:child_process';
 import * as tar from 'tar';
 import { dirname, join, relative, resolve, sep } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { tmpdir } from 'node:os';
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distRoot = join(projectRoot, 'dist');
 const stageDir = join(distRoot, 'operations');
@@ -110,20 +109,10 @@ async function getNpmCli() {
 }
 
 async function assertNativeDependencies() {
-  const temporaryRoot = await mkdtemp(join(tmpdir(), 'goodman-operations-check-'));
-  let client;
-  try {
-    const require = createRequire(join(stageDir, 'package.json'));
-    const sharp = require('sharp');
-    await sharp({ create: { width: 1, height: 1, channels: 3, background: '#000000' } }).png().toBuffer();
-    const { createClient } = require('@libsql/client');
-    client = createClient({ url: pathToFileURL(join(temporaryRoot, 'native-check.sqlite')).href });
-    const result = await client.execute('SELECT 1 AS native_dependency_check');
-    if (Number(result.rows?.[0]?.native_dependency_check) !== 1) fail('libSQL did not return the expected local query result.');
-  } finally {
-    client?.close();
-    await rm(temporaryRoot, { recursive: true, force: true });
-  }
+  const require = createRequire(join(stageDir, 'package.json'));
+  const sharp = require('sharp');
+  await sharp({ create: { width: 1, height: 1, channels: 3, background: '#000000' } }).png().toBuffer();
+  require('pg');
 }
 
 function sourceRevision() {

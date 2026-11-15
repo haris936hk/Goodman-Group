@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
@@ -19,8 +19,9 @@ import {
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
 import { withCmsMutation } from "../../src/cms/mutation-gate";
 import type { Administrator, Announcement, Media } from "../../src/payload-types";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 
-// Replace only Next's import-time environment sentinel; all CMS reads use real SQLite.
+// Replace only Next's import-time environment sentinel; all CMS reads use real Postgres.
 vi.mock("server-only", () => ({}));
 
 // Mock only the client RestoreAsDraftButton framework boundary; no version/content query mocks.
@@ -36,6 +37,7 @@ import { RestoreAsDraftView } from "../../src/cms/admin/restore-as-draft";
 
 let payload: Payload;
 let directory: string;
+let fixture: CmsFixture;
 type TestAdminUser = Administrator & { collection: "administrators" };
 let user: TestAdminUser;
 
@@ -87,7 +89,7 @@ async function addMedia(
   alt = "Test cover image",
   extension = "png",
 ): Promise<Media> {
-  const inputPath = path.join(directory, `upload-${randomUUID()}.${extension}`);
+  const inputPath = path.join(directory, `${fixture.prefix}upload-${randomUUID()}.${extension}`);
   await writeFile(inputPath, bytes);
   try {
     return await withCmsMutation(() =>
@@ -143,11 +145,7 @@ async function createViewProps(options: {
 
 beforeAll(async () => {
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-version-view-"));
-  process.env.DATABASE_URL = `file:${directory}/blog.sqlite`;
-  process.env.UPLOAD_DIR = `${directory}/uploads`;
-  process.env.PAYLOAD_SECRET = "disposable-version-view-fixture-secret-of-32-chars";
-  await mkdir(process.env.UPLOAD_DIR);
-  // Dynamic import exception: payload.config must load only after temporary DATABASE_URL and UPLOAD_DIR are set in the isolated environment.
+  fixture = await createCmsFixture({ realBlob: true });
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
@@ -168,12 +166,15 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
 });
 
 describe("RestoreAsDraftView custom admin version comparison", () => {
-  it("matches numeric SQLite IDs from string query param versionFrom rather than falling back to adjacent revision", async () => {
+  it("matches numeric Postgres IDs from string query param versionFrom rather than falling back to adjacent revision", async () => {
     const article = await withCmsMutation(() =>
       payload.create({
         collection: "announcements",
@@ -238,7 +239,7 @@ describe("RestoreAsDraftView custom admin version comparison", () => {
     expect(defaultHtml).toContain("Revision 3 Title");
     expect(defaultHtml).not.toContain("Revision 1 Title");
 
-    // 2. With string query param versionFrom: matches numeric SQLite ID for v1 rather than adjacent v2
+    // 2. With string query param versionFrom: matches numeric Postgres ID for v1 rather than adjacent v2
     const explicitProps = await createViewProps({
       docID: article.id,
       versionId: v3.id,

@@ -7,11 +7,10 @@ import {
   type CollectionConfig,
   type PayloadRequest,
 } from 'payload';
-import { readCmsEnvironment } from '../environment';
 import { assertCmsMutationScope } from '../mutation-gate';
 import { validateMediaBulkDelete, validateMediaDelete } from '../media-references';
 
-const MAX_UPLOAD_BYTES = 5_000_000;
+const MAX_UPLOAD_BYTES = 4_000_000;
 const MAX_DECODED_PIXELS = 25_000_000;
 const ALLOWED_FORMATS: Record<string, true> = {
   jpeg: true,
@@ -111,7 +110,7 @@ async function decodeAndStripMetadata(req: PayloadRequest): Promise<void> {
     throw new APIError('The uploaded image could not be read.', 415);
   }
   if (actualSize > MAX_UPLOAD_BYTES || file.size > MAX_UPLOAD_BYTES) {
-    throw new APIError('Images must be no larger than 5,000,000 bytes.', 413);
+    throw new APIError('Images must be no larger than 4,000,000 bytes.', 413);
   }
   if (actualSize !== file.size) {
     throw new APIError('The uploaded image size does not match its contents.', 400);
@@ -156,6 +155,9 @@ async function decodeAndStripMetadata(req: PayloadRequest): Promise<void> {
     size: sanitizedData.length,
     tempFilePath: undefined,
   } as NonNullable<PayloadRequest['file']>;
+  // The storage adapter performs a nested metadata update after clearing req.file.
+  // Do not let that update mistake the already-validated multipart file for a replacement.
+  req.files = undefined;
 }
 
 const enforceMutationSafety: CollectionBeforeOperationHook<"media"> = async ({ args, operation, overrideAccess, req }) => {
@@ -252,12 +254,11 @@ export const Media: CollectionConfig = {
     beforeOperation: [enforceMutationSafety],
   },
   upload: {
-    staticDir: readCmsEnvironment().uploadDir,
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
     allowRestrictedFileTypes: false,
     bulkUpload: false,
     crop: false,
-    disableLocalStorage: false,
+    disableLocalStorage: true,
     focalPoint: false,
     hideRemoveFile: true,
     imageSizes: [

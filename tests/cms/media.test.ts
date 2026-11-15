@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
@@ -9,12 +9,13 @@ import { getPayload, type Payload } from "payload";
 import type { Announcement, Media } from "../../src/payload-types";
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
 import { withCmsMutation } from "../../src/cms/mutation-gate";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 
 let payload: Payload;
 let directory: string;
-let uploadDirectory: string;
+let fixture: CmsFixture;
 const originalEnvironment = new Map<string, string | undefined>();
-const environmentKeys = ["DATABASE_URL", "UPLOAD_DIR", "PAYLOAD_SECRET"];
+const environmentKeys = ["DATABASE_URL", "BLOB_READ_WRITE_TOKEN", "PAYLOAD_SECRET"];
 
 const emptyBody = (): NonNullable<Announcement["body"]> => ({
   root: {
@@ -72,7 +73,7 @@ async function addMedia(
   alt = "  A meaningful image description  ",
   caption?: string,
 ): Promise<Media> {
-  const inputPath = path.join(directory, `upload-${randomUUID()}.${extension}`);
+  const inputPath = path.join(directory, `${fixture.prefix}upload-${randomUUID()}.${extension}`);
   await writeFile(inputPath, bytes);
   try {
     return await withCmsMutation(() => payload.create({
@@ -102,35 +103,34 @@ function relationshipID(value: unknown): number | undefined {
 }
 
 async function listStoredFiles(): Promise<string[]> {
-  const files: string[] = [];
-  const visit = async (current: string): Promise<void> => {
-    for (const entry of await readdir(current, { withFileTypes: true })) {
-      const fullPath = path.join(current, entry.name);
-      if (entry.isDirectory()) await visit(fullPath);
-      else files.push(fullPath);
-    }
-  };
-  await visit(uploadDirectory);
-  return files.sort();
+  return (await fixture.blobs()).map((blob) => blob.pathname).sort();
+}
+
+async function readStoredFile(filename: string): Promise<Buffer> {
+  const blob = (await fixture.blobs()).find((entry) => entry.pathname === filename);
+  if (!blob) throw new Error(`Blob not found: ${filename}`);
+  const response = await fetch(blob.url);
+  if (!response.ok) throw new Error(`Blob fetch failed: ${response.status}`);
+  return Buffer.from(await response.arrayBuffer());
 }
 
 async function snapshotMediaFiles(media: Media): Promise<Array<[string, Buffer]>> {
   return Promise.all(mediaFileNames(media).map(async (filename) => [
     filename,
-    await readFile(path.join(uploadDirectory, filename)),
+    await readStoredFile(filename),
   ]));
 }
 
 async function expectMediaFilesExist(media: Media): Promise<void> {
   const files = await listStoredFiles();
   const names = new Set(files.map((file) => path.basename(file)));
-  for (const filename of mediaFileNames(media)) expect(names.has(filename), `${filename} should exist on disk`).toBe(true);
+  for (const filename of mediaFileNames(media)) expect(names.has(filename), `${filename} should exist in Blob`).toBe(true);
 }
 
 async function expectMediaFilesAbsent(media: Media): Promise<void> {
   const files = await listStoredFiles();
   const names = new Set(files.map((file) => path.basename(file)));
-  for (const filename of mediaFileNames(media)) expect(names.has(filename), `${filename} should be removed from disk`).toBe(false);
+  for (const filename of mediaFileNames(media)) expect(names.has(filename), `${filename} should be removed from Blob`).toBe(false);
 }
 
 async function createDraft(data: {
@@ -151,14 +151,8 @@ async function expectMediaMissing(media: Media): Promise<void> {
 
 beforeAll(async () => {
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-media-test-"));
-  uploadDirectory = path.join(directory, "uploads");
   for (const key of environmentKeys) originalEnvironment.set(key, process.env[key]);
-  process.env.DATABASE_URL = `file:${path.join(directory, "blog.sqlite")}`;
-  process.env.UPLOAD_DIR = uploadDirectory;
-  process.env.PAYLOAD_SECRET = "disposable-media-test-secret-not-a-production-credential-123456";
-  await mkdir(uploadDirectory);
-
-  // Load Payload only after the database and upload paths point to this disposable directory.
+  fixture = await createCmsFixture();
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
@@ -170,8 +164,11 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
   for (const key of environmentKeys) {
     const value = originalEnvironment.get(key);
     if (value === undefined) delete process.env[key];
@@ -189,7 +186,7 @@ describe("persisted media lifecycle", () => {
       expect(media.width).toBe(32);
       expect(media.height).toBe(24);
       await expectMediaFilesExist(media);
-      const original = await readFile(path.join(uploadDirectory, media.filename!));
+      const original = await readStoredFile(media.filename!);
       await expect(sharp(original).metadata()).resolves.toMatchObject({ format, width: 32, height: 24 });
     }
 
@@ -201,7 +198,7 @@ describe("persisted media lifecycle", () => {
   it("uses decoded bytes rather than a misleading filename and rejects corrupt or disguised uploads", async () => {
     const pngNamedAsJpeg = await addMedia(await imageBytes("png"), "actually-png.jpg");
     expect(pngNamedAsJpeg.mimeType).toBe("image/png");
-    await expect(sharp(await readFile(path.join(uploadDirectory, pngNamedAsJpeg.filename!))).metadata())
+    await expect(sharp(await readStoredFile(pngNamedAsJpeg.filename!)).metadata())
       .resolves.toMatchObject({ format: "png" });
 
     const before = await listStoredFiles();
@@ -211,9 +208,9 @@ describe("persisted media lifecycle", () => {
     expect(await listStoredFiles()).toEqual(before);
   });
 
-  it("enforces the 5,000,000-byte and 25-megapixel input ceilings", async () => {
+  it("enforces the 4,000,000-byte and 25-megapixel input ceilings", async () => {
     const validPng = await imageBytes("png");
-    const oversized = Buffer.concat([validPng, Buffer.alloc(5_000_001 - validPng.length)]);
+    const oversized = Buffer.concat([validPng, Buffer.alloc(4_000_001 - validPng.length)]);
     const filesBeforeOversize = await listStoredFiles();
     await expect(addMedia(oversized, "oversized.png")).rejects.toMatchObject({ status: 413 });
     expect(await listStoredFiles()).toEqual(filesBeforeOversize);
@@ -227,7 +224,7 @@ describe("persisted media lifecycle", () => {
         background: { r: 10, g: 20, b: 30 },
       },
     }).png().toBuffer();
-    expect(tooManyPixels.length).toBeLessThan(5_000_000);
+    expect(tooManyPixels.length).toBeLessThan(4_000_000);
     const filesBeforePixels = await listStoredFiles();
     await expect(addMedia(tooManyPixels, "too-many-pixels.png")).rejects.toThrow(/25 megapixels|decodable/i);
     expect(await listStoredFiles()).toEqual(filesBeforePixels);
@@ -451,12 +448,12 @@ describe("persisted media lifecycle", () => {
 
 it("accepts native multipart memory uploads at the exact byte limit and rejects larger files without leftovers", async () => {
   // Exercise the real REST parsing boundary after installing disposable configuration.
-  const { POST } = await import("../../src/app/(payload)/api/cms/[...slug]/route");
+  const { POST, PATCH } = await import("../../src/app/(payload)/api/cms/[...slug]/route");
   const { token } = await payload.login({ collection: "administrators", data: { email: "cms-media-integration@example.test", password: "Disposable-test-password-42!" } });
   const upload = (bytes: Buffer, name: string) => {
     const form = new FormData();
     form.append("_payload", JSON.stringify({ alt: "Equipment at a Group event" }));
-    form.append("file", new Blob([Uint8Array.from(bytes)], { type: "image/png" }), name);
+    form.append("file", new Blob([Uint8Array.from(bytes)], { type: "image/png" }), `${fixture.prefix}${name}`);
     return POST(new Request("http://localhost:3000/api/cms/media", {
       method: "POST", body: form,
       headers: { authorization: `JWT ${token}`, origin: "http://localhost:3000" },
@@ -468,8 +465,20 @@ it("accepts native multipart memory uploads at the exact byte limit and rejects 
   const result = await small.json();
   expect(result.doc).toMatchObject({ id: expect.any(Number), alt: "Equipment at a Group event" });
   const stored = await payload.findByID({ collection: "media", id: result.doc.id, overrideAccess: false });
-  expect((await sharp(await readFile(path.join(uploadDirectory, stored.filename!))).metadata()).format).toBe("png");
-  const exact = Buffer.concat([png, Buffer.alloc(5_000_000 - png.length)]);
+  expect((await sharp(await readStoredFile(stored.filename!)).metadata()).format).toBe("png");
+  const originalFiles = await snapshotMediaFiles(stored);
+  const filesBeforeReplacement = await listStoredFiles();
+  const replacement = new FormData();
+  replacement.append("_payload", JSON.stringify({ alt: "Attempted replacement" }));
+  replacement.append("file", new Blob([Uint8Array.from(await imageBytes("png", 48, 36))], { type: "image/png" }), `${fixture.prefix}replacement.png`);
+  const replacementResponse = await PATCH(new Request(`http://localhost:3000/api/cms/media/${stored.id}`, {
+    method: "PATCH", body: replacement,
+    headers: { authorization: `JWT ${token}`, origin: "http://localhost:3000" },
+  }), { params: Promise.resolve({ slug: ["media", String(stored.id)] }) });
+  expect(replacementResponse.status).toBe(409);
+  expect(await snapshotMediaFiles(stored)).toEqual(originalFiles);
+  expect(await listStoredFiles()).toEqual(filesBeforeReplacement);
+  const exact = Buffer.concat([png, Buffer.alloc(4_000_000 - png.length)]);
   expect((await upload(exact, "native-exact-limit.png")).status).toBe(201);
   const before = await listStoredFiles();
   expect((await upload(Buffer.concat([exact, Buffer.alloc(1)]), "native-oversized.png")).status).toBe(413);
@@ -484,7 +493,7 @@ it("serves public media downloads without private or noindex headers while prote
   const form = new FormData();
   form.append("_payload", JSON.stringify({ alt: "Public photo test" }));
   const png = await imageBytes("png");
-  form.append("file", new Blob([Uint8Array.from(png)], { type: "image/png" }), "public-header-test.png");
+  form.append("file", new Blob([Uint8Array.from(png)], { type: "image/png" }), `${fixture.prefix}public-header-test.png`);
 
   const uploadResponse = await POST(new Request("http://localhost:3000/api/cms/media", {
     method: "POST",

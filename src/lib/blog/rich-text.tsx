@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 
 import { SITE_ORIGIN } from "@/data/goodman-group";
+import { trustedMediaURL } from "@/lib/blog/media-url";
 
 type LexicalNode = {
   type?: unknown;
@@ -42,14 +43,10 @@ function isPositiveDimension(value: unknown): value is number {
 }
 
 function safeImageURL(value: unknown): string | null {
-  if (typeof value !== "string" || value.length === 0) return null;
-  try {
-    const url = new URL(value, SITE_ORIGIN);
-    if (url.origin !== SITE_ORIGIN || url.username || url.password) return null;
-    return `${url.pathname}${url.search}${url.hash}`;
-  } catch {
-    return null;
-  }
+  const url = trustedMediaURL(value);
+  if (!url) return null;
+  const path = `${url.pathname}${url.search}${url.hash}`.replace(/,/g, "%2C");
+  return url.origin === SITE_ORIGIN ? path : `${url.origin}${path}`;
 }
 
 export function readMediaImage(value: unknown): MediaImageData | null {

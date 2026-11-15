@@ -15,6 +15,7 @@ import { RestoreAsDraftView as RestoreAsDraftView_5951bcf431c6c5840c96ecaa3528c3
 import { MediaFieldLabel as MediaFieldLabel_7a5a1fe4caa133c6d0d7eda60f2659c8 } from '../../../../src/cms/admin/media-field-label'
 import { AdministratorLoginView as AdministratorLoginView_6c88882964e36bc0ba20bd15a2c0802c } from '../../../../src/cms/admin/login-view'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -34,5 +35,6 @@ export const importMap = {
   "/src/cms/admin/restore-as-draft#RestoreAsDraftView": RestoreAsDraftView_5951bcf431c6c5840c96ecaa3528c3d3,
   "/src/cms/admin/media-field-label#MediaFieldLabel": MediaFieldLabel_7a5a1fe4caa133c6d0d7eda60f2659c8,
   "/src/cms/admin/login-view#AdministratorLoginView": AdministratorLoginView_6c88882964e36bc0ba20bd15a2c0802c,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

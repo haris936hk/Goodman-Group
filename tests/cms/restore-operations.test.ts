@@ -11,12 +11,13 @@ interface CliResult {
   stderr: string;
 }
 
-function runCmsRestore(env: Record<string, string>, args: string[] = []): Promise<CliResult> {
+function runCmsRestore(env: Record<string, string>, args: string[] = [], script = "cms-restore.mjs"): Promise<CliResult> {
   const { promise, resolve, reject } = Promise.withResolvers<CliResult>();
-  const cliScript = path.resolve("scripts/cms-restore.mjs");
+  const cliScript = path.resolve("scripts", script);
   const child = spawn(process.execPath, [cliScript, ...args], {
     env: {
       ...process.env,
+      BLOB_READ_WRITE_TOKEN: "",
       ...env,
     },
     stdio: ["pipe", "pipe", "pipe"],
@@ -36,6 +37,22 @@ function runCmsRestore(env: Record<string, string>, args: string[] = []): Promis
   });
   return promise;
 }
+
+describe("remote CMS operations", () => {
+  for (const script of ["cms-backup.mjs", "cms-restore.mjs"]) {
+    for (const env of [
+      { DATABASE_URL: "postgresql://example.invalid/cms", BLOB_READ_WRITE_TOKEN: "" },
+      { DATABASE_URL: "file:///tmp/cms.sqlite", BLOB_READ_WRITE_TOKEN: "test-token" },
+    ]) {
+      it(`${script} refuses remote storage before touching local targets`, async () => {
+        const result = await runCmsRestore({ ...env, UPLOAD_DIR: "/tmp/cms-uploads" }, ["/tmp/cms-backup"], script);
+        expect(result.code).not.toBe(0);
+        expect(result.stderr).toContain("PostgreSQL and Vercel Blob backup/restore are not supported");
+        expect(result.stdout).not.toContain("Type RESTORE");
+      });
+    }
+  }
+});
 
 describe("CMS restore operations canonical overlap protection", () => {
   let root: string;

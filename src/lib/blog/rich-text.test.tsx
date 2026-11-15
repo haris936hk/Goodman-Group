@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { readMediaImage, RichText } from "./rich-text";
+
+vi.mock("server-only", () => ({}));
 
 const text = (value: string, format = 0) => ({ type: "text", text: value, format });
 const document = (...children: unknown[]) => ({ root: { children } });
@@ -52,5 +54,18 @@ describe("article rich text", () => {
     expect(rendered).toHaveAttribute("height", "900");
     expect(screen.getByText(image.caption).closest("figcaption")).not.toBeNull();
     expect(readMediaImage({ ...image, url: "https://external.example/photo.jpg" })).toBeNull();
+  });
+
+  it("renders images only from the configured Blob store", () => {
+    vi.stubEnv("BLOB_READ_WRITE_TOKEN", "vercel_blob_rw_store123_secret123");
+    const image = {
+      url: "https://store123.public.blob.vercel-storage.com/photo.webp",
+      alt: "Equipment",
+      sizes: { small: { url: "https://store123.public.blob.vercel-storage.com/small.webp", width: 480 } },
+    };
+    render(<RichText value={document({ type: "upload", relationTo: "media", value: image })} />);
+    expect(screen.getByRole("img", { name: "Equipment" })).toHaveAttribute("src", image.url);
+    expect(readMediaImage({ ...image, url: "https://other.public.blob.vercel-storage.com/photo.webp" })).toBeNull();
+    expect(readMediaImage({ ...image, url: "http://store123.public.blob.vercel-storage.com/photo.webp" })).toBeNull();
   });
 });

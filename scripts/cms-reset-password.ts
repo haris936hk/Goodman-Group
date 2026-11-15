@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import { withAdministratorMaintenance } from "../src/cms/administrator-maintenance.js";
 import { promptHidden } from "../src/cms/administrator-prompts.js";
 import { readCmsEnvironment } from "../src/cms/environment.js";
+import { withCmsMutation } from "../src/cms/mutation-gate.js";
 
 async function main() {
   readCmsEnvironment();
@@ -27,7 +28,17 @@ async function main() {
     if (!password) throw new Error("The administrator password cannot be empty.");
     if (password !== confirmation) throw new Error("The entered passwords do not match.");
 
-    await withAdministratorMaintenance(async () => {
+    await withCmsMutation(() => withAdministratorMaintenance(async () => {
+      const current = await payload.find({
+        collection: "administrators",
+        depth: 0,
+        limit: 2,
+        overrideAccess: true,
+      });
+      if (current.totalDocs !== 1 || current.docs.length !== 1 ||
+          current.docs[0].id !== administrator.id || current.docs[0].email !== administrator.email) {
+        throw new Error("The administrator account changed during password recovery; retry the command.");
+      }
       await payload.unlock({
         collection: "administrators",
         data: { email: administrator.email, password },
@@ -52,7 +63,7 @@ async function main() {
         data: { sessions: [] },
         overrideAccess: true,
       });
-    });
+    }));
 
     console.info("Administrator password updated; prior sessions were revoked.");
   } finally {

@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import { withAdministratorMaintenance } from "../src/cms/administrator-maintenance.js";
 import { promptHidden, promptLine } from "../src/cms/administrator-prompts.js";
 import { readCmsEnvironment } from "../src/cms/environment.js";
+import { withCmsMutation } from "../src/cms/mutation-gate.js";
 
 async function main() {
   readCmsEnvironment();
@@ -25,7 +26,7 @@ async function main() {
     if (!password) throw new Error("The administrator password cannot be empty.");
     if (password !== confirmation) throw new Error("The entered passwords do not match.");
 
-    await withAdministratorMaintenance(async () => {
+    await withCmsMutation(() => withAdministratorMaintenance(async () => {
       const current = await payload.find({
         collection: "administrators",
         depth: 0,
@@ -49,7 +50,7 @@ async function main() {
       if (after.totalDocs !== 1) {
         throw new Error("Administrator bootstrap did not leave exactly one account.");
       }
-    });
+    }));
 
     console.info("Administrator account created.");
   } finally {

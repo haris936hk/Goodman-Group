@@ -161,12 +161,12 @@ export interface Announcement {
   coverImage?: (number | null) | Media;
   relatedCompanies?:
     | (
-        | 'goodman-laboratories'
-        | 'geron-pharma'
-        | 'goodman-medical-equipment'
-        | 'wal-green-chemicals'
         | 'goodman-billing'
         | 'goodman-technologies'
+        | 'goodman-laboratories'
+        | 'goodman-medical-equipment'
+        | 'wal-green-chemicals'
+        | 'geron-pharma'
       )[]
     | null;
   publishedAt?: string | null;
@@ -182,6 +182,7 @@ export interface Media {
   id: number;
   alt: string;
   caption?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -347,6 +348,7 @@ export interface AnnouncementsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

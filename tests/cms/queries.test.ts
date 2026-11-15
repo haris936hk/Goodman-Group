@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
@@ -8,30 +8,31 @@ import { withCmsMutation } from "../../src/cms/mutation-gate";
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
 import type { Announcement } from "../../src/payload-types";
 import { getAnnouncementImageURL, getBlogArticleMetadata, createBlogPostingJsonLd } from "../../src/lib/blog/metadata";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 
-// Replace only Next's import-time environment sentinel; all CMS reads use real SQLite.
+// Replace only Next's import-time environment sentinel; all CMS reads use real Postgres.
 vi.mock("server-only", () => ({}));
 import { getAuthenticatedDraft, getPublishedAnnouncement, getPublishedAnnouncementSlugs, getPublishedAnnouncementsPage } from "../../src/lib/blog/queries";
 
 let payload: Payload;
 let directory: string;
+let fixture: CmsFixture;
 const body = (text: string): NonNullable<Announcement["body"]> => ({ root: { type: "root", version: 1, direction: null, format: "", indent: 0, children: [{ type: "paragraph", version: 1, children: [{ type: "text", version: 1, text, format: 0, detail: 0, mode: "normal", style: "" }] }] } });
 
 beforeAll(async () => {
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-queries-"));
-  process.env.DATABASE_URL = `file:${directory}/blog.sqlite`;
-  process.env.UPLOAD_DIR = `${directory}/uploads`;
-  process.env.PAYLOAD_SECRET = "disposable-query-fixture-secret-of-at-least-32-characters";
-  await mkdir(process.env.UPLOAD_DIR);
-  // Config must load after isolated paths are assigned, not from the ambient deployment environment.
+  fixture = await createCmsFixture();
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
   await withAdministratorMaintenance(() => payload.create({ collection: "administrators", data: { email: "queries@example.test", password: "Disposable-query-password-42!" }, overrideAccess: true }));
 });
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
 });
 
 describe("public and preview query boundaries", () => {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { SITE_ORIGIN } from "@/data/goodman-group";
+import { trustedMediaURL } from "@/lib/blog/media-url";
 import type { Announcement } from "@/payload-types";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -9,13 +10,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function publicImageURL(value: unknown): string | undefined {
   if (!isRecord(value) || typeof value.url !== "string" || !value.url) return undefined;
-  try {
-    const url = new URL(value.url, SITE_ORIGIN);
-    if (url.origin !== SITE_ORIGIN || url.username || url.password) return undefined;
-    return url.href;
-  } catch {
-    return undefined;
-  }
+  return trustedMediaURL(value.url)?.href;
 }
 
 export function getAnnouncementImageURL(announcement: Announcement): string | undefined {

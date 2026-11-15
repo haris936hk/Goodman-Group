@@ -1,11 +1,12 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { getPayload, type Payload } from "payload";
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
 import type AdminPageComponent from "../../src/app/(payload)/admin/[[...segments]]/page";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 
 const request = vi.hoisted(() => ({ headers: new Headers() }));
 vi.mock("next/headers", () => ({ headers: async () => request.headers }));
@@ -15,15 +16,12 @@ vi.mock("../../src/app/(payload)/admin/importMap", () => ({ importMap: {} }));
 
 let payload: Payload;
 let directory: string;
+let fixture: CmsFixture;
 let adminPage: typeof AdminPageComponent;
 
 beforeAll(async () => {
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-entry-"));
-  process.env.DATABASE_URL = `file:${directory}/blog.sqlite`;
-  process.env.UPLOAD_DIR = `${directory}/uploads`;
-  process.env.PAYLOAD_SECRET = "disposable-admin-entry-fixture-secret-of-at-least-32-characters";
-  await mkdir(process.env.UPLOAD_DIR);
-  // Load configuration and the entry point only after external disposable paths are installed.
+  fixture = await createCmsFixture();
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
@@ -31,8 +29,11 @@ beforeAll(async () => {
   adminPage = (await import("../../src/app/(payload)/admin/[[...segments]]/page")).default;
 });
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
 });
 
 describe("admin initial autosave entry point", () => {

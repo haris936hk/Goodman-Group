@@ -1,22 +1,24 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { createLocalReq, getPayload, registerFirstUserOperation, type Payload } from "payload";
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 
 const primaryEmail = "administrator@example.test";
 const primaryPassword = "Disposable-admin-password-42!";
 const resetPassword = "Disposable-admin-password-43!";
 const origin = "http://localhost:3000";
-const environmentKeys = ["DATABASE_URL", "UPLOAD_DIR", "PAYLOAD_SECRET"] as const;
+const environmentKeys = ["DATABASE_URL", "BLOB_READ_WRITE_TOKEN", "PAYLOAD_SECRET"] as const;
 type RouteHandler = (request: Request, context: { params: Promise<{ slug?: string[] }> }) => Promise<Response>;
 type RouteHandlers = { GET: RouteHandler; POST: RouteHandler };
 type AdministratorState = { loginAttempts?: number | null; lockUntil?: string | null; sessions?: Array<{ id: string }> };
 
 let payload: Payload;
 let directory: string;
+let fixture: CmsFixture;
 let routeHandlers: RouteHandlers;
 const previousEnvironment = new Map<string, string | undefined>();
 
@@ -47,12 +49,7 @@ beforeAll(async () => {
   for (const key of environmentKeys) previousEnvironment.set(key, process.env[key]);
   vi.stubEnv("NODE_ENV", "test");
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-admin-test-"));
-  process.env.DATABASE_URL = `file:${path.join(directory, "blog.sqlite")}`;
-  process.env.UPLOAD_DIR = path.join(directory, "uploads");
-  process.env.PAYLOAD_SECRET = "isolated-admin-test-secret-not-a-production-credential-123456";
-  await mkdir(process.env.UPLOAD_DIR);
-
-  // Load the Payload config only after temporary database paths are installed.
+  fixture = await createCmsFixture();
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
@@ -61,8 +58,11 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
   for (const key of environmentKeys) {
     const value = previousEnvironment.get(key);
     if (value === undefined) delete process.env[key];
@@ -71,7 +71,7 @@ afterAll(async () => {
   vi.unstubAllEnvs();
 });
 
-describe("SQLite-backed administrator security and lifecycle", () => {
+describe("Postgres-backed administrator security and lifecycle", () => {
   it("enforces sole-account bootstrap, self-access, lockout and session-revoking recovery", async () => {
     expect((await payload.find({ collection: "administrators", overrideAccess: true, limit: 2 })).totalDocs).toBe(0);
 

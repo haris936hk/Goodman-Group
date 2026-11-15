@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtemp, mkdir, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -8,26 +8,27 @@ import { withCmsMutation } from "../../src/cms/mutation-gate";
 import { withAdministratorMaintenance } from "../../src/cms/administrator-maintenance";
 import { restoreDraftEndpoint } from "../../src/cms/restore-draft";
 import type { Announcement } from "../../src/payload-types";
+import { createCmsFixture, destroyCmsPayload, type CmsFixture } from "./fixture";
 
 const body = (text: string): NonNullable<Announcement["body"]> => ({ root: { type: "root", version: 1, direction: null, format: "", indent: 0, children: [{ type: "paragraph", version: 1, direction: null, format: "", indent: 0, children: [{ type: "text", version: 1, text, format: 0, detail: 0, mode: "normal", style: "" }] }] } });
 let payload: Payload;
 let directory: string;
+let fixture: CmsFixture;
 
 beforeAll(async () => {
   directory = await mkdtemp(path.join(tmpdir(), "goodman-cms-test-"));
-  process.env.DATABASE_URL = `file:${directory}/blog.sqlite`;
-  process.env.UPLOAD_DIR = `${directory}/uploads`;
-  process.env.PAYLOAD_SECRET = "isolated-test-secret-not-a-production-credential-123456";
-  await mkdir(process.env.UPLOAD_DIR);
-  // Exercise config loading after disposable paths are set; a static import would read ambient deployment settings.
+  fixture = await createCmsFixture();
   const { default: config } = await import("../../payload.config");
   payload = await getPayload({ config });
   await payload.db.migrate();
   await withAdministratorMaintenance(() => payload.create({ collection: "administrators", data: { email: "cms-integration@example.test", password: "Disposable-test-password-42!" }, overrideAccess: true }));
 });
 afterAll(async () => {
-  await payload?.destroy();
-  if (directory) await rm(directory, { recursive: true, force: true });
+  try { await destroyCmsPayload(payload); } finally {
+    try { await fixture?.destroy(); } finally {
+      if (directory) await rm(directory, { recursive: true, force: true });
+    }
+  }
 });
 
 describe("persisted announcement lifecycle", () => {
