@@ -1,5 +1,8 @@
 import { SITE_ORIGIN } from "../data/goodman-group";
 
+// The project's Vercel production alias is also used for administrator access.
+const VERCEL_PRODUCTION_ORIGIN = "https://goodman-group.vercel.app";
+
 export function readCmsEnvironment() {
   const { DATABASE_URL, BLOB_READ_WRITE_TOKEN, PAYLOAD_SECRET } = process.env;
   let databaseUrl: URL;
@@ -21,7 +24,7 @@ export function readCmsEnvironment() {
     blobToken: BLOB_READ_WRITE_TOKEN,
     secret: PAYLOAD_SECRET,
     origins: process.env.NODE_ENV === "production"
-      ? [SITE_ORIGIN, ...(previewOrigin ? [previewOrigin] : [])]
-      : [SITE_ORIGIN, "http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:4173", "http://127.0.0.1:4173", ...(previewOrigin ? [previewOrigin] : [])],
+      ? [SITE_ORIGIN, VERCEL_PRODUCTION_ORIGIN, ...(previewOrigin ? [previewOrigin] : [])]
+      : [SITE_ORIGIN, VERCEL_PRODUCTION_ORIGIN, "http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:4173", "http://127.0.0.1:4173", ...(previewOrigin ? [previewOrigin] : [])],
   };
 }

@@ -22,11 +22,12 @@ let fixture: CmsFixture;
 let routeHandlers: RouteHandlers;
 const previousEnvironment = new Map<string, string | undefined>();
 
-async function cmsRequest(method: "GET" | "POST", slug: string[], options: { data?: Record<string, unknown>; cookie?: string } = {}) {
-  const headers = new Headers({ origin });
+async function cmsRequest(method: "GET" | "POST", slug: string[], options: { data?: Record<string, unknown>; cookie?: string; requestOrigin?: string } = {}) {
+  const requestOrigin = options.requestOrigin ?? origin;
+  const headers = new Headers({ origin: requestOrigin });
   if (method === "POST") headers.set("content-type", "application/json");
   if (options.cookie) headers.set("cookie", options.cookie);
-  const request = new Request(`${origin}/api/cms/${slug.join("/")}`, {
+  const request = new Request(`${requestOrigin}/api/cms/${slug.join("/")}`, {
     method,
     headers,
     ...(options.data ? { body: JSON.stringify(options.data) } : {}),
@@ -96,6 +97,18 @@ describe("Postgres-backed administrator security and lifecycle", () => {
     expect(first.email).toBe(primaryEmail);
 
     expect((await payload.find({ collection: "administrators", overrideAccess: true, limit: 2 })).totalDocs).toBe(1);
+
+    const aliasLogin = await cmsRequest("POST", ["administrators", "login"], {
+      requestOrigin: "https://goodman-group.vercel.app",
+      data: { email: primaryEmail, password: primaryPassword },
+    });
+    expect(aliasLogin.status).toBe(200);
+    expect(aliasLogin.headers.get("set-cookie")).toMatch(/-token=/);
+    const crossOriginLogin = await cmsRequest("POST", ["administrators", "login"], {
+      requestOrigin: "https://goodman-group.vercel.app.attacker.example",
+      data: { email: primaryEmail, password: primaryPassword },
+    });
+    expect(crossOriginLogin.status).toBe(403);
 
     for (const [slug, data] of [
       [["administrators", "first-register"], publicAccount],

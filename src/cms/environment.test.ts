@@ -19,19 +19,19 @@ describe("CMS configuration", () => {
     vi.stubEnv("DATABASE_URL", url);
     expect(readCmsEnvironment).toThrow();
   });
-  it("does not allow development origins in production", () => {
+  it("allows the deployed administrator origin without trusting other domains", () => {
     vi.stubEnv("NODE_ENV", "production");
-    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN]);
+    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN, "https://goodman-group.vercel.app"]);
   });
   it("allows only the validated Vercel deployment origin in preview", () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("VERCEL_ENV", "preview");
     vi.stubEnv("VERCEL_URL", "goodman-preview.vercel.app");
-    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN, "https://goodman-preview.vercel.app"]);
+    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN, "https://goodman-group.vercel.app", "https://goodman-preview.vercel.app"]);
     vi.stubEnv("VERCEL_URL", "goodman.vercel.app.attacker.example");
-    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN]);
+    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN, "https://goodman-group.vercel.app"]);
     vi.stubEnv("VERCEL_URL", "goodman-preview.vercel.app");
     vi.stubEnv("VERCEL_ENV", "production");
-    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN]);
+    expect(readCmsEnvironment().origins).toEqual([SITE_ORIGIN, "https://goodman-group.vercel.app"]);
   });
 });

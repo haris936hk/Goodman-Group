@@ -211,7 +211,7 @@ Use Node 24 (`>=24.22.1 <25`) and npm 11.17.0. Supply the following to the Verce
 | `PAYLOAD_SECRET` | Stable, high-entropy secret of at least 32 characters |
 | `PAYLOAD_CONFIG_PATH` | Absolute path to `payload.config.ts` for standalone Payload CLI commands |
 
-Use separate databases, Blob stores and secrets for production, previews and tests. Do not commit credentials. Production trusts the configured site origin; a Vercel preview additionally trusts its validated `VERCEL_URL`. Preview URLs do not change the canonical site origin.
+Use separate databases, Blob stores and secrets for production, previews and tests. Do not commit credentials. CMS requests trust the configured site origin and the project's `https://goodman-group.vercel.app` production alias; a Vercel preview additionally trusts its validated `VERCEL_URL`. These extra trusted origins do not change the canonical site origin. Remove the production alias from the CMS allowlist if it is detached from the project.
 
 Remote PostgreSQL connections use TLS with certificate and hostname verification in both Payload and the CMS mutation gate. The bundled Supabase 2021 root CA is used for Supabase endpoints; update it when Supabase rotates its root. Loopback databases may use plaintext for local testing. URL TLS options that disable verification are rejected.
 
