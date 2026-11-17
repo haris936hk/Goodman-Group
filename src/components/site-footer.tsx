@@ -12,7 +12,7 @@ const footerLinks = [
   ["Blog", "/blog"],
 ] as const;
 
-export function SiteFooter() {
+export function SiteFooter({ currentCompanySlug }: { currentCompanySlug?: string } = {}) {
   return (
     <footer className="site-footer">
       <div className="footer-main">
@@ -41,7 +41,11 @@ export function SiteFooter() {
               )
             ))}
             {companies.map((company) => (
-              <Link key={company.slug} href={`/companies/${company.slug}`}>
+              <Link
+                key={company.slug}
+                href={`/companies/${company.slug}`}
+                aria-current={company.slug === currentCompanySlug ? "page" : undefined}
+              >
                 {company.displayName}
               </Link>
             ))}
